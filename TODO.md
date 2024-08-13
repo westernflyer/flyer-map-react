@@ -6,7 +6,6 @@
 - Format the time better
 - Format the value better
 - Unit should be tight against value.
-- Celsius, not Kelvin
 
 Could also use a refactor.
 

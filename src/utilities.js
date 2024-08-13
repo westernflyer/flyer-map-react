@@ -11,7 +11,7 @@ const unitInfo = {
     },
     "navigation.speedOverGround": {
         label: "Speed over ground",
-        unit: " kn"
+        unit: " m/s"
     },
     "navigation.courseOverGroundTrue": {
         label: "Course over ground",
@@ -23,7 +23,7 @@ const unitInfo = {
     },
     "environment.water.temperature": {
         label: "Water temperature",
-        unit: "ºC"
+        unit: "ºK"
     }
 }
 
@@ -66,7 +66,7 @@ export function getUpdateDicts(signalk_obj) {
     let updates = [];
     for (let update of signalk_obj.updates) {
         for (let value of update.values) {
-            if (value.path == 'navigation.position') {
+            if (value.path === 'navigation.position') {
                 updates.push(new InfoDict('navigation.position.latitude', 'Latitude', value.value.latitude, ' °', update.timestamp))
                 updates.push(new InfoDict('navigation.position.longitude', 'Longitude', value.value.longitude, ' °', update.timestamp))
             } else {
