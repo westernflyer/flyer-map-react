@@ -1,30 +1,11 @@
-import dayjs from 'dayjs';
-
 const unitInfo = {
-    "navigation.position.latitude": {
-        label: "Latitude",
-        unit: "º"
-    },
-    "navigation.position.longitude": {
-        label: "Longitude",
-        unit: "º"
-    },
-    "navigation.speedOverGround": {
-        label: "Speed over ground",
-        unit: " m/s"
-    },
-    "navigation.courseOverGroundTrue": {
-        label: "Course over ground",
-        unit: "ºT"
-    },
-    "environment.depth.belowTransducer": {
-        label: "Depth",
-        unit: " m"
-    },
-    "environment.water.temperature": {
-        label: "Water temperature",
-        unit: "ºK"
-    }
+    "navigation.position.latitude": "º",
+    "navigation.position.longitude": "º",
+    "navigation.speedOverGround": " m/s",
+    "navigation.courseOverGroundTrue": "ºT",
+    "environment.depth.belowTransducer": " m",
+    "environment.depth.belowKeel": " m",
+    "environment.water.temperature": "ºK"
 }
 
 /*
@@ -50,13 +31,12 @@ const unitInfo = {
     }
  */
 
-class InfoDict {
-    constructor(key, label, value, unit, update_time) {
+class Update {
+    constructor(key, value, unit, last_update) {
         this.key = key;
-        this.label = label;
         this.value = value;
         this.unit = unit;
-        this.update_time = update_time;
+        this.last_update = last_update;
     }
 }
 
@@ -67,12 +47,24 @@ export function getUpdateDicts(signalk_obj) {
     for (let update of signalk_obj.updates) {
         for (let value of update.values) {
             if (value.path === 'navigation.position') {
-                updates.push(new InfoDict('navigation.position.latitude', 'Latitude', value.value.latitude, ' °', update.timestamp))
-                updates.push(new InfoDict('navigation.position.longitude', 'Longitude', value.value.longitude, ' °', update.timestamp))
+                updates.push(new Update('navigation.position.latitude', value.value.latitude, ' °', update.timestamp));
+                updates.push(new Update('navigation.position.longitude', value.value.longitude, ' °', update.timestamp));
             } else {
-                updates.push(new InfoDict(value.path, unitInfo[value.path].label, value.value, unitInfo[value.path].unit, update.timestamp))
+                updates.push(new Update(value.path, value.value, unitInfo[value.path], update.timestamp));
             }
         }
     }
     return updates;
+}
+
+export class VesselInfo {
+    constructor(state) {
+        this.state = state || {};
+    }
+
+    mergeUpdates(updates) {
+        for (let update of updates) {
+            this.state[update.key] = update;
+        }
+    }
 }

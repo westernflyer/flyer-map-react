@@ -2,31 +2,27 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 
 import mqtt from 'mqtt';
-import {getUpdateDicts} from "./utilities.js";
+import {getUpdateDicts, VesselInfo} from "./utilities.js";
 
 import {Table} from "antd";
 
 const tableColumns = [
     {
-        title: 'Property',
-        dataIndex: 'label',
-        key: 'key'
-    },
-    {
-        title: 'Last update',
-        dataIndex: 'update_time',
-        key: 'update_time',
+        title: 'Path',
+        dataIndex: 'key',
     },
     {
         title: 'Value',
         dataIndex: 'value',
-        key: 'update_time'
     },
     {
         title: 'Unit',
         dataIndex: 'unit',
-        key: 'unit'
-    }
+    },
+    {
+        title: 'Last update',
+        dataIndex: 'last_update',
+    },
 ]
 
 let options = {
@@ -44,13 +40,13 @@ client.subscribe("signalk/+/environment.water.temperature")
 
 function App() {
     // Sets default React state
-    const [updates, setUpdates] = useState([]);
+    const [vesselState, setVesselState] = useState(new VesselInfo());
     useEffect(() => {
         if (client) {
             client.on('message', function (topic, message) {
                 const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
-                setUpdates(updateDicts);
-                console.log(updateDicts);
+                vesselState.mergeUpdates(updateDicts)
+                setVesselState(new VesselInfo(vesselState.state));
             })
         }
     }, [client]);
@@ -60,7 +56,7 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1>Western Flyer info</h1>
-                <Table dataSource={updates} columns={tableColumns} pagination={false}/>
+                <Table dataSource={Object.values(vesselState.state)} columns={tableColumns} pagination={false}/>
             </header>
         </div>
     );

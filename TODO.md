@@ -1,7 +1,6 @@
 # TODO
 
 ## Table related issues
-- Right now, it shows only updates. It should show all values.
 - Format the time better
 - Format the value better
 - Unit should be tight against value.
