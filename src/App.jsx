@@ -60,7 +60,7 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1>Western Flyer info</h1>
-                <Table dataSource={updates} columns={tableColumns}/>
+                <Table dataSource={updates} columns={tableColumns} pagination={false}/>
             </header>
         </div>
     );
