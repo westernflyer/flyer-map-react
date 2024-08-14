@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 
 import mqtt from 'mqtt';
-import {getUpdateDicts, VesselInfo} from "./utilities.js";
+import {getUpdateDicts, VesselState} from "./utilities.js";
 
 import {Table} from "antd";
 
@@ -25,12 +25,10 @@ const tableColumns = [
     },
 ]
 
-let options = {
-    // clientId uniquely identifies client
-    clientId: "flyer-client-" + Math.floor(Math.random() * 10000)
-};
-
-let client = mqtt.connect('ws://localhost:8080', options);
+let client = mqtt.connect(
+    'ws://localhost:8080',
+    {clientId: "flyer-client-" + Math.floor(Math.random() * 10000)}
+);
 
 client.subscribe("signalk/+/navigation.position");
 client.subscribe("signalk/+/navigation.speedOverGround")
@@ -40,13 +38,13 @@ client.subscribe("signalk/+/environment.water.temperature")
 
 function App() {
     // Sets default React state
-    const [vesselState, setVesselState] = useState(new VesselInfo());
+    const [vesselState, setVesselState] = useState(new VesselState());
     useEffect(() => {
         if (client) {
             client.on('message', function (topic, message) {
                 const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
                 vesselState.mergeUpdates(updateDicts)
-                setVesselState(new VesselInfo(vesselState.state));
+                setVesselState(new VesselState(vesselState.state));
             })
         }
     }, [client]);
@@ -56,7 +54,10 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <h1>Western Flyer info</h1>
-                <Table dataSource={Object.values(vesselState.state)} columns={tableColumns} pagination={false}/>
+                <Table
+                    dataSource={Object.values(vesselState.state)}
+                    columns={tableColumns}
+                    pagination={false}/>
             </header>
         </div>
     );
