@@ -57,18 +57,18 @@ interested paths. You can also set how often they get published.
 
 Example:
 
-| SignalK path                        |  Refresh rate |
-|:------------------------------------|--------------:|
-| `navigation.position`               |            20 |
-| `navigation.speedOverGround`        |            20 |
-| `navigation.courseOverGroundTrue`   |            20 |
-| `environment.depth.belowTransducer` |            20 |
-| `environment.water.temperature`     |            60 |
-
-
-When you're all done, it should look something like this:
-
-<img src= "images/mqtt-subscribes.png" alt="MQTT subscriptions" style="border: 2px solid grey;">
+| SignalK path                        | Refresh rate |
+|:------------------------------------|-------------:|
+| `navigation.position`               |           20 |
+| `navigation.speedOverGround`        |           20 | 
+| `navigation.courseOverGroundTrue`   |           20 |      
+| `navigation.speedThroughWater`      |           20 |
+| `navigation.headingTrue`            |           20 |
+| `environment.depth.belowTransducer` |           20 |     
+| `environment.depth.belowKeel`       |           20 |           
+| `environment.wind.speedApparent`    |           20 |
+| `environment.wind.angleApparent`    |           20 |
+| `environment.water.temperature`     |           10 |      
 
 Double check that the topics are getting published:
 

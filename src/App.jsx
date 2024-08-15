@@ -33,7 +33,11 @@ let client = mqtt.connect(
 client.subscribe("signalk/+/navigation.position");
 client.subscribe("signalk/+/navigation.speedOverGround")
 client.subscribe("signalk/+/navigation.courseOverGroundTrue")
+client.subscribe("signalk/+/navigation.headingTrue")
+client.subscribe("signalk/+/navigation.speedThroughWater")
 client.subscribe("signalk/+/environment.depth.belowTransducer")
+client.subscribe("signalk/+/environment.wind.speedApparent")
+client.subscribe("signalk/+/environment.wind.angleApparent")
 client.subscribe("signalk/+/environment.water.temperature")
 
 function App() {

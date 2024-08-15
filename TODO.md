@@ -1,9 +1,8 @@
 # TODO
 
 ## Table related issues
-- Format the time better
-- Format the value better
-- Unit should be tight against value.
+- Format lat, lon, and headings better. 
+- Predetermine table ordering
 
 Post a notice if the MQTT broker disconnects.
 
