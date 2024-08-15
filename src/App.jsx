@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 
 import mqtt from 'mqtt';
-import {getUpdateDicts, VesselState} from "./utilities.js";
+import {getUpdateDicts, VesselState, FormattedState} from "./utilities.js";
 
 import DataTable from 'react-data-table-component';
 
@@ -12,12 +12,12 @@ const tableColumns = [
         selector: row => row.key,
     },
     {
-        name: 'Value',
-        selector: row => row.value,
+        name: 'Property',
+        selector: row => row.label,
     },
     {
-        name: 'Unit',
-        selector: row => row.unit,
+        name: 'Value',
+        selector: row => row.value,
     },
     {
         name: 'Last update',
@@ -39,12 +39,15 @@ client.subscribe("signalk/+/environment.water.temperature")
 function App() {
     // Sets default React state
     const [vesselState, setVesselState] = useState(new VesselState());
+    const [formattedState, setFormattedState] = useState(new FormattedState());
     useEffect(() => {
         if (client) {
             client.on('message', function (topic, message) {
                 const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
                 vesselState.mergeUpdates(updateDicts)
-                setVesselState(new VesselState(vesselState.state));
+                setVesselState(new VesselState(vesselState));
+                formattedState.mergeUpdates(updateDicts);
+                setFormattedState(new FormattedState(formattedState));
             })
         }
     }, [client]);
@@ -55,7 +58,7 @@ function App() {
             <header className="App-header">
                 <div className="table-style">
                     <DataTable
-                        data={Object.values(vesselState.state)}
+                        data={Object.values(formattedState)}
                         columns={tableColumns}
                         title={"Current values"}
                         responsive
