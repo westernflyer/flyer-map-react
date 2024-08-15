@@ -3,6 +3,7 @@ import './App.css';
 
 import mqtt from 'mqtt';
 import {getUpdateDicts, VesselState, FormattedState} from "./utilities.js";
+import { signalKUnits} from "./units.js";
 
 import DataTable from 'react-data-table-component';
 
@@ -30,15 +31,10 @@ let client = mqtt.connect(
     {clientId: "flyer-client-" + Math.floor(Math.random() * 10000)}
 );
 
-client.subscribe("signalk/+/navigation.position");
-client.subscribe("signalk/+/navigation.speedOverGround")
-client.subscribe("signalk/+/navigation.courseOverGroundTrue")
-client.subscribe("signalk/+/navigation.headingTrue")
-client.subscribe("signalk/+/navigation.speedThroughWater")
-client.subscribe("signalk/+/environment.depth.belowTransducer")
-client.subscribe("signalk/+/environment.wind.speedApparent")
-client.subscribe("signalk/+/environment.wind.angleApparent")
-client.subscribe("signalk/+/environment.water.temperature")
+// Subscribe to all the topics we know about
+Object.keys(signalKUnits).forEach(key => {
+    client.subscribe("signalk/+/" + key)
+})
 
 function App() {
     // Sets default React state
