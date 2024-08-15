@@ -4,24 +4,24 @@ import './App.css';
 import mqtt from 'mqtt';
 import {getUpdateDicts, VesselState} from "./utilities.js";
 
-import {Table} from "antd";
+import DataTable from 'react-data-table-component';
 
 const tableColumns = [
     {
-        title: 'Path',
-        dataIndex: 'key',
+        name: 'Path',
+        selector: row => row.key,
     },
     {
-        title: 'Value',
-        dataIndex: 'value',
+        name: 'Value',
+        selector: row => row.value,
     },
     {
-        title: 'Unit',
-        dataIndex: 'unit',
+        name: 'Unit',
+        selector: row => row.unit,
     },
     {
-        title: 'Last update',
-        dataIndex: 'last_update',
+        name: 'Last update',
+        selector: row => row.last_update,
     },
 ]
 
@@ -53,11 +53,14 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <h1>Western Flyer info</h1>
-                <Table
-                    dataSource={Object.values(vesselState.state)}
-                    columns={tableColumns}
-                    pagination={false}/>
+                <div className="table-style">
+                    <DataTable
+                        data={Object.values(vesselState.state)}
+                        columns={tableColumns}
+                        title={"Current values"}
+                        responsive
+                    />
+                </div>
             </header>
         </div>
     );
