@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import * as units from "./units";
+import { formatUpdate, signalKUnits } from "./units";
 
 /*
     A SignalK object looks like:
@@ -43,7 +43,7 @@ export function getUpdateDicts(signalk_obj) {
                     new Update(
                         "navigation.position.latitude",
                         value.value.latitude,
-                        units.signalKUnits[value.path],
+                        signalKUnits[value.path],
                         dayjs(update.timestamp),
                     ),
                 );
@@ -51,7 +51,7 @@ export function getUpdateDicts(signalk_obj) {
                     new Update(
                         "navigation.position.longitude",
                         value.value.longitude,
-                        units.signalKUnits[value.path],
+                        signalKUnits[value.path],
                         dayjs(update.timestamp),
                     ),
                 );
@@ -60,7 +60,7 @@ export function getUpdateDicts(signalk_obj) {
                     new Update(
                         value.path,
                         value.value,
-                        units.signalKUnits[value.path],
+                        signalKUnits[value.path],
                         dayjs(update.timestamp),
                     ),
                 );
@@ -92,31 +92,4 @@ export class FormattedState {
             this[update.key] = formatUpdate(update);
         }
     }
-}
-
-export function formatUpdate(update) {
-    // The unit group a key belongs to. This will be something
-    // like 'group_temperature'
-    const unit_group = units.unit_group[update.key];
-    // The desired unit to be used for that group. This will be something
-    // like 'degree_C'
-    const selected_unit = units.unitSelection[unit_group];
-    // Convert if necessary
-    const value =
-        update.unit === selected_unit
-            ? update.value
-            : units.conversionDict[update.unit][selected_unit](update.value);
-    // Format the value and convert to string. 12.34567 becomes
-    // something like "12.3"
-    const formattedValue = units.formattedValue(value, selected_unit);
-    // Get an appropriate label for the unit. Something like "°C".
-    const unit_label = units.unitLabels[selected_unit];
-
-    // Now put it all together:
-    return {
-        key: update.key,
-        label: units.pathLabels[update.key],
-        value: formattedValue + unit_label,
-        last_update: units.formattedValue(update.last_update, "unix_epoch"),
-    };
 }
