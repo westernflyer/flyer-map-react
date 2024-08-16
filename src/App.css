@@ -1,3 +1,38 @@
+/*
+ * CSS to be used for the Flyer map
+ */
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 300;
+}
+.entry-header {
+  text-align: center;
+  padding: 20px;
+  background-color: #4d7685;
+  color: #fff;
+  font-style: italic
+}
+
+.entry-header h1.entry-title {
+  color: #fff;
+  text-transform: none;
+  font-weight: 400;
+  font-family: "Noto Sans",sans-serif;
+  font-size: 30px;
+  font-style: italic
+}
+
+.entry-header h1.entry-title:after {
+  display: block;
+  content: '';
+  margin: 10px auto;
+  max-width: 150px;
+  height: 10px;
+  background-size: contain;
+  background: url(https://www.westernflyer.org/wp-content/themes/whitespace/images/underline.png) no-repeat center;
+}
+
 #root {
   width: 80%;
   margin: 0 auto;
@@ -6,3 +41,4 @@
 
 .table-style {
 }
+
