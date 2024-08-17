@@ -1,10 +1,10 @@
 import { useState, useEffect, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./App.css";
-
 import mqtt from "mqtt";
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 import DataTable from "react-data-table-component";
+import PropTypes from "prop-types";
 
 import { getUpdateDicts, VesselState, FormattedState } from "./utilities.js";
 import { signalKUnits } from "./units.js";
@@ -43,6 +43,10 @@ function VesselTable(props) {
         />
     );
 }
+
+VesselTable.propTypes = {
+    formattedState: PropTypes.array,
+};
 
 function App() {
     // client is the MQTT connection.
@@ -83,8 +87,12 @@ function App() {
                 const updateDicts = getUpdateDicts(
                     JSON.parse(message.toString()),
                 );
-                setVesselState(v => new VesselState(v.mergeUpdates(updateDicts)));
-                setFormattedState(f => new FormattedState(f.mergeUpdates(updateDicts)));
+                setVesselState(
+                    (v) => new VesselState(v.mergeUpdates(updateDicts)),
+                );
+                setFormattedState(
+                    (f) => new FormattedState(f.mergeUpdates(updateDicts)),
+                );
             });
         }
     }, [client]);
