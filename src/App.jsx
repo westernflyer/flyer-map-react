@@ -52,7 +52,7 @@ function VesselTable(props) {
 }
 
 VesselTable.propTypes = {
-    formattedState: PropTypes.array,
+    formattedState: PropTypes.object,
 };
 
 function App() {
@@ -104,8 +104,15 @@ function App() {
         }
     }, [client]);
 
-    const lat = vesselState["navigation.position.latitude"]?.value || 36.8;
-    const lng = vesselState["navigation.position.longitude"]?.value || -121.9;
+    let latLng;
+    if (vesselState["navigation.position.latitude"] == null){
+        latLng = undefined;
+    } else {
+        latLng = {
+            lat: vesselState["navigation.position.latitude"].value,
+            lng: vesselState["navigation.position.longitude"].value
+        };
+    }
 
     return (
         <div style={{ height: "400px", width: "100%", padding: "50px" }}>
@@ -120,12 +127,12 @@ function App() {
                     <Map
                         defaultZoom={10}
                         defaultCenter={{ lat: 36.8, lng: -121.9 }}
-                        center={{ lat: lat, lng: lng }}
+                        center={latLng}
                         mapId="DEMO_MAP_ID"
                     >
                         <AdvancedMarker
                             key={"flyer"}
-                            position={{ lat: lat, lng: lng }}
+                            position={latLng}
                         />
                     </Map>
                 </APIProvider>
