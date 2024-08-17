@@ -22,6 +22,7 @@ export const signalKUnits = {
     last_update: "unix_epoch",
 };
 
+// Which unit group each path belongs to.
 const unitGroup = {
     "navigation.position.latitude": "group_latitude",
     "navigation.position.longitude": "group_longitude",
@@ -64,7 +65,7 @@ export const pathLabels = {
     last_update: "Last update",
 };
 
-// What unit to display
+// What unit to display for each unit group
 const unitSelection = {
     group_latitude: "dd mm.mm",
     group_longitude: "dd mm.mm",
@@ -76,6 +77,7 @@ const unitSelection = {
     group_time: "unix_epoch",
 };
 
+// Convert between units
 const conversionDict = {
     degree_K: {
         degree_C: (x) => x - 273.15,
@@ -93,6 +95,7 @@ const conversionDict = {
     },
 };
 
+// Take an update from the broker, and format it for presentation.
 export function formatUpdate(update) {
     let labeledVal;
 
@@ -120,27 +123,12 @@ export function formatUpdate(update) {
     };
 }
 
-function formatLatLon(value, unit_group, unit) {
-    let fval, hemisphere;
-    console.assert(unit === "dd.dd", "Expected decimal degrees.");
-
-    // The desired "unit" to be used. It's not really a unit, rather how
-    // latitude and longitude will be formated.
-    // Something like 'dd.dd' or 'dd mm.mm'
-    const selected_unit = unitSelection[unit_group];
-
-    if (selected_unit === "dd.dd") {
-        fval = value.toFixed(4) + "°";
-    } else if (selected_unit === "dd mm.mm") {
-        const degrees = Math.floor(Math.abs(value));
-        const minutes = (value - degrees) * 60.0;
-        fval = degrees.toFixed(0) + "° " + minutes.toFixed(1) + "'";
-    }
-    if (unit_group === "group_latitude") hemisphere = value >= 0 ? "N" : "S";
-    else hemisphere = value >= 0 ? "E" : "W";
-    return fval + hemisphere;
-}
-
+/**
+ * Convert a value to an approprate unit, then format it. Add a unit label.
+ * @param {float} value - The value to be formatted
+ * @param {string} unit_group - The unit group the value belongs to
+ * @param {string} unit - The unit the value is in.
+*/
 function formatValue(value, unit_group, unit) {
     let fval;
 
@@ -183,3 +171,26 @@ function formatValue(value, unit_group, unit) {
     // Attach the unit label and return
     return fval + unit_label;
 }
+
+// Format a latitude or longitude
+function formatLatLon(value, unit_group, unit) {
+    let fval, hemisphere;
+    console.assert(unit === "dd.dd", "Expected decimal degrees.");
+
+    // The desired "unit" to be used. It's not really a unit, rather how
+    // latitude and longitude will be formated.
+    // Something like 'dd.dd' or 'dd mm.mm'
+    const selected_unit = unitSelection[unit_group];
+
+    if (selected_unit === "dd.dd") {
+        fval = value.toFixed(4) + "°";
+    } else if (selected_unit === "dd mm.mm") {
+        const degrees = Math.floor(Math.abs(value));
+        const minutes = (value - degrees) * 60.0;
+        fval = degrees.toFixed(0) + "° " + minutes.toFixed(1) + "'";
+    }
+    if (unit_group === "group_latitude") hemisphere = value >= 0 ? "N" : "S";
+    else hemisphere = value >= 0 ? "E" : "W";
+    return fval + hemisphere;
+}
+

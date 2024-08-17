@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { formatUpdate, signalKUnits } from "./units";
 
 /*
@@ -32,6 +32,14 @@ import { formatUpdate, signalKUnits } from "./units";
  */
 
 class Update {
+    /**
+     * @constructor
+     * @param {string} key - An appropriate, unique key. This is usually
+     * the SignalK path
+     * @param {float} value - The updated value
+     * @param {float} unit - The unit the value is in
+     * @param {dayjs.Dayjs} last_update - The time the value was last updated.
+     */
     constructor(key, value, unit, last_update) {
         this.key = key;
         this.value = value;
@@ -40,11 +48,13 @@ class Update {
     }
 }
 
-// Extract data out of the parsed JSON object.
+// Extract data out of the parsed JSON SignalK object.
 export function getUpdateDicts(signalk_obj) {
     let updates = [];
     for (let update of signalk_obj.updates) {
         for (let value of update.values) {
+            // Special treatment for position: flatten it
+            // into latitude and longitude:
             if (value.path === "navigation.position") {
                 updates.push(
                     new Update(
@@ -77,6 +87,7 @@ export function getUpdateDicts(signalk_obj) {
     return updates;
 }
 
+// This will accumulate the updates.
 export class VesselState {
     constructor(oldState) {
         Object.assign(this, oldState);
@@ -90,6 +101,7 @@ export class VesselState {
     }
 }
 
+// This will format the updates, then accumulate them.
 export class FormattedState {
     constructor(oldState) {
         Object.assign(this, oldState);
