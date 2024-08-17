@@ -83,10 +83,8 @@ function App() {
                 const updateDicts = getUpdateDicts(
                     JSON.parse(message.toString()),
                 );
-                vesselState.mergeUpdates(updateDicts);
-                setVesselState(new VesselState(vesselState));
-                formattedState.mergeUpdates(updateDicts);
-                setFormattedState(new FormattedState(formattedState));
+                setVesselState(v => new VesselState(v.mergeUpdates(updateDicts)));
+                setFormattedState(f => new FormattedState(f.mergeUpdates(updateDicts)));
             });
         }
     }, [client]);

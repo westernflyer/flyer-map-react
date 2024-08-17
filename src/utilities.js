@@ -79,6 +79,7 @@ export class VesselState {
         for (let update of updates) {
             this[update.key] = update;
         }
+        return this;
     }
 }
 
@@ -91,5 +92,6 @@ export class FormattedState {
         for (let update of updates) {
             this[update.key] = formatUpdate(update);
         }
+        return this;
     }
 }
