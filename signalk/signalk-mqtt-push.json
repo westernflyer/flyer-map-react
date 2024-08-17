@@ -1,0 +1,45 @@
+{
+  "configuration": {
+    "remoteHost": "mqtt://localhost",
+    "rejectUnauthorized": false,
+    "paths": [
+      {
+        "path": "navigation.position",
+        "interval": 10
+      },
+      {
+        "path": "navigation.speedOverGround",
+        "interval": 10
+      },
+      {
+        "path": "navigation.courseOverGroundTrue\t",
+        "interval": 10
+      },
+      {
+        "path": "navigation.speedThroughWater",
+        "interval": 10
+      },
+      {
+        "path": "navigation.headingTrue",
+        "interval": 10
+      },
+      {
+        "path": "environment.depth.belowTransducer\t",
+        "interval": 10
+      },
+      {
+        "path": "environment.water.temperature",
+        "interval": 60
+      },
+      {
+        "path": "environment.wind.speedApparent",
+        "interval": 10
+      },
+      {
+        "path": "environment.wind.angleApparent",
+        "interval": 10
+      }
+    ]
+  },
+  "enabled": true
+}

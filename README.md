@@ -47,6 +47,13 @@ Then restart the SignalK server
 
 ### Configure the MQTT plugin
 
+Next, you need to configure the MQTT plugin. There are two choices:
+
+1. [Do it manually](#manually-configure-the-plugin)
+2. [Copy a config file into place](#copy-a-config-file-into-place)
+
+#### Manually configure the plugin
+
 Figure out which paths you want to watch. You can discover available data streams under the "Data Browser" tab. For
 example, `navigation.position` and `environment.depth.belowTransducer` would give location and depth (below transducer),
 respectively.
@@ -74,4 +81,21 @@ Double check that the topics are getting published:
 
     mosquitto_sub -h localhost -t '#'
 
-The `-t '#'` says that you want to listen to all topics. 
+The `-t '#'` says that you want to listen to all topics.
+
+#### Copy a config file into place
+
+Replace the file `~/.signalk/plugin-config-data/signalk-mqtt-push.json` with the copy found in this git repository.
+The double check it to see if it looks reasonable for your environment. In particular, you will probably want to
+change option `remoteHost`.
+
+Restart the SignalK server.
+
+Then double check that the topics are getting published:
+
+    mosquitto_sub -h localhost -t '#'
+
+The `-t '#'` says that you want to listen to all topics.
+
+
+
