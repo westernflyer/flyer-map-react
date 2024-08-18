@@ -127,10 +127,7 @@ function App() {
                 >
                     {(latLng && (
                         <Map
-                            // defaultZoom={10}
-                            // defaultCenter={{ lat: 36.8, lng: -121.9 }}
-                            // center={latLng}
-                            zoom={10}
+                            defaultZoom={10}
                             defaultCenter={latLng}
                             mapId="DEMO_MAP_ID"
                         >
