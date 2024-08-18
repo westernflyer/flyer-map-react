@@ -24,6 +24,10 @@
         "interval": 10
       },
       {
+        "path": "navigation.log",
+        "interval": 120
+      },
+      {
         "path": "environment.depth.belowTransducer",
         "interval": 10
       },
@@ -38,6 +42,18 @@
       {
         "path": "environment.wind.angleApparent",
         "interval": 10
+      },
+      {
+        "path": "environment.wind.speedOverGround",
+        "interval": 10
+      },
+      {
+        "path": "environment.wind.directionTrue",
+        "interval": 10
+      },
+      {
+        "path": "environment.outside.pressure",
+        "interval": 120
       }
     ]
   },

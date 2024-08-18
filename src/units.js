@@ -14,11 +14,15 @@ export const signalKUnits = {
     "navigation.courseOverGroundTrue": "radian",
     "navigation.speedThroughWater": "meter_per_second",
     "navigation.headingTrue": "radian",
+    "navigation.log": "meter",
     "environment.depth.belowTransducer": "meter",
     "environment.depth.belowKeel": "meter",
     "environment.wind.speedApparent": "meter_per_second",
     "environment.wind.angleApparent": "radian",
+    "environment.wind.speedOverGround": "meter_per_second",
+    "environment.wind.directionTrue": "radian",
     "environment.water.temperature": "degree_K",
+    "environment.outside.pressure": "pascal",
     last_update: "unix_epoch",
 };
 
@@ -30,11 +34,15 @@ const unitGroup = {
     "navigation.courseOverGroundTrue": "group_direction",
     "navigation.speedThroughWater": "group_speed",
     "navigation.headingTrue": "group_direction",
+    "navigation.log": "group_distance",
     "environment.depth.belowTransducer": "group_depth",
     "environment.depth.belowKeel": "group_depth",
     "environment.wind.speedApparent": "group_speed",
     "environment.wind.angleApparent": "group_direction",
+    "environment.wind.speedOverGround": "group_speed",
+    "environment.wind.directionTrue": "group_direction",
     "environment.water.temperature": "group_temperature",
+    "environment.outside.pressure": "group_pressure",
     last_update: "group_time",
 };
 
@@ -42,11 +50,15 @@ const unitGroup = {
 const unitLabels = {
     meter_per_second: " m/s",
     degree_true: "º",
+    kilometer: " km",
     meter: " m",
+    nautical_mile: " nm",
     degree_C: "°C",
     degree_F: "°F",
     degree_K: "ºK",
     knot: " kn",
+    pascal: " Pa",
+    millibar: " mbar",
 };
 
 // Which label to use for a given SignalK path
@@ -57,11 +69,15 @@ export const pathLabels = {
     "navigation.courseOverGroundTrue": "Course over ground",
     "navigation.speedThroughWater": "Speed through water",
     "navigation.headingTrue": "Heading",
+    "navigation.log": "Log",
     "environment.depth.belowTransducer": "Depth below transducer",
     "environment.depth.belowKeel": "Depth below keel",
     "environment.wind.speedApparent": "Wind speed (apparent)",
     "environment.wind.angleApparent": "Wind direction (apparent)",
+    "environment.wind.speedOverGround": "Wind speed (true)",
+    "environment.wind.directionTrue": "Wind direction (true)",
     "environment.water.temperature": "Water temperature",
+    "environment.outside.pressure": "Pressure",
     last_update: "Last update",
 };
 
@@ -75,6 +91,7 @@ const unitSelection = {
     group_speed: "knot",
     group_distance: "nautical_mile",
     group_time: "unix_epoch",
+    group_pressure: "millibar",
 };
 
 // Convert between units
@@ -84,6 +101,8 @@ const conversionDict = {
     },
     meter: {
         foot: (x) => 3.280839895 * x,
+        nautical_mile: (x) => 0.000539957 * x,
+        kilometer: (x) => x / 1000.0,
     },
     meter_per_second: {
         knot: (x) => 1.94384449 * x,
@@ -93,6 +112,9 @@ const conversionDict = {
     radian: {
         degree_true: (x) => 57.295779513 * x,
     },
+    pascal: {
+        millibar: (x) => x / 100.0,
+    }
 };
 
 // Take an update from the broker, and format it for presentation.
@@ -147,6 +169,12 @@ function formatValue(value, unit_group, unit) {
         case "degree_K":
             fval = convertedValue.toFixed(1);
             break;
+        case "millibar":
+            fval = convertedValue.toFixed(1);
+            break;
+        case "pascal":
+            fval = convertedValue.toFixed(0);
+            break;
         case "degree_true":
             fval = convertedValue.toFixed(0);
             break;
@@ -158,6 +186,7 @@ function formatValue(value, unit_group, unit) {
             fval = convertedValue.toFixed(0);
             break;
         case "nautical_mile":
+        case "kilometer":
             fval = convertedValue.toFixed(1);
             break;
         case "unix_epoch":
@@ -186,7 +215,7 @@ function formatLatLon(value, unit_group, unit) {
         fval = value.toFixed(4) + "°";
     } else if (selected_unit === "dd mm.mm") {
         const degrees = Math.floor(Math.abs(value));
-        const minutes = (value - degrees) * 60.0;
+        const minutes = (Math.abs(value) - degrees) * 60.0;
         fval = degrees.toFixed(0) + "° " + minutes.toFixed(1) + "'";
     }
     if (unit_group === "group_latitude") hemisphere = value >= 0 ? "N" : "S";
