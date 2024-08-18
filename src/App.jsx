@@ -107,7 +107,7 @@ function App() {
     }, [client]);
 
     // If we don't have a vessel position yet, and vesselState has a valid
-    // position, then save it.
+    // position, then save and use it.
     if (!latLng && vesselState["navigation.position.latitude"] != null) {
         setLatLng({
             lat: vesselState["navigation.position.latitude"].value,
@@ -125,7 +125,7 @@ function App() {
                     apiKey={`${google_key}`}
                     onLoad={() => console.log("Maps API has loaded.")}
                 >
-                    {latLng && (
+                    {(latLng && (
                         <Map
                             // defaultZoom={10}
                             // defaultCenter={{ lat: 36.8, lng: -121.9 }}
@@ -140,7 +140,11 @@ function App() {
                                 title={"Western Flyer"}
                             />
                         </Map>
-                    ) || <p className="fetching">Waiting for valid vessel position...</p>}
+                    )) || (
+                        <p className="fetching">
+                            Waiting for a valid vessel position...
+                        </p>
+                    )}
                 </APIProvider>
                 <div style={{ padding: "20px" }}>
                     <VesselTable formattedState={formattedState} />
