@@ -21,10 +21,6 @@ const brokerUrl = "ws://localhost:8080";
 
 const tableColumns = [
     {
-        name: "Path",
-        selector: (row) => row.key,
-    },
-    {
         name: "Property",
         selector: (row) => row.label,
     },
@@ -35,6 +31,10 @@ const tableColumns = [
     {
         name: "Last update",
         selector: (row) => row.last_update,
+    },
+    {
+        name: "SignalK path",
+        selector: (row) => row.key,
     },
 ];
 
