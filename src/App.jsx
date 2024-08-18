@@ -62,6 +62,8 @@ function App() {
     const [vesselState, setVesselState] = useState(new VesselState());
     // formattedState holds the current values. They are all formattedstrings.
     const [formattedState, setFormattedState] = useState(new FormattedState());
+    // latLng holds the current vessel position, or null if it has not been established yet.
+    const [latLng, setLatLng] = useState(null);
 
     // Because this app relies on an external connection to the MQTT broker,
     // internal state must be synchronized in a 'useEffect" function.
@@ -104,14 +106,13 @@ function App() {
         }
     }, [client]);
 
-    let latLng;
-    if (vesselState["navigation.position.latitude"] == null){
-        latLng = undefined;
-    } else {
-        latLng = {
+    // If we don't have a vessel position yet, and vesselState has a valid
+    // position, then save it.
+    if (!latLng && vesselState["navigation.position.latitude"] != null) {
+        setLatLng({
             lat: vesselState["navigation.position.latitude"].value,
-            lng: vesselState["navigation.position.longitude"].value
-        };
+            lng: vesselState["navigation.position.longitude"].value,
+        });
     }
 
     return (
@@ -124,17 +125,22 @@ function App() {
                     apiKey={`${google_key}`}
                     onLoad={() => console.log("Maps API has loaded.")}
                 >
-                    <Map
-                        defaultZoom={10}
-                        defaultCenter={{ lat: 36.8, lng: -121.9 }}
-                        center={latLng}
-                        mapId="DEMO_MAP_ID"
-                    >
-                        <AdvancedMarker
-                            key={"flyer"}
-                            position={latLng}
-                        />
-                    </Map>
+                    {latLng && (
+                        <Map
+                            // defaultZoom={10}
+                            // defaultCenter={{ lat: 36.8, lng: -121.9 }}
+                            // center={latLng}
+                            zoom={10}
+                            defaultCenter={latLng}
+                            mapId="DEMO_MAP_ID"
+                        >
+                            <AdvancedMarker
+                                key={"flyer"}
+                                position={latLng}
+                                title={"Western Flyer"}
+                            />
+                        </Map>
+                    ) || <p className="fetching">Waiting for valid vessel position...</p>}
                 </APIProvider>
                 <div style={{ padding: "20px" }}>
                     <VesselTable formattedState={formattedState} />

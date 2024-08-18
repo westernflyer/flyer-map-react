@@ -42,3 +42,14 @@ body {
 .table-style {
 }
 
+.fetching {
+  animation: blinker 1s linear infinite;
+  font-size: 30px;
+  font-style: italic;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
