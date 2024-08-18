@@ -12,7 +12,7 @@
         "interval": 10
       },
       {
-        "path": "navigation.courseOverGroundTrue\t",
+        "path": "navigation.courseOverGroundTrue",
         "interval": 10
       },
       {
@@ -24,7 +24,7 @@
         "interval": 10
       },
       {
-        "path": "environment.depth.belowTransducer\t",
+        "path": "environment.depth.belowTransducer",
         "interval": 10
       },
       {
