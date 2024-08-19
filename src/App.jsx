@@ -69,10 +69,10 @@ function App() {
     // internal state must be synchronized in a 'useEffect" function.
     useEffect(() => {
         // Connect to the broker.
-        const client = mqtt.connect(brokerUrl, {
-            clientId: "flyer-client-" + Math.floor(Math.random() * 10000),
-        });
+        const clientId = "flyer-client-" + Math.floor(Math.random() * 10000)
+        const client = mqtt.connect(brokerUrl, { clientId: clientId });
         setClient(client);
+        console.log("Connected to broker as client", clientId);
 
         // Subscribe to all the topics we know about
         Object.keys(signalKUnits).forEach((key) => {
