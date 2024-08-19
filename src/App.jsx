@@ -16,8 +16,7 @@ import PropTypes from "prop-types";
 import { getUpdateDicts, VesselState, FormattedState } from "./utilities.js";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
-
-const brokerUrl = "ws://localhost:8080";
+import { mqttOptions } from "./config.js";
 
 const tableColumns = [
     {
@@ -69,10 +68,13 @@ function App() {
     // internal state must be synchronized in a 'useEffect" function.
     useEffect(() => {
         // Connect to the broker.
-        const clientId = "flyer-client-" + Math.floor(Math.random() * 10000)
-        const client = mqtt.connect(brokerUrl, { clientId: clientId });
+        const client = mqtt.connect(mqttOptions.brokerUrl, {
+            clientId: mqttOptions.clientId,
+            username: mqttOptions.username,
+            password: mqttOptions.password,
+        });
         setClient(client);
-        console.log("Connected to broker as client", clientId);
+        console.log("Connected to broker as client", mqttOptions.clientId);
 
         // Subscribe to all the topics we know about
         Object.keys(signalKUnits).forEach((key) => {
