@@ -13,10 +13,15 @@ import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 import DataTable from "react-data-table-component";
 import PropTypes from "prop-types";
 
-import { getUpdateDicts, VesselState, FormattedState } from "./utilities.js";
+import {
+    getUpdateDicts,
+    VesselState,
+    FormattedState,
+    orderArray,
+} from "./utilities.js";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
-import { mqttOptions } from "./config.js";
+import { mqttOptions, tableOptions } from "./config.js";
 
 const tableColumns = [
     {
@@ -42,7 +47,7 @@ function VesselTable(props) {
     const { formattedState } = props;
     return (
         <DataTable
-            data={Object.values(formattedState)}
+            data={orderArray(tableOptions.order, formattedState)}
             columns={tableColumns}
             title={"Current values"}
             responsive
@@ -65,7 +70,7 @@ function App() {
     const [latLng, setLatLng] = useState(null);
 
     // Because this app relies on an external connection to the MQTT broker,
-    // internal state must be synchronized in a 'useEffect" function.
+    // internal state must be synchronized in a "useEffect" function.
     useEffect(() => {
         // Connect to the broker.
         const client = mqtt.connect(mqttOptions.brokerUrl, {
@@ -83,7 +88,7 @@ function App() {
             console.log("Subscribed to topic", topic);
         });
 
-        // Return a function that will get called when it's time to cleanup.
+        // Return a function that will get called when it's time to clean up.
         return () => {
             client.end();
             setClient(null);

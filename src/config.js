@@ -15,5 +15,26 @@ export const mqttOptions = {
     password: undefined,
 
     // Which SignalK ID to listen to. Use '+' for all IDs.
-    vesselId: '+',
+    vesselId: "+",
+};
+
+export const tableOptions = {
+    // What to present in the table, and in what order:
+    order: [
+        "navigation.position.latitude",
+        "navigation.position.longitude",
+        "navigation.speedOverGround",
+        "navigation.courseOverGroundTrue",
+        "navigation.speedThroughWater",
+        "navigation.headingTrue",
+        "navigation.log",
+        "environment.depth.belowTransducer",
+        "environment.depth.belowKeel",
+        "environment.wind.speedOverGround",
+        "environment.wind.directionTrue",
+        "environment.wind.speedApparent",
+        "environment.wind.angleApparent",
+        "environment.water.temperature",
+        "environment.outside.pressure",
+    ],
 };

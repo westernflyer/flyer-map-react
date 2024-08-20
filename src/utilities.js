@@ -114,3 +114,19 @@ export class FormattedState {
         return this;
     }
 }
+
+
+/**
+ * Extract attributes from an object in a given ordering
+ * @param {Array[String]} ordering - The ordering of the final results
+ * @param {object} obj - Object to be deconstructed into an array
+ * @returns {Array[obj]}
+ */
+export function orderArray(ordering, obj) {
+    return ordering.reduce((partial, x) => {
+        if (obj[x] != null) {
+            partial.push(obj[x]);
+        }
+        return partial;
+    }, []);
+}
