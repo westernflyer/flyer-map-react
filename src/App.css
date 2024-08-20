@@ -39,9 +39,9 @@ body {
   padding: 2rem;
 }
 
-.table-style {
+.fixed_style {
+  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace
 }
-
 .fetching {
   animation: blinker 1s linear infinite;
   font-size: 30px;
@@ -52,4 +52,9 @@ body {
   50% {
     opacity: 0;
   }
+}
+
+.rdt_TableHeadRow {
+  font-weight: bold;
+  font-size: 10pt;
 }
