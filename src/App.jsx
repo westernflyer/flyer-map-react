@@ -33,7 +33,7 @@ const tableColumns = [
     },
     {
         name: "SignalK path",
-        selector: (row) => row.key,
+        selector: (row) => <div className={"fixed_style"}>{row.key}</div>,
     },
 ];
 
