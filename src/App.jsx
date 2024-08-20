@@ -78,7 +78,7 @@ function App() {
 
         // Subscribe to all the topics we know about
         Object.keys(signalKUnits).forEach((key) => {
-            const topic = "signalk/+/" + key;
+            const topic = `signalk/${mqttOptions.vesselId}/${key}`;
             client.subscribe(topic);
             console.log("Subscribed to topic", topic);
         });

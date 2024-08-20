@@ -13,4 +13,7 @@ export const mqttOptions = {
     // The username and password as required by the broker, if any
     username: undefined,
     password: undefined,
+
+    // Which SignalK ID to listen to. Use '+' for all IDs.
+    vesselId: '+',
 };
