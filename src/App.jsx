@@ -49,7 +49,7 @@ function VesselTable(props) {
         <DataTable
             data={orderArray(tableOptions.order, formattedState)}
             columns={tableColumns}
-            title={"Current values"}
+            title={<h2> Current values</h2>}
             responsive
         />
     );
