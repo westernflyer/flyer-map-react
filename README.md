@@ -168,4 +168,4 @@ used:
 2. Create a file `src/google-api-key.js` and put the key in there. When you're done,
 it will look something like:
 
-        export const google_key = "AIzaSy9owi48bcf0W2BrChHFjFc9w5SFTjziybE";
+        export const google_key = "yourlonginscrutablegoogleapikey";
