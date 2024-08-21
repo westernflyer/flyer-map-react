@@ -15,12 +15,13 @@ export const signalKUnits = {
     "navigation.speedThroughWater": "meter_per_second",
     "navigation.headingTrue": "radian",
     "navigation.log": "meter",
+    "environment.depth.belowSurface": "meter",
     "environment.depth.belowTransducer": "meter",
     "environment.depth.belowKeel": "meter",
-    "environment.wind.speedApparent": "meter_per_second",
-    "environment.wind.angleApparent": "radian",
     "environment.wind.speedOverGround": "meter_per_second",
     "environment.wind.directionTrue": "radian",
+    "environment.wind.speedApparent": "meter_per_second",
+    "environment.wind.angleApparent": "radian",
     "environment.water.temperature": "degree_K",
     "environment.outside.pressure": "pascal",
     last_update: "unix_epoch",
@@ -35,12 +36,13 @@ const unitGroup = {
     "navigation.speedThroughWater": "group_speed",
     "navigation.headingTrue": "group_direction",
     "navigation.log": "group_distance",
+    "environment.depth.belowSurface": "group_depth",
     "environment.depth.belowTransducer": "group_depth",
     "environment.depth.belowKeel": "group_depth",
-    "environment.wind.speedApparent": "group_speed",
-    "environment.wind.angleApparent": "group_direction",
     "environment.wind.speedOverGround": "group_speed",
     "environment.wind.directionTrue": "group_direction",
+    "environment.wind.speedApparent": "group_speed",
+    "environment.wind.angleApparent": "group_direction",
     "environment.water.temperature": "group_temperature",
     "environment.outside.pressure": "group_pressure",
     last_update: "group_time",
@@ -70,12 +72,13 @@ export const pathLabels = {
     "navigation.speedThroughWater": "Speed through water",
     "navigation.headingTrue": "Heading",
     "navigation.log": "Log",
+    "environment.depth.belowSurface": "Water depth",
     "environment.depth.belowTransducer": "Depth below transducer",
     "environment.depth.belowKeel": "Depth below keel",
-    "environment.wind.speedApparent": "Wind speed (apparent)",
-    "environment.wind.angleApparent": "Wind direction (apparent)",
     "environment.wind.speedOverGround": "Wind speed (true)",
     "environment.wind.directionTrue": "Wind direction (true)",
+    "environment.wind.speedApparent": "Wind speed (apparent)",
+    "environment.wind.angleApparent": "Wind direction (apparent)",
     "environment.water.temperature": "Water temperature",
     "environment.outside.pressure": "Pressure",
     last_update: "Last update",
@@ -114,7 +117,7 @@ const conversionDict = {
     },
     pascal: {
         millibar: (x) => x / 100.0,
-    }
+    },
 };
 
 // Take an update from the broker, and format it for presentation.
@@ -150,7 +153,7 @@ export function formatUpdate(update) {
  * @param {float} value - The value to be formatted
  * @param {string} unit_group - The unit group the value belongs to
  * @param {string} unit - The unit the value is in.
-*/
+ */
 function formatValue(value, unit_group, unit) {
     let fval;
 
@@ -183,7 +186,7 @@ function formatValue(value, unit_group, unit) {
             fval = convertedValue.toFixed(1);
             break;
         case "meter":
-            fval = convertedValue.toFixed(0);
+            fval = convertedValue.toFixed(1);
             break;
         case "nautical_mile":
         case "kilometer":
@@ -222,4 +225,3 @@ function formatLatLon(value, unit_group, unit) {
     else hemisphere = value >= 0 ? "E" : "W";
     return fval + hemisphere;
 }
-

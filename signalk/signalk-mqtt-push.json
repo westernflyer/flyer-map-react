@@ -28,12 +28,20 @@
         "interval": 120
       },
       {
+        "path": "environment.depth.belowSurface",
+        "interval": 10
+      },
+      {
         "path": "environment.depth.belowTransducer",
         "interval": 10
       },
       {
+        "path": "environment.depth.belowKeel",
+        "interval": 10
+      },
+      {
         "path": "environment.water.temperature",
-        "interval": 60
+        "interval": 120
       },
       {
         "path": "environment.wind.speedApparent",
