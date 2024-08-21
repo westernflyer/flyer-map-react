@@ -18,6 +18,7 @@ import {
     getUpdateDicts,
     orderArray,
 } from "./utilities.js";
+import { About } from "./About";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
 import { mqttOptions, tableOptions } from "../flyer.config.js";
@@ -99,7 +100,7 @@ function App() {
     // and the internal state.
     useEffect(() => {
         if (client) {
-            client.on("message", function (topic, message) {
+            client.on("message", function(topic, message) {
                 const updateDicts = getUpdateDicts(
                     JSON.parse(message.toString()),
                 );
@@ -152,6 +153,9 @@ function App() {
                 </APIProvider>
                 <div style={{ padding: "20px" }}>
                     <VesselTable formattedState={formattedState} />
+                    <div style={{ "paddingLeft": "16px"}}>
+                        <About />
+                    </div>
                 </div>
             </StrictMode>
         </div>

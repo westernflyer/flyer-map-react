@@ -4,7 +4,9 @@
 
 body {
     font-family: 'Noto Sans', sans-serif;
+    font-size: 18px;
     font-weight: 300;
+    font-style: normal;
 }
 
 h1, h2 {
@@ -41,6 +43,10 @@ h1, h2 {
     background: url(https://www.westernflyer.org/wp-content/themes/whitespace/images/underline.png) no-repeat center;
 }
 
+p {
+    line-height: 1.4;
+}
+
 #root {
     width: 80%;
     margin: 0 auto;
@@ -48,7 +54,7 @@ h1, h2 {
 }
 
 .tty {
-    font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace
+    font-family: "Noto Sans Mono", ui-monospace, Consolas, monospace
 }
 
 .fetching {
