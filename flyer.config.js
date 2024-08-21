@@ -4,8 +4,9 @@
 
 export const mqttOptions = {
     // The URL for the MQTT broker
-    // brokerUrl : "ws://localhost:8080",
-    brokerUrl : "ws://acme.com:8080",
+    //   brokerUrl : "ws://localhost:8080",
+    // or for secure websockets:
+    //   brokerUrl : "wss://mydomain.com:9001
 
     // The client ID to be used for the MQTT connection
     clientId: "flyer-client-" + Math.floor(Math.random() * 10000),

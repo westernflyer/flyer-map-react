@@ -20,7 +20,7 @@ import {
 } from "./utilities.js";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
-import { mqttOptions, tableOptions } from "./config.js";
+import { mqttOptions, tableOptions } from "../flyer.config.js";
 import "./App.css";
 
 const tableColumns = [
