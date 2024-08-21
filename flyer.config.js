@@ -7,6 +7,7 @@ export const mqttOptions = {
     //   brokerUrl : "ws://localhost:8080",
     // or for secure websockets:
     //   brokerUrl : "wss://mydomain.com:9001
+    brokerUrl: "wss://threefools.org:9001",
 
     // The client ID to be used for the MQTT connection
     clientId: "flyer-client-" + Math.floor(Math.random() * 10000),
@@ -15,7 +16,8 @@ export const mqttOptions = {
     username: undefined,
     password: undefined,
 
-    // Which SignalK ID to listen to. Use '+' for all IDs.
+    // Which SignalK ID to listen to. This is usually set to the vessel's MMSI
+    // number. Use '+' to listen to all IDs.
     vesselId: "+",
 };
 
