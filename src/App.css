@@ -3,58 +3,61 @@
  */
 
 body {
-  font-family: 'Noto Sans', sans-serif;
-  font-weight: 300;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: 300;
 }
+
 .entry-header {
-  text-align: center;
-  padding: 20px;
-  background-color: #4d7685;
-  color: #fff;
-  font-style: italic
+    text-align: center;
+    padding: 20px;
+    background-color: #4d7685;
+    color: #fff;
+    font-style: italic
 }
 
 .entry-header h1.entry-title {
-  color: #fff;
-  text-transform: none;
-  font-weight: 400;
-  font-family: "Noto Sans",sans-serif;
-  font-size: 30px;
-  font-style: italic
+    color: #fff;
+    text-transform: none;
+    font-weight: 400;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 30px;
+    font-style: italic
 }
 
 .entry-header h1.entry-title:after {
-  display: block;
-  content: '';
-  margin: 10px auto;
-  max-width: 150px;
-  height: 10px;
-  background-size: contain;
-  background: url(https://www.westernflyer.org/wp-content/themes/whitespace/images/underline.png) no-repeat center;
+    display: block;
+    content: '';
+    margin: 10px auto;
+    max-width: 150px;
+    height: 10px;
+    background-size: contain;
+    background: url(https://www.westernflyer.org/wp-content/themes/whitespace/images/underline.png) no-repeat center;
 }
 
 #root {
-  width: 80%;
-  margin: 0 auto;
-  padding: 2rem;
+    width: 80%;
+    margin: 0 auto;
+    padding: 2rem;
 }
 
-.fixed_style {
-  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace
+.tty {
+    font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono", Menlo, Monaco, Consolas, monospace
 }
+
 .fetching {
-  animation: blinker 1s linear infinite;
-  font-size: 30px;
-  font-style: italic;
+    animation: blinker 1s linear infinite;
+    font-size: 30px;
+    font-style: italic;
 }
 
 @keyframes blinker {
-  50% {
-    opacity: 0;
-  }
+    50% {
+        opacity: 0;
+    }
 }
 
+/* Styling used by react-data-table for its  first row: */
 .rdt_TableHeadRow {
-  font-weight: bold;
-  font-size: 10pt;
+    font-weight: bold;
+    font-size: 10pt;
 }

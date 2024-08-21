@@ -97,5 +97,14 @@ Then double check that the topics are getting published:
 
 The `-t '#'` says that you want to listen to all topics.
 
+## Google maps
 
+The system uses Google Maps, which requires an API key. After obtaining one from the
+[credentials](https://console.cloud.google.com/google/maps-apis/credentials) page, restrict the access to your key to
+the website you need. Here's what I used:
 
+<img src="./images/website_restrictions.png" alt="Be sure to specify the trailing slash!">
+
+Be sure to specify the trailing slash after `flyer-map`!
+
+You can also restrict which APIs to use. You only need "Maps JavaScript API".

@@ -124,6 +124,7 @@ export class FormattedState {
  */
 export function orderArray(ordering, obj) {
     return ordering.reduce((partial, x) => {
+        // Only include non-null objects
         if (obj[x] != null) {
             partial.push(obj[x]);
         }

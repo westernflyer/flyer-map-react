@@ -7,21 +7,21 @@
 
 import { useState, useEffect, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./App.css";
-import mqtt from "mqtt";
-import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
-import DataTable from "react-data-table-component";
 import PropTypes from "prop-types";
+import DataTable from "react-data-table-component";
+import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
+import mqtt from "mqtt";
 
 import {
-    getUpdateDicts,
     VesselState,
     FormattedState,
+    getUpdateDicts,
     orderArray,
 } from "./utilities.js";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
 import { mqttOptions, tableOptions } from "./config.js";
+import "./App.css";
 
 const tableColumns = [
     {
@@ -38,7 +38,7 @@ const tableColumns = [
     },
     {
         name: "SignalK path",
-        selector: (row) => <div className={"fixed_style"}>{row.key}</div>,
+        selector: (row) => <div className={"tty"}>{row.key}</div>,
     },
 ];
 
