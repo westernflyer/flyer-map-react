@@ -39,7 +39,7 @@ const tableColumns = [
     },
     {
         name: "SignalK path",
-        selector: (row) => <div className={"tty"}>{row.key}</div>,
+        selector: (row) => <span className={"tty"}>{row.key}</span>,
     },
 ];
 
