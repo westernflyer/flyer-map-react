@@ -2,6 +2,7 @@
 
 Post a notice if the MQTT broker disconnects.
 
+Create a "run deploy" target.
 
 ## Table related issues
 

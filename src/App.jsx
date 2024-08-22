@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
+import Fader from 'react-fader'
 import PropTypes from "prop-types";
 import DataTable from "react-data-table-component";
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
@@ -30,11 +31,11 @@ const tableColumns = [
     },
     {
         name: "Value",
-        selector: (row) => row.value,
+        selector: (row) => <Fader>{row.value}</Fader>,
     },
     {
         name: "Last update",
-        selector: (row) => row.last_update,
+        selector: (row) => <Fader>{row.last_update}</Fader>,
     },
     {
         name: "SignalK path",
