@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect } from "react";
-import Fader from 'react-fader'
+import Fader from "react-fader";
 import PropTypes from "prop-types";
 import DataTable from "react-data-table-component";
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
@@ -100,7 +100,7 @@ function App() {
     // and the internal state.
     useEffect(() => {
         if (client) {
-            client.on("message", function(topic, message) {
+            client.on("message", function (topic, message) {
                 const updateDicts = getUpdateDicts(
                     JSON.parse(message.toString()),
                 );
@@ -126,7 +126,7 @@ function App() {
     return (
         <div style={{ height: "400px", width: "100%", padding: "50px" }}>
             <header className="entry-header">
-                <h1 className="entry-title">Where is Flyer?</h1>
+                <h1 className="entry-title">Where's the Flyer?</h1>
             </header>
             <APIProvider
                 apiKey={`${google_key}`}
@@ -152,7 +152,7 @@ function App() {
             </APIProvider>
             <div style={{ padding: "20px" }}>
                 <VesselTable formattedState={formattedState} />
-                <div style={{ "paddingLeft": "16px" }}>
+                <div style={{ paddingLeft: "16px" }}>
                     <About />
                 </div>
             </div>
