@@ -5,8 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useState, useEffect, StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import DataTable from "react-data-table-component";
 import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
@@ -128,41 +127,36 @@ function App() {
             <header className="entry-header">
                 <h1 className="entry-title">Where is Flyer?</h1>
             </header>
-            <StrictMode>
-                <APIProvider
-                    apiKey={`${google_key}`}
-                    onLoad={() => console.log("Maps API has loaded.")}
-                >
-                    {(latLng && (
-                        <Map
-                            defaultZoom={10}
-                            defaultCenter={latLng}
-                            mapId="DEMO_MAP_ID"
-                        >
-                            <AdvancedMarker
-                                key={"flyer"}
-                                position={latLng}
-                                title={"Western Flyer"}
-                            />
-                        </Map>
-                    )) || (
-                        <p className="fetching">
-                            Waiting for a valid vessel position...
-                        </p>
-                    )}
-                </APIProvider>
-                <div style={{ padding: "20px" }}>
-                    <VesselTable formattedState={formattedState} />
-                    <div style={{ "paddingLeft": "16px"}}>
-                        <About />
-                    </div>
+            <APIProvider
+                apiKey={`${google_key}`}
+                onLoad={() => console.log("Maps API has loaded.")}
+            >
+                {(latLng && (
+                    <Map
+                        defaultZoom={10}
+                        defaultCenter={latLng}
+                        mapId="DEMO_MAP_ID"
+                    >
+                        <AdvancedMarker
+                            key={"flyer"}
+                            position={latLng}
+                            title={"Western Flyer"}
+                        />
+                    </Map>
+                )) || (
+                    <p className="fetching">
+                        Waiting for a valid vessel position...
+                    </p>
+                )}
+            </APIProvider>
+            <div style={{ padding: "20px" }}>
+                <VesselTable formattedState={formattedState} />
+                <div style={{ "paddingLeft": "16px" }}>
+                    <About />
                 </div>
-            </StrictMode>
+            </div>
         </div>
     );
 }
-
-const root = createRoot(document.getElementById("root"));
-root.render(<App />);
 
 export default App;
