@@ -6,6 +6,7 @@
  */
 
 import "./App.css";
+
 export const About = () => {
     return (
         <div className="about">
@@ -19,13 +20,15 @@ export const About = () => {
                 >
                     YDEN-02 ethernet gateway
                 </a>
-                , then to a <a href={"https://signalk.org/"}>SignalK server</a>.
-                From there, updates are published to an{" "}
-                <a href={"https://mqtt.org/"}>MQTT broker</a>. The client
-                browser receives the updates via a websocket connection.
+                , then to a <a href={"https://signalk.org/"}>SignalK server</a>{" "}
+                running on a low-powered Linux server. From there, updates are
+                published to an <a href={"https://mqtt.org/"}>MQTT broker</a>.
+                The client browser receives the updates from the broker via a
+                websocket connection.
             </p>
             <p>
-                The Google Maps and "Current Values" table are updated using <a href={"https://react.dev/"}>React</a>.
+                The Google Maps and "Current Values" table are updated using{" "}
+                <a href={"https://react.dev/"}>React</a>.
             </p>
             <p>
                 The source code can be found in the{" "}
