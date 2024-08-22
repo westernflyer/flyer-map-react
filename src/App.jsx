@@ -57,7 +57,28 @@ function VesselTable(props) {
 }
 
 VesselTable.propTypes = {
-    formattedState: PropTypes.object,
+    formattedState: PropTypes.objectOf(PropTypes.object),
+};
+
+// React function component to show a marker for the boat position and heading
+function BoatMarker(props) {
+    const { latLng, heading } = props;
+    return (
+        <AdvancedMarker key={"flyer"} position={latLng} title={"Western Flyer"}>
+            <div
+                style={{
+                    transform: "translate(9px,22px) rotate(" + heading + "rad)",
+                }}
+            >
+                <img src="/flyer-map/red_boat.svg" alt="Boat position" />
+            </div>
+        </AdvancedMarker>
+    );
+}
+
+BoatMarker.propTypes = {
+    latLng: PropTypes.objectOf(PropTypes.number),
+    heading: PropTypes.number,
 };
 
 function App() {
@@ -138,10 +159,11 @@ function App() {
                         defaultCenter={latLng}
                         mapId="DEMO_MAP_ID"
                     >
-                        <AdvancedMarker
-                            key={"flyer"}
-                            position={latLng}
-                            title={"Western Flyer"}
+                        <BoatMarker
+                            latLng={latLng}
+                            heading={
+                                vesselState["navigation.headingTrue"]?.value
+                            }
                         />
                     </Map>
                 )) || (
