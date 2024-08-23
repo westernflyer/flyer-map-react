@@ -8,35 +8,34 @@
 import "./App.css";
 
 export const About = () => {
-    return (
-        <div className="about">
-            <h2>About</h2>
-            <p>
-                Data originates on an NMEA 2000 network, flows through a{" "}
-                <a
-                    href={
-                        "https://yachtdevicesus.com/products/nmea-2000-ethernet-gateway-yden-02"
-                    }
-                >
-                    YDEN-02 ethernet gateway
-                </a>
-                , then to a <a href={"https://signalk.org/"}>SignalK server</a>{" "}
-                running on a low-powered Linux server. From there, updates are
-                published to an <a href={"https://mqtt.org/"}>MQTT broker</a>.
-                The client browser receives the updates from the broker via a
-                websocket connection.
-            </p>
-            <p>
-                The Google Maps and "Current Values" table are updated using{" "}
-                <a href={"https://react.dev/"}>React</a>.
-            </p>
-            <p>
-                The source code can be found in the{" "}
-                <a href={"https://github.com/tkeffer/flyer-map-react"}>
-                    <span className={"tty"}>flyer-map-react</span>
-                </a>{" "}
-                repository.
-            </p>
-        </div>
-    );
+  return (
+    <div className="about">
+      <h2>About</h2>
+      <p>
+        Data originates on an NMEA 2000 network, flows through a{" "}
+        <a
+          href={
+            "https://yachtdevicesus.com/products/nmea-2000-ethernet-gateway-yden-02"
+          }
+        >
+          YDEN-02 ethernet gateway
+        </a>
+        , then to a <a href={"https://signalk.org/"}>SignalK server</a> running
+        on a low-powered Linux server. From there, updates are published to an{" "}
+        <a href={"https://mqtt.org/"}>MQTT broker</a>. The client browser
+        receives the updates from the broker via a websocket connection.
+      </p>
+      <p>
+        The Google Maps and "Current Values" table are updated using{" "}
+        <a href={"https://react.dev/"}>React</a>.
+      </p>
+      <p>
+        The source code can be found in the{" "}
+        <a href={"https://github.com/tkeffer/flyer-map-react"}>
+          <span className={"tty"}>flyer-map-react</span>
+        </a>{" "}
+        repository.
+      </p>
+    </div>
+  );
 };

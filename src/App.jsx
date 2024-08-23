@@ -13,10 +13,10 @@ import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
 import {
-    VesselState,
-    FormattedState,
-    getUpdateDicts,
-    orderArray,
+  VesselState,
+  FormattedState,
+  getUpdateDicts,
+  orderArray,
 } from "./utilities.js";
 import { About } from "./About";
 import { signalKUnits } from "./units.js";
@@ -25,161 +25,149 @@ import { mqttOptions, tableOptions } from "../flyer.config.js";
 import "./App.css";
 
 const tableColumns = [
-    {
-        name: "Property",
-        selector: (row) => row.label,
-    },
-    {
-        name: "Value",
-        selector: (row) => <Fader>{row.value}</Fader>,
-    },
-    {
-        name: "Last update",
-        selector: (row) => <Fader>{row.last_update}</Fader>,
-    },
-    {
-        name: "SignalK path",
-        selector: (row) => <span className={"tty"}>{row.key}</span>,
-    },
+  {
+    name: "Property",
+    selector: (row) => row.label,
+  },
+  {
+    name: "Value",
+    selector: (row) => <Fader>{row.value}</Fader>,
+  },
+  {
+    name: "Last update",
+    selector: (row) => <Fader>{row.last_update}</Fader>,
+  },
+  {
+    name: "SignalK path",
+    selector: (row) => <span className={"tty"}>{row.key}</span>,
+  },
 ];
 
 // React function component to show a table of current values.
 function VesselTable(props) {
-    const { formattedState } = props;
-    return (
-        <DataTable
-            data={orderArray(tableOptions.order, formattedState)}
-            columns={tableColumns}
-            title={<h2> Current values</h2>}
-            responsive
-        />
-    );
+  const { formattedState } = props;
+  return (
+    <DataTable
+      data={orderArray(tableOptions.order, formattedState)}
+      columns={tableColumns}
+      title={<h2> Current values</h2>}
+      responsive
+    />
+  );
 }
 
 VesselTable.propTypes = {
-    formattedState: PropTypes.objectOf(PropTypes.object),
+  formattedState: PropTypes.objectOf(PropTypes.object),
 };
 
 // React function component to show a marker for the boat position and heading
 function BoatMarker(props) {
-    const { latLng, heading } = props;
-    return (
-        <AdvancedMarker key={"flyer"} position={latLng} title={"Western Flyer"}>
-            <div
-                style={{
-                    transform: "translate(9px,22px) rotate(" + heading + "rad)",
-                }}
-            >
-                <img src="/flyer-map/red_boat.svg" alt="Boat position" />
-            </div>
-        </AdvancedMarker>
-    );
+  const { latLng, heading } = props;
+  return (
+    <AdvancedMarker key={"flyer"} position={latLng} title={"Western Flyer"}>
+      <div
+        style={{
+          transform: "translate(9px,22px) rotate(" + heading + "rad)",
+        }}
+      >
+        <img src="/flyer-map/red_boat.svg" alt="Boat position" />
+      </div>
+    </AdvancedMarker>
+  );
 }
 
 BoatMarker.propTypes = {
-    latLng: PropTypes.objectOf(PropTypes.number),
-    heading: PropTypes.number,
+  latLng: PropTypes.objectOf(PropTypes.number),
+  heading: PropTypes.number,
 };
 
 function App() {
-    // client is the MQTT connection.
-    const [client, setClient] = useState(null);
-    // vesselState holds the current values. They are unformatted.
-    const [vesselState, setVesselState] = useState(new VesselState());
-    // formattedState holds the current values. They are all formattedstrings.
-    const [formattedState, setFormattedState] = useState(new FormattedState());
-    // latLng holds the current vessel position, or null if it has not been established yet.
-    const [latLng, setLatLng] = useState(null);
+  // client is the MQTT connection.
+  const [client, setClient] = useState(null);
+  // vesselState holds the current values. They are unformatted.
+  const [vesselState, setVesselState] = useState(new VesselState());
+  // formattedState holds the current values. They are all formattedstrings.
+  const [formattedState, setFormattedState] = useState(new FormattedState());
+  // latLng holds the current vessel position, or null if it has not been established yet.
+  const [latLng, setLatLng] = useState(null);
 
-    // Because this app relies on an external connection to the MQTT broker,
-    // internal state must be synchronized in a "useEffect" function.
-    useEffect(() => {
-        // Connect to the broker.
-        const client = mqtt.connect(mqttOptions.brokerUrl, {
-            clientId: mqttOptions.clientId,
-            username: mqttOptions.username,
-            password: mqttOptions.password,
-        });
-        setClient(client);
-        console.log("Connected to broker as client", mqttOptions.clientId);
+  // Because this app relies on an external connection to the MQTT broker,
+  // internal state must be synchronized in a "useEffect" function.
+  useEffect(() => {
+    // Connect to the broker.
+    const client = mqtt.connect(mqttOptions.brokerUrl, {
+      clientId: mqttOptions.clientId,
+      username: mqttOptions.username,
+      password: mqttOptions.password,
+    });
+    setClient(client);
+    console.log("Connected to broker as client", mqttOptions.clientId);
 
-        // Subscribe to all the topics we know about
-        Object.keys(signalKUnits).forEach((key) => {
-            const topic = `signalk/${mqttOptions.vesselId}/${key}`;
-            client.subscribe(topic);
-            console.log("Subscribed to topic", topic);
-        });
+    // Subscribe to all the topics we know about
+    Object.keys(signalKUnits).forEach((key) => {
+      const topic = `signalk/${mqttOptions.vesselId}/${key}`;
+      client.subscribe(topic);
+      console.log("Subscribed to topic", topic);
+    });
 
-        // Return a function that will get called when it's time to clean up.
-        return () => {
-            client.end();
-            setClient(null);
-        };
-    }, []);
+    // Return a function that will get called when it's time to clean up.
+    return () => {
+      client.end();
+      setClient(null);
+    };
+  }, []);
 
-    // This useEffect() is used to synchronize between an arrival of a message
-    // and the internal state.
-    useEffect(() => {
-        if (client) {
-            client.on("message", function (topic, message) {
-                const updateDicts = getUpdateDicts(
-                    JSON.parse(message.toString()),
-                );
-                setVesselState(
-                    (v) => new VesselState(v.mergeUpdates(updateDicts)),
-                );
-                setFormattedState(
-                    (f) => new FormattedState(f.mergeUpdates(updateDicts)),
-                );
-            });
-        }
-    }, [client]);
-
-    // If we don't have a vessel position yet, and vesselState has a valid
-    // position, then save and use it.
-    if (!latLng && vesselState["navigation.position.latitude"] != null) {
-        setLatLng({
-            lat: vesselState["navigation.position.latitude"].value,
-            lng: vesselState["navigation.position.longitude"].value,
-        });
+  // This useEffect() is used to synchronize between an arrival of a message
+  // and the internal state.
+  useEffect(() => {
+    if (client) {
+      client.on("message", function (topic, message) {
+        const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
+        setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
+        setFormattedState(
+          (f) => new FormattedState(f.mergeUpdates(updateDicts)),
+        );
+      });
     }
+  }, [client]);
 
-    return (
-        <div style={{ height: "400px", width: "100%", padding: "50px" }}>
-            <header className="entry-header">
-                <h1 className="entry-title">Where's the Flyer?</h1>
-            </header>
-            <APIProvider
-                apiKey={`${google_key}`}
-                onLoad={() => console.log("Maps API has loaded.")}
-            >
-                {(latLng && (
-                    <Map
-                        defaultZoom={10}
-                        defaultCenter={latLng}
-                        mapId="DEMO_MAP_ID"
-                    >
-                        <BoatMarker
-                            latLng={latLng}
-                            heading={
-                                vesselState["navigation.headingTrue"]?.value
-                            }
-                        />
-                    </Map>
-                )) || (
-                    <p className="fetching">
-                        Waiting for a valid vessel position...
-                    </p>
-                )}
-            </APIProvider>
-            <div style={{ padding: "20px" }}>
-                <VesselTable formattedState={formattedState} />
-                <div style={{ paddingLeft: "16px" }}>
-                    <About />
-                </div>
-            </div>
+  // If we don't have a vessel position yet, and vesselState has a valid
+  // position, then save and use it.
+  if (!latLng && vesselState["navigation.position.latitude"] != null) {
+    setLatLng({
+      lat: vesselState["navigation.position.latitude"].value,
+      lng: vesselState["navigation.position.longitude"].value,
+    });
+  }
+
+  return (
+    <div style={{ height: "400px", width: "100%", padding: "50px" }}>
+      <header className="entry-header">
+        <h1 className="entry-title">Where's the Flyer?</h1>
+      </header>
+      <APIProvider
+        apiKey={`${google_key}`}
+        onLoad={() => console.log("Maps API has loaded.")}
+      >
+        {(latLng && (
+          <Map defaultZoom={10} defaultCenter={latLng} mapId="DEMO_MAP_ID">
+            <BoatMarker
+              latLng={latLng}
+              heading={vesselState["navigation.headingTrue"]?.value}
+            />
+          </Map>
+        )) || (
+          <p className="fetching">Waiting for a valid vessel position...</p>
+        )}
+      </APIProvider>
+      <div style={{ padding: "20px" }}>
+        <VesselTable formattedState={formattedState} />
+        <div style={{ paddingLeft: "16px" }}>
+          <About />
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default App;
