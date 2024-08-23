@@ -1,13 +1,14 @@
 {
   "name": "flyer-map-react",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "rsync -r dist/ tkeffer@threefools.org://var/www/html/flyer-map/"
   },
   "dependencies": {
     "@vis.gl/react-google-maps": "^1.1.0",
