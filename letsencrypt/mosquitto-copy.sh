@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# 08/22/2024
+# Adapted from https://github.com/eclipse/mosquitto/blob/master/misc/letsencrypt/mosquitto-copy.sh
+
 # This is an example deploy renewal hook for certbot that copies newly updated
 # certificates to the Mosquitto certificates directory and sets the ownership
 # and permissions so only the mosquitto user can access them, then signals

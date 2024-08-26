@@ -112,7 +112,7 @@ function App() {
 
     // Return a function that will get called when it's time to clean up.
     return () => {
-      client.end();
+      client.end(err => err && console.log("Error closing MQTT connection:", err));
       setClient(null);
     };
   }, []);
@@ -128,6 +128,7 @@ function App() {
           (f) => new FormattedState(f.mergeUpdates(updateDicts)),
         );
       });
+      client.on("error", (err) => console.error(err));
     }
   }, [client]);
 
