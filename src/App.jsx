@@ -101,7 +101,12 @@ function App() {
       password: mqttOptions.password,
     });
     setClient(client);
-    console.log("Connected to broker as client", mqttOptions.clientId);
+    console.log(
+      "Connected to broker",
+      mqttOptions.brokerUrl,
+      "as client",
+      mqttOptions.clientId,
+    );
 
     // Subscribe to all the topics we know about
     Object.keys(signalKUnits).forEach((key) => {
@@ -112,8 +117,12 @@ function App() {
 
     // Return a function that will get called when it's time to clean up.
     return () => {
-      client.end(err => err && console.log("Error closing MQTT connection:", err));
-      setClient(null);
+      if (client) {
+        client.end(
+          (err) => err && console.log("Error closing MQTT connection:", err),
+        );
+        setClient(null);
+      }
     };
   }, []);
 
@@ -161,6 +170,7 @@ function App() {
           <p className="fetching">Waiting for a valid vessel position...</p>
         )}
       </APIProvider>
+      <p>No, the Flyer is not in the Gulf of Finland! This is a simulation.</p>
       <div style={{ padding: "20px" }}>
         <VesselTable formattedState={formattedState} />
         <div style={{ paddingLeft: "16px" }}>
