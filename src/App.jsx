@@ -150,6 +150,11 @@ function App() {
     });
   }
 
+  // Use boat heading, but if it's not available, substitute COG
+  let boatDir = vesselState["navigation.headingTrue"]?.value;
+  if (boatDir == null)
+    boatDir = vesselState["navigation.courseOverGroundTrue"]?.value;
+
   return (
     <div style={{ height: "400px", width: "100%", padding: "50px" }}>
       <header className="entry-header">
@@ -163,7 +168,7 @@ function App() {
           <Map defaultZoom={10} defaultCenter={latLng} mapId="DEMO_MAP_ID">
             <BoatMarker
               latLng={latLng}
-              heading={vesselState["navigation.headingTrue"]?.value}
+              heading={boatDir}
             />
           </Map>
         )) || (
