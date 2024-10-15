@@ -103,7 +103,7 @@ environment. In particular, you will probably want to change option
 
 An MQTT broker is used to act as a liaison between the boat and any client
 browsers. The MQTT protocol takes minimal bandwidth, so it is excellent for
-acting over a satellite of cellular connection.
+acting over a satellite or cellular connection.
 
 1. To install an MQTT broker:
 

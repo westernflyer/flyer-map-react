@@ -15,10 +15,10 @@ export const About = () => {
         Data originates on an NMEA 2000 network, flows through a{" "}
         <a
           href={
-            "https://yachtdevicesus.com/products/nmea-2000-ethernet-gateway-yden-02"
+            "https://actisense.com/products/pro-ndc-1e2k/"
           }
         >
-          YDEN-02 ethernet gateway
+          Actisense PRO-NDC-1E2K gateway
         </a>
         , then to a <a href={"https://signalk.org/"}>SignalK server</a> running
         on a low-powered Linux server. From there, updates are published to an{" "}
