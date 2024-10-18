@@ -87,6 +87,21 @@ export function getUpdateDicts(signalk_obj) {
   return updates;
 }
 
+export function getLatLng(json_obj){
+  let latLng = null;
+  for (let update of json_obj.updates) {
+    for (let value of update.values) {
+      if (value.path === "navigation.position") {
+        latLng = {
+          lat: value.value.latitude,
+          lng: value.value.longitude,
+        }
+      }
+    }
+  }
+  return latLng;
+}
+
 // This will accumulate the updates.
 export class VesselState {
   constructor(oldState) {

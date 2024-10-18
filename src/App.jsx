@@ -16,6 +16,7 @@ import {
   VesselState,
   FormattedState,
   getUpdateDicts,
+  getLatLng,
   orderArray,
 } from "./utilities.js";
 import { About } from "./About";
@@ -131,24 +132,21 @@ function App() {
   useEffect(() => {
     if (client) {
       client.on("message", function (topic, message) {
-        const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
+        const json_msg = JSON.parse(message.toString());
+        const updateDicts = getUpdateDicts(json_msg);
         setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
         setFormattedState(
           (f) => new FormattedState(f.mergeUpdates(updateDicts)),
         );
+        // If the message included a new lat/lon, then update its value
+        const newLatLng= getLatLng(json_msg);
+        if (newLatLng) {
+          setLatLng(newLatLng);
+        }
       });
       client.on("error", (err) => console.error(err));
     }
   }, [client]);
-
-  // If we don't have a vessel position yet, and vesselState has a valid
-  // position, then save and use it.
-  if (!latLng && vesselState["navigation.position.latitude"] != null) {
-    setLatLng({
-      lat: vesselState["navigation.position.latitude"].value,
-      lng: vesselState["navigation.position.longitude"].value,
-    });
-  }
 
   // Use boat heading, but if it's not available, substitute COG
   let boatDir = vesselState["navigation.headingTrue"]?.value;
