@@ -87,10 +87,8 @@ function App() {
   const [client, setClient] = useState(null);
   // vesselState holds the current values. They are unformatted.
   const [vesselState, setVesselState] = useState(new VesselState());
-  // formattedState holds the current values. They are all formattedstrings.
+  // formattedState holds the current values as formatted strings.
   const [formattedState, setFormattedState] = useState(new FormattedState());
-  // latLng holds the current vessel position, or null if it has not been established yet.
-  const [latLng, setLatLng] = useState(null);
 
   // Because this app relies on an external connection to the MQTT broker,
   // internal state must be synchronized in a "useEffect" function.
@@ -132,20 +130,18 @@ function App() {
   useEffect(() => {
     if (client) {
       client.on("message", function (topic, message) {
-        const json_msg = JSON.parse(message.toString());
-        const updateDicts = getUpdateDicts(json_msg);
+        const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
         setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
         setFormattedState(
           (f) => new FormattedState(f.mergeUpdates(updateDicts)),
         );
-        // If the message included a new lat/lon, then update its value
-        const newLatLng= getLatLng(json_msg);
-        if (newLatLng) {
-          setLatLng(newLatLng);
-        }
       });
       client.on("error", (err) => console.error(err));
     }
+    // Setting 'client' as the sole dependency ensures that the function only
+    // gets called when client changes. That is, on initial establishment of
+    // the client connection. Otherwise, new handlers would get established on
+    // every refresh.
   }, [client]);
 
   // Use boat heading, but if it's not available, substitute COG
@@ -153,10 +149,13 @@ function App() {
   if (boatDir == null)
     boatDir = vesselState["navigation.courseOverGroundTrue"]?.value;
 
+  // latLng holds the current vessel position, or null if it has not been established yet.
+  const latLng = getLatLng(vesselState);
+
   return (
     <div style={{ height: "400px", width: "100%", padding: "50px" }}>
       <header className="entry-header">
-        <h1 className="entry-title">Where's the Flyer?</h1>
+        <h1 className="entry-title">Where&apos;s the Flyer?</h1>
       </header>
       <APIProvider
         apiKey={`${google_key}`}
@@ -164,16 +163,13 @@ function App() {
       >
         {(latLng && (
           <Map defaultZoom={10} defaultCenter={latLng} mapId="DEMO_MAP_ID">
-            <BoatMarker
-              latLng={latLng}
-              heading={boatDir}
-            />
+            <BoatMarker latLng={latLng} heading={boatDir} />
           </Map>
         )) || (
           <p className="fetching">Waiting for a valid vessel position...</p>
         )}
       </APIProvider>
-      <p>No, the Flyer is not in the Gulf of Finland! This is a simulation.</p>
+      <p>No, the Flyer is not roaming around the Pacific! This is a simulation.</p>
       <div style={{ padding: "20px" }}>
         <VesselTable formattedState={formattedState} />
         <div style={{ paddingLeft: "16px" }}>

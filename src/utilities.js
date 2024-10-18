@@ -87,17 +87,14 @@ export function getUpdateDicts(signalk_obj) {
   return updates;
 }
 
-export function getLatLng(json_obj){
+// Extract latLng out of the vessel state
+export function getLatLng(vesselState) {
   let latLng = null;
-  for (let update of json_obj.updates) {
-    for (let value of update.values) {
-      if (value.path === "navigation.position") {
-        latLng = {
-          lat: value.value.latitude,
-          lng: value.value.longitude,
-        }
-      }
-    }
+  if (vesselState["navigation.position.latitude"] != null) {
+    latLng = {
+      lat: vesselState["navigation.position.latitude"].value,
+      lng: vesselState["navigation.position.longitude"].value,
+    };
   }
   return latLng;
 }
