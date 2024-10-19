@@ -162,7 +162,11 @@ function App() {
         onLoad={() => console.log("Maps API has loaded.")}
       >
         {(latLng && (
-          <Map defaultZoom={10} defaultCenter={latLng} mapId="DEMO_MAP_ID">
+          <Map
+            defaultZoom={10}
+            defaultCenter={latLng}
+            streetViewControl={false}
+            mapId="DEMO_MAP_ID">
             <BoatMarker latLng={latLng} heading={boatDir} />
           </Map>
         )) || (
