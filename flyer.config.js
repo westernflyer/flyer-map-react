@@ -35,6 +35,7 @@ export const tableOptions = {
     "environment.depth.belowTransducer",
     "environment.depth.belowKeel",
     "environment.wind.speedOverGround",
+    "environment.wind.speedTrue",
     "environment.wind.directionTrue",
     "environment.wind.speedApparent",
     "environment.wind.angleApparent",
