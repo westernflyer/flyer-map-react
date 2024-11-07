@@ -14,7 +14,10 @@ import "./App.css";
 export const BoatMarker = (props) => {
   const { latLng, heading } = props;
   return (
-    <AdvancedMarker key={"flyer"} position={latLng} title={"Western Flyer"}>
+    <AdvancedMarker key={"flyer"}
+                    position={latLng}
+                    title={"Western Flyer"}
+                    anchorPoint={"CENTER"}>
       <div
         style={{
           transform: "translate(9px,22px) rotate(" + heading + "rad)",
