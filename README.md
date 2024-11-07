@@ -73,6 +73,8 @@ Add any interested paths. You can also set how often they get published.
         | `navigation.headingTrue`            |           20 |
         | `environment.depth.belowTransducer` |           20 |     
         | `environment.depth.belowKeel`       |           20 |           
+        | `environment.wind.speedTrue`        |           20 |
+        | `environment.wind.directionTrue`    |           20 |
         | `environment.wind.speedApparent`    |           20 |
         | `environment.wind.angleApparent`    |           20 |
         | `environment.water.temperature`     |           10 |      

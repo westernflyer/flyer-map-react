@@ -52,6 +52,10 @@
         "interval": 10
       },
       {
+        "path": "environment.wind.speedTrue",
+        "interval": 10
+      },
+      {
         "path": "environment.wind.speedOverGround",
         "interval": 10
       },
