@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import Fader from "react-fader";
 import PropTypes from "prop-types";
 import DataTable from "react-data-table-component";
-import { APIProvider, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
+import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
 import {
@@ -20,6 +20,7 @@ import {
   orderArray,
 } from "./utilities.js";
 import { About } from "./About";
+import { BoatMarker } from "./BoatMarker";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
 import { mqttOptions, tableOptions } from "../flyer.config.js";
@@ -61,26 +62,6 @@ VesselTable.propTypes = {
   formattedState: PropTypes.objectOf(PropTypes.object),
 };
 
-// React function component to show a marker for the boat position and heading
-function BoatMarker(props) {
-  const { latLng, heading } = props;
-  return (
-    <AdvancedMarker key={"flyer"} position={latLng} title={"Western Flyer"}>
-      <div
-        style={{
-          transform: "translate(9px,22px) rotate(" + heading + "rad)",
-        }}
-      >
-        <img src="/flyer-map/red_boat.svg" alt="Boat position" />
-      </div>
-    </AdvancedMarker>
-  );
-}
-
-BoatMarker.propTypes = {
-  latLng: PropTypes.objectOf(PropTypes.number),
-  heading: PropTypes.number,
-};
 
 function App() {
   // client is the MQTT connection.
