@@ -8,7 +8,10 @@ would allow multiple devices to provide duplicate data.
 Default should be to move the map to follow the boat. If the user moves the map,
 it stays put. A button restores default behavior.
 
-Add vector showing COG. Another vector showing wind.
+## COG vector issues
+- Doesn't erase old polyline. Just keeps adding new ones.
+- Seems to point in the wrong direction. Or maybe bearing is being interpreted
+in the mathematical sense (0=E), instead of navigation sense (0=N).
 
 ## Table related issues
 
