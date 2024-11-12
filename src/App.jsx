@@ -154,8 +154,7 @@ function App() {
           <p className="fetching">Waiting for a valid vessel position...</p>
         )}
       </APIProvider>
-      <p>No, the Flyer is not roaming around the Pacific! This is a simulation.</p>
-      <div style={{ padding: "20px" }}>
+d      <div style={{ padding: "20px" }}>
         <VesselTable formattedState={formattedState} />
         <div style={{ paddingLeft: "16px" }}>
           <About />
