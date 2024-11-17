@@ -64,20 +64,20 @@ Add any interested paths. You can also set how often they get published.
 
     Example:
     
-        | SignalK path                        | Refresh rate |
-        |:------------------------------------|-------------:|
-        | `navigation.position`               |           20 |
-        | `navigation.speedOverGround`        |           20 | 
-        | `navigation.courseOverGroundTrue`   |           20 |      
-        | `navigation.speedThroughWater`      |           20 |
-        | `navigation.headingTrue`            |           20 |
-        | `environment.depth.belowTransducer` |           20 |     
-        | `environment.depth.belowKeel`       |           20 |           
-        | `environment.wind.speedTrue`        |           20 |
-        | `environment.wind.directionTrue`    |           20 |
-        | `environment.wind.speedApparent`    |           20 |
-        | `environment.wind.angleApparent`    |           20 |
-        | `environment.water.temperature`     |           10 |      
+    | SignalK path                        | Refresh rate |
+    |:------------------------------------|-------------:|
+    | `navigation.position`               |           20 |
+    | `navigation.speedOverGround`        |           20 | 
+    | `navigation.courseOverGroundTrue`   |           20 |      
+    | `navigation.speedThroughWater`      |           20 |
+    | `navigation.headingTrue`            |           20 |
+    | `environment.depth.belowTransducer` |           20 |     
+    | `environment.depth.belowKeel`       |           20 |           
+    | `environment.wind.speedTrue`        |           20 |
+    | `environment.wind.directionTrue`    |           20 |
+    | `environment.wind.speedApparent`    |           20 |
+    | `environment.wind.angleApparent`    |           20 |
+    | `environment.water.temperature`     |          120 |      
     
 3. Double check that the topics are getting published:
     
