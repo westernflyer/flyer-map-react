@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
 
@@ -24,66 +24,72 @@ import "./App.css";
  * @returns {JSX.Element} - The rendered JSX line.
  */
 export const LineMarker = (props) => {
-  let { latLng, cog, sog, duration } = props;
+    let { latLng, cog, sog, duration } = props;
 
-  duration = duration || 600;
-  const map = useMap();
+    let [cogPath, setCogPath] = useState(null);
+    duration = duration || 600;
+    const map = useMap();
 
-  useEffect(() => {
-    if (!map || latLng == null || cog == null || sog == null) return;
+    useEffect(() => {
+        if (!map || latLng == null || cog == null || sog == null) return;
 
-    // Convert from nm to meters
-    const distance_meters = sog * duration * 1852 / 3600;
-    const endLatLng = latLngAtBearing(latLng, distance_meters, cog);
-    const pathCoordinates = [latLng, endLatLng];
-    console.log("pathCoordinates=", pathCoordinates, "; distance=", distance_meters, "; cog=", cog);
+        // Convert from nm to meters
+        const distance_meters = sog * duration * 1852 / 3600;
+        const endLatLng = latLngAtBearing(latLng, distance_meters, cog);
+        const pathCoordinates = [latLng, endLatLng];
+        console.log("pathCoordinates=", pathCoordinates, "; distance=", distance_meters, "; cog=", cog);
 
-    const cogPath = new google.maps.Polyline({
-      path: pathCoordinates,
-      geodesic: true,
-      strokeColor: "#FF0000",
-      strokeOpacity: 1.0,
-      strokeWeight: 1,
-    });
+        if (!cogPath) {
+            cogPath = new google.maps.Polyline({
+                path: pathCoordinates,
+                geodesic: true,
+                strokeColor: "#FFFF00",
+                strokeOpacity: 1.0,
+                strokeWeight: 1,
+            });
+            cogPath.setMap(map);
+            setCogPath(cogPath);
+        } else {
+            cogPath.setPath(pathCoordinates);
+        }
 
-    cogPath.setMap(map);
-  }, [map, cog, duration, latLng, sog]);
+    }, [map, cog, duration, latLng, sog]);
 
-  return <>...</>;
+    return <>...</>;
 };
 
 LineMarker.propTypes = {
-  latLng: PropTypes.objectOf(PropTypes.number),
-  cog: PropTypes.number,
-  sog: PropTypes.number,
-  duration: PropTypes.number,
+    latLng: PropTypes.objectOf(PropTypes.number),
+    cog: PropTypes.number,
+    sog: PropTypes.number,
+    duration: PropTypes.number,
 };
 
 // React function component to show a marker for the boat position and heading
 export const BoatMarker = (props) => {
-  const { latLng, heading } = props;
-  return (
-    <div>
-      <AdvancedMarker
-        key={"flyer"}
-        position={latLng}
-        title={"Western Flyer"}
-        anchorPoint={"CENTER"}
-      >
-        <div
-          style={{
-            transform: "translate(9px,22px) rotate(" + heading + "rad)",
-          }}
-        >
-          <img src="/flyer-map/red_boat.svg" alt="Boat position" />
+    const { latLng, heading } = props;
+    return (
+        <div>
+            <AdvancedMarker
+                key={"flyer"}
+                position={latLng}
+                title={"Western Flyer"}
+                anchorPoint={"CENTER"}
+            >
+                <div
+                    style={{
+                        transform: "translate(9px,22px) rotate(" + heading + "rad)",
+                    }}
+                >
+                    <img src="/flyer-map/red_boat.svg" alt="Boat position" />
+                </div>
+            </AdvancedMarker>
+            <LineMarker latLng={latLng} cog={heading} sog={10}></LineMarker>
         </div>
-      </AdvancedMarker>
-      <LineMarker latLng={latLng} cog={heading} sog={10}></LineMarker>
-    </div>
-  );
+    );
 };
 
 BoatMarker.propTypes = {
-  latLng: PropTypes.objectOf(PropTypes.number),
-  heading: PropTypes.number,
+    latLng: PropTypes.objectOf(PropTypes.number),
+    heading: PropTypes.number,
 };
