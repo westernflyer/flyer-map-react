@@ -21,7 +21,7 @@ import "./App.css";
  * @param {number} props.sog - The speed over ground in knots
  * @param {number} [props.duration] - The line will extend this many seconds in the
  *   future. Default is 600 (10 minutes).
- * @returns {JSX.Element} - The rendered JSX line.
+ * @returns {JSX.Element}
  */
 export const LineMarker = (props) => {
     let { latLng, cog, sog, duration } = props;
@@ -29,6 +29,16 @@ export const LineMarker = (props) => {
     let [cogPath, setCogPath] = useState(null);
     duration = duration || 600;
     const map = useMap();
+    if (cogPath == null) {
+        cogPath = new window.google.maps.Polyline({
+            geodesic: true,
+            strokeColor: "#FFFF00",
+            strokeOpacity: 1.0,
+            strokeWeight: 1,
+        });
+        cogPath.setMap(map);
+        setCogPath(cogPath);
+    }
 
     useEffect(() => {
         if (!map || latLng == null || cog == null || sog == null) return;
@@ -39,21 +49,9 @@ export const LineMarker = (props) => {
         const pathCoordinates = [latLng, endLatLng];
         console.log("pathCoordinates=", pathCoordinates, "; distance=", distance_meters, "; cog=", cog);
 
-        if (!cogPath) {
-            cogPath = new google.maps.Polyline({
-                path: pathCoordinates,
-                geodesic: true,
-                strokeColor: "#FFFF00",
-                strokeOpacity: 1.0,
-                strokeWeight: 1,
-            });
-            cogPath.setMap(map);
-            setCogPath(cogPath);
-        } else {
-            cogPath.setPath(pathCoordinates);
-        }
+        cogPath.setPath(pathCoordinates);
 
-    }, [map, cog, duration, latLng, sog]);
+    }, [map, cog, duration, latLng, sog, cogPath]);
 
     return <>...</>;
 };
@@ -74,7 +72,6 @@ export const BoatMarker = (props) => {
                 key={"flyer"}
                 position={latLng}
                 title={"Western Flyer"}
-                anchorPoint={"CENTER"}
             >
                 <div
                     style={{

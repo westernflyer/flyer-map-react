@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { formatUpdate, signalKUnits } from "./units";
 
 /*
