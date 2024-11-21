@@ -32,7 +32,7 @@ export const LineMarker = (props) => {
     if (cogPath == null) {
         cogPath = new window.google.maps.Polyline({
             geodesic: true,
-            strokeColor: "#FFFF00",
+            strokeColor: "white",
             strokeOpacity: 1.0,
             strokeWeight: 1,
         });
@@ -43,12 +43,13 @@ export const LineMarker = (props) => {
     useEffect(() => {
         if (!map || latLng == null || cog == null || sog == null) return;
 
-        // Convert from nm to meters
-        const distance_meters = sog * duration * 1852 / 3600;
+        // Calculate how far the boat will go in duration seconds, then convert from nm to meters
+        const distance_meters = sog * duration / 3600 * 1852;
+        // Calculate where the boat will end up in that time
         const endLatLng = latLngAtBearing(latLng, distance_meters, cog);
+        // Construct a path out of the two points
         const pathCoordinates = [latLng, endLatLng];
-        console.log("pathCoordinates=", pathCoordinates, "; distance=", distance_meters, "; cog=", cog);
-
+        // Attach the path to the polyline
         cogPath.setPath(pathCoordinates);
 
     }, [map, cog, duration, latLng, sog, cogPath]);
@@ -75,7 +76,7 @@ export const BoatMarker = (props) => {
             >
                 <div
                     style={{
-                        transform: "translate(9px,22px) rotate(" + heading + "rad)",
+                        transform: "translate(0px,25px) rotate(" + heading + "rad)",
                     }}
                 >
                     <img src="/flyer-map/red_boat.svg" alt="Boat position" />
