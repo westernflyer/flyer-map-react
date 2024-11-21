@@ -65,7 +65,7 @@ LineMarker.propTypes = {
 
 // React function component to show a marker for the boat position and heading
 export const BoatMarker = (props) => {
-    const { latLng, heading } = props;
+    const { latLng, heading, cog } = props;
     return (
         <div>
             <AdvancedMarker
@@ -81,7 +81,7 @@ export const BoatMarker = (props) => {
                     <img src="/flyer-map/red_boat.svg" alt="Boat position" />
                 </div>
             </AdvancedMarker>
-            <LineMarker latLng={latLng} cog={heading} sog={10}></LineMarker>
+            <LineMarker latLng={latLng} cog={cog} sog={10}></LineMarker>
         </div>
     );
 };
@@ -89,4 +89,5 @@ export const BoatMarker = (props) => {
 BoatMarker.propTypes = {
     latLng: PropTypes.objectOf(PropTypes.number),
     heading: PropTypes.number,
+    cog: PropTypes.number,
 };

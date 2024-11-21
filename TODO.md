@@ -9,8 +9,7 @@ Default should be to move the map to follow the boat. If the user moves the map,
 it stays put. A button restores default behavior.
 
 ## COG vector issues
-- Seems to point in the wrong direction. Or maybe bearing is being interpreted
-in the mathematical sense (0=E), instead of navigation sense (0=N).
+Line is offset from the boat. Boat position may be wrong, or maybe it's the line
 
 ## Table related issues
 

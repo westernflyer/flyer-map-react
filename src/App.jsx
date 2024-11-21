@@ -129,6 +129,7 @@ function App() {
     let boatDir = vesselState["navigation.headingTrue"]?.value;
     if (boatDir == null)
         boatDir = vesselState["navigation.courseOverGroundTrue"]?.value;
+    const cog = vesselState["navigation.courseOverGroundTrue"]?.value;
 
     // latLng holds the current vessel position, or null if it has not been established yet.
     const latLng = getLatLng(vesselState);
@@ -138,7 +139,8 @@ function App() {
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
-            <p><a href={"https://westernflyer.org"}>Back to the Western Flyer Foundation website</a></p>
+            <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
+                Foundation website</a></p>
             <APIProvider
                 apiKey={`${google_key}`}
                 onLoad={() => console.log("Maps API has loaded.")}
@@ -149,7 +151,9 @@ function App() {
                         defaultCenter={latLng}
                         streetViewControl={false}
                         mapId="DEMO_MAP_ID">
-                        <BoatMarker latLng={latLng} heading={boatDir} />
+                        <BoatMarker latLng={latLng}
+                                    heading={boatDir}
+                                    cog={cog} />
                     </Map>
                 )) || (
                     <p className="fetching">Waiting for a valid vessel

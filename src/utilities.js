@@ -148,15 +148,14 @@ export function orderArray(ordering, obj) {
  *
  * @param latLng {{lng: number, lat: number}}
  * @param distance {number} Distance in meters
- * @param bearing {number} Bearing (0=North, 90=East, etc.)
+ * @param bearing_radians {number} Bearing in radians (0=north)
  * @returns {{lng: number, lat: number}}
  */
-export function latLngAtBearing(latLng, distance, bearing) {
+export function latLngAtBearing(latLng, distance, bearing_radians) {
 
     const R = 6371e3; // Earth's radius in meters
     const lat1_radians = (latLng.lat * Math.PI) / 180; // Convert to radians
     const lng1_radians = (latLng.lng * Math.PI) / 180;
-    const bearing_radians = (bearing * Math.PI) / 180;
     const angular_distance = distance / R;
 
     const lat2_radians = Math.asin(
