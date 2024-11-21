@@ -26,7 +26,7 @@ export const About = () => {
         receives the updates from the broker via a websocket connection.
       </p>
       <p>
-        The Google Maps and "Current Values" table are updated using{" "}
+        The Google Maps and &ldquo;Current Values&rdquo; table are updated using&nbsp;
         <a href={"https://react.dev/"}>React</a>.
       </p>
       <p>

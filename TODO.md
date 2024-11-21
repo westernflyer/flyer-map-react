@@ -8,7 +8,8 @@ would allow multiple devices to provide duplicate data.
 Default should be to move the map to follow the boat. If the user moves the map,
 it stays put. A button restores default behavior.
 
-Add vector showing COG. Another vector showing wind.
+## COG vector issues
+Line is offset from the boat. Boat position may be wrong, or maybe it's the line
 
 ## Table related issues
 
