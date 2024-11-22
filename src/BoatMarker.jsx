@@ -17,18 +17,22 @@ import "./App.css";
  *
  * @param {object} props
  * @param {{lat:number, lng:number}} props.latLng - The latitude/longitude of the boat
- * @param {number} props.cog - The course over ground. 0=N, 90=E, etc.
- * @param {number} props.sog - The speed over ground in knots
+ * @param {number} props.cog - The course over ground in radians. 0=N, pi/180=E, etc.
+ * @param {number} props.sog - The speed over ground in meters/second
  * @param {number} [props.duration] - The line will extend this many seconds in the
  *   future. Default is 600 (10 minutes).
- * @returns {JSX.Element}
+ * @returns {JSX.Element} - An empty JSX element
  */
 export const LineMarker = (props) => {
     let { latLng, cog, sog, duration } = props;
 
     let [cogPath, setCogPath] = useState(null);
     duration = duration || 600;
+
+    // Retrieve the map instance
     const map = useMap();
+
+    // If a Polyline does not already exist, create one.
     if (cogPath == null) {
         cogPath = new window.google.maps.Polyline({
             geodesic: true,
@@ -41,10 +45,11 @@ export const LineMarker = (props) => {
     }
 
     useEffect(() => {
+        // Make sure we have all the data we need before setting the path
         if (!map || latLng == null || cog == null || sog == null) return;
 
-        // Calculate how far the boat will go in duration seconds, then convert from nm to meters
-        const distance_meters = sog * duration / 3600 * 1852;
+        // Calculate how far the boat will go in duration seconds
+        const distance_meters = sog * duration;
         // Calculate where the boat will end up in that time
         const endLatLng = latLngAtBearing(latLng, distance_meters, cog);
         // Construct a path out of the two points
@@ -66,7 +71,7 @@ LineMarker.propTypes = {
 
 // React function component to show a marker for the boat position and heading
 export const BoatMarker = (props) => {
-    const { latLng, heading, cog } = props;
+    const { latLng, heading, cog, sog } = props;
     return (
         <div>
             <AdvancedMarker
@@ -82,7 +87,7 @@ export const BoatMarker = (props) => {
                     <img src="/flyer-map/red_boat.svg" alt="Boat position" />
                 </div>
             </AdvancedMarker>
-            <LineMarker latLng={latLng} cog={cog} sog={10}></LineMarker>
+            <LineMarker latLng={latLng} cog={cog} sog={sog}></LineMarker>
         </div>
     );
 };
@@ -91,4 +96,5 @@ BoatMarker.propTypes = {
     latLng: PropTypes.objectOf(PropTypes.number),
     heading: PropTypes.number,
     cog: PropTypes.number,
+    sog: PropTypes.number,
 };

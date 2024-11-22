@@ -129,7 +129,6 @@ function App() {
     let boatDir = vesselState["navigation.headingTrue"]?.value;
     if (boatDir == null)
         boatDir = vesselState["navigation.courseOverGroundTrue"]?.value;
-    const cog = vesselState["navigation.courseOverGroundTrue"]?.value;
 
     // latLng holds the current vessel position, or null if it has not been established yet.
     const latLng = getLatLng(vesselState);
@@ -153,7 +152,8 @@ function App() {
                         mapId="DEMO_MAP_ID">
                         <BoatMarker latLng={latLng}
                                     heading={boatDir}
-                                    cog={cog} />
+                                    cog={vesselState["navigation.courseOverGroundTrue"]?.value}
+                                    sog={vesselState["navigation.speedOverGround"]?.value}/>
                     </Map>
                 )) || (
                     <p className="fetching">Waiting for a valid vessel
