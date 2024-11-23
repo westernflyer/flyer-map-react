@@ -138,6 +138,8 @@ function App() {
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
+            <p>No, the Western Flyer is not cruising through the Gulf of
+            Finland! This is a simulation.</p>
             <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
                 Foundation website</a></p>
             <APIProvider
