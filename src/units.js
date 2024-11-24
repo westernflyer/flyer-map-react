@@ -149,11 +149,11 @@ export function formatUpdate(update) {
 
 /**
  * Convert a value to an approprate unit, then format it. Add a unit label.
- * @param {float} value - The value to be formatted
+ * @param {number} value - The value to be formatted
  * @param {string} unit_group - The unit group the value belongs to
  * @param {string} unit - The unit the value is in.
  */
-function formatValue(value, unit_group, unit) {
+export function formatValue(value, unit_group, unit) {
   let fval;
 
   // The desired unit to be used for that group. This will be something

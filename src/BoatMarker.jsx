@@ -7,26 +7,34 @@
 
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { AdvancedMarker, useMap } from "@vis.gl/react-google-maps";
+import { AdvancedMarker, useMap, InfoWindow } from "@vis.gl/react-google-maps";
 
 import { latLngAtBearing } from "./utilities";
+import { formatValue } from "./units";
 import "./App.css";
 
 /**
  * Component that displays a line for COG/SOG.
  *
  * @param {object} props
- * @param {{lat:number, lng:number}} props.latLng - The latitude/longitude of the boat
+ * @param {{lat:number, lng:number}} props.boatPosition - The latitude/longitude of the boat
  * @param {number} props.cog - The course over ground in radians. 0=N, pi/180=E, etc.
  * @param {number} props.sog - The speed over ground in meters/second
  * @param {number} [props.duration] - The line will extend this many seconds in the
  *   future. Default is 600 (10 minutes).
- * @returns {JSX.Element} - An empty JSX element
+ * @returns {JSX.Element} - An InfoWindow located at the end of the COG line that will be shown on mouseover
  */
 export const LineMarker = (props) => {
-    let { latLng, cog, sog, duration } = props;
+    let { boatPosition, cog, sog, duration } = props;
 
+    // The polyline representing the COG vector
     let [cogPath, setCogPath] = useState(null);
+    // The lat/lon position at the end of the line.
+    const [infoWindowPosition, setInfoWindowPosition] = useState(null);
+    // Whether to show an InfoWindow at the end of the line
+    const [showCogInfo, setShowCogInfo] = useState(false);
+
+    // Provide a default duration of 10 minutes
     duration = duration || 600;
 
     // Retrieve the map instance
@@ -40,30 +48,56 @@ export const LineMarker = (props) => {
             strokeOpacity: 1.0,
             strokeWeight: 1,
         });
+        // Attach Polyline to our map
         cogPath.setMap(map);
+        // Add listeners for mousing in and out.
+        cogPath.addListener("mouseover", (e) => {
+            setShowCogInfo(true);
+            setInfoWindowPosition(e.latLng);
+        });
+        cogPath.addListener("mouseout", () => {
+            setShowCogInfo(false);
+        });
         setCogPath(cogPath);
     }
 
     useEffect(() => {
         // Make sure we have all the data we need before setting the path
-        if (!map || latLng == null || cog == null || sog == null) return;
+        if (map && boatPosition && cog != null && sog != null) {
+            // Calculate how far the boat will go in duration seconds
+            const distance_meters = sog * duration;
+            // Calculate and save where the boat will end up in that time
+            const endBoatPosition = latLngAtBearing(boatPosition, distance_meters, cog);
+            // Construct coordinates out of the two points
+            const lineCoordinates = [boatPosition, endBoatPosition];
+            // Attach the coordinates to the polyline
+            cogPath.setPath(lineCoordinates);
+        }
+    });
 
-        // Calculate how far the boat will go in duration seconds
-        const distance_meters = sog * duration;
-        // Calculate where the boat will end up in that time
-        const endLatLng = latLngAtBearing(latLng, distance_meters, cog);
-        // Construct a path out of the two points
-        const pathCoordinates = [latLng, endLatLng];
-        // Attach the path to the polyline
-        cogPath.setPath(pathCoordinates);
-
-    }, [map, cog, duration, latLng, sog, cogPath]);
-
-    return <>...</>;
+    return (
+        <>
+            {(
+                infoWindowPosition && showCogInfo && <InfoWindow
+                    position={infoWindowPosition}
+                    headerContent={<h3>Course over ground</h3>}
+                >
+                    {<p>The white line represents the distance the boat will
+                        travel over the next {duration / 60} minutes.<br />
+                        <br />
+                        Present speed and direction:&nbsp;
+                        {formatValue(sog, "group_speed", "knot")}&nbsp;
+                        at {formatValue(cog, "group_direction", "radian")}
+                    </p>}
+                </InfoWindow>
+            )}
+        </>
+    );
 };
 
+
 LineMarker.propTypes = {
-    latLng: PropTypes.objectOf(PropTypes.number),
+    boatPosition: PropTypes.objectOf(PropTypes.number),
     cog: PropTypes.number,
     sog: PropTypes.number,
     duration: PropTypes.number,
@@ -84,10 +118,11 @@ export const BoatMarker = (props) => {
                         transform: "translate(0px,25px) rotate(" + heading + "rad)",
                     }}
                 >
-                    <img src="/flyer-map/red_boat.svg" alt="Boat position" />
+                    <img src="/flyer-map/red_boat.svg"
+                         alt="Boat position" />
                 </div>
             </AdvancedMarker>
-            <LineMarker latLng={latLng} cog={cog} sog={sog}></LineMarker>
+            <LineMarker boatPosition={latLng} cog={cog} sog={sog}></LineMarker>
         </div>
     );
 };
