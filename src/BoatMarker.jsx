@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { AdvancedMarker, useMap, InfoWindow } from "@vis.gl/react-google-maps";
 
@@ -28,7 +28,7 @@ export const LineMarker = (props) => {
     let { boatPosition, cog, sog, duration } = props;
 
     // The polyline representing the COG vector
-    let [cogPath, setCogPath] = useState(null);
+    const cogPathRef = useRef(null);
     // The lat/lon position at the end of the line.
     const [infoWindowPosition, setInfoWindowPosition] = useState(null);
     // Whether to show an InfoWindow at the end of the line
@@ -40,26 +40,27 @@ export const LineMarker = (props) => {
     // Retrieve the map instance
     const map = useMap();
 
-    // If a Polyline does not already exist, create one.
-    if (cogPath == null) {
-        cogPath = new window.google.maps.Polyline({
-            geodesic: true,
-            strokeColor: "white",
-            strokeOpacity: 1.0,
-            strokeWeight: 1,
-        });
-        // Attach Polyline to our map
-        cogPath.setMap(map);
-        // Add listeners for mousing in and out.
-        cogPath.addListener("mouseover", (e) => {
-            setShowCogInfo(true);
-            setInfoWindowPosition(e.latLng);
-        });
-        cogPath.addListener("mouseout", () => {
-            setShowCogInfo(false);
-        });
-        setCogPath(cogPath);
-    }
+    useEffect(() => {
+        if (!cogPathRef.current && map) {
+            const cogPath = new window.google.maps.Polyline({
+                geodesic: true,
+                strokeColor: "white",
+                strokeOpacity: 1.0,
+                strokeWeight: 1,
+            });
+            // Attach Polyline to the map
+            cogPath.setMap(map);
+            // Add listeners for mouseover and mouseout
+            cogPath.addListener("mouseover", (e) => {
+                setShowCogInfo(true);
+                setInfoWindowPosition(e.latLng);
+            });
+            cogPath.addListener("mouseout", () => {
+                setShowCogInfo(false);
+            });
+            cogPathRef.current = cogPath;
+        }
+    }, [map]);
 
     useEffect(() => {
         // Make sure we have all the data we need before setting the path
@@ -71,9 +72,9 @@ export const LineMarker = (props) => {
             // Construct coordinates out of the two points
             const lineCoordinates = [boatPosition, endBoatPosition];
             // Attach the coordinates to the polyline
-            cogPath.setPath(lineCoordinates);
+            cogPathRef.current.setPath(lineCoordinates);
         }
-    });
+    }, [map, boatPosition, cog, sog, duration]);
 
     return (
         <>
