@@ -30,7 +30,7 @@ export const LineMarker = (props) => {
     // The polyline representing the COG vector
     const cogPathRef = useRef(null);
     // The lat/lon position at the end of the line.
-    const [infoWindowPosition, setInfoWindowPosition] = useState(null);
+    const [infoWindowPosition, setInfoWindowPosition] = useState({lat:null, lng:null});
     // Whether to show an InfoWindow at the end of the line
     const [showCogInfo, setShowCogInfo] = useState(false);
 
@@ -78,20 +78,20 @@ export const LineMarker = (props) => {
 
     return (
         <>
-            {(
-                infoWindowPosition && showCogInfo && <InfoWindow
+            {infoWindowPosition?.lat != null && showCogInfo &&
+                <InfoWindow
                     position={infoWindowPosition}
                     headerContent={<h3>Course over ground</h3>}
                 >
-                    {<p>The white line represents the distance the boat will
+                    <p>The white line represents the distance the boat will
                         travel over the next {duration / 60} minutes.<br />
                         <br />
-                        Present speed and direction:&nbsp;
+                        Speed and direction:&nbsp;
                         {formatValue(sog, "group_speed", "knot")}&nbsp;
                         at {formatValue(cog, "group_direction", "radian")}
-                    </p>}
+                    </p>
                 </InfoWindow>
-            )}
+            }
         </>
     );
 };
