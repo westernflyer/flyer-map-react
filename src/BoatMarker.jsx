@@ -24,13 +24,13 @@ import "./App.css";
  *   future. Default is 600 (10 minutes).
  * @returns {JSX.Element} - An InfoWindow located at the end of the COG line that will be shown on mouseover
  */
-export const LineMarker = (props) => {
+export const COGMarker = (props) => {
     let { boatPosition, cog, sog, duration } = props;
 
     // The polyline representing the COG vector
     const cogPathRef = useRef(null);
     // The lat/lon position at the end of the line.
-    const [infoWindowPosition, setInfoWindowPosition] = useState(null);
+    const [infoWindowPosition, setInfoWindowPosition] = useState({lat:null, lng:null});
     // Whether to show an InfoWindow at the end of the line
     const [showCogInfo, setShowCogInfo] = useState(false);
 
@@ -78,26 +78,26 @@ export const LineMarker = (props) => {
 
     return (
         <>
-            {(
-                infoWindowPosition && showCogInfo && <InfoWindow
+            {infoWindowPosition?.lat != null && showCogInfo &&
+                <InfoWindow
                     position={infoWindowPosition}
                     headerContent={<h3>Course over ground</h3>}
                 >
-                    {<p>The white line represents the distance the boat will
+                    <p>The white line represents the distance the boat will
                         travel over the next {duration / 60} minutes.<br />
                         <br />
-                        Present speed and direction:&nbsp;
+                        Speed and direction:&nbsp;
                         {formatValue(sog, "group_speed", "knot")}&nbsp;
                         at {formatValue(cog, "group_direction", "radian")}
-                    </p>}
+                    </p>
                 </InfoWindow>
-            )}
+            }
         </>
     );
 };
 
 
-LineMarker.propTypes = {
+COGMarker.propTypes = {
     boatPosition: PropTypes.objectOf(PropTypes.number),
     cog: PropTypes.number,
     sog: PropTypes.number,
@@ -123,7 +123,7 @@ export const BoatMarker = (props) => {
                          alt="Boat position" />
                 </div>
             </AdvancedMarker>
-            <LineMarker boatPosition={latLng} cog={cog} sog={sog}></LineMarker>
+            <COGMarker boatPosition={latLng} cog={cog} sog={sog}></COGMarker>
         </div>
     );
 };
