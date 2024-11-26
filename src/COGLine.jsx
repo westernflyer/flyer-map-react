@@ -24,7 +24,9 @@ import { formatValue } from "./units";
  * @returns {JSX.Element} - An InfoWindow located at the end of the COG line that will be shown on mouseover
  */
 export const COGLine = (props) => {
-    let { boatPosition, cog, sog, duration } = props;
+    const { boatPosition, cog, sog } = props;
+    // Provide a default duration of 10 minutes
+    const duration = props.duration || 600;
 
     // The polyline representing the COG vector
     const cogPathRef = useRef(null);
@@ -32,9 +34,6 @@ export const COGLine = (props) => {
     const [infoWindowPosition, setInfoWindowPosition] = useState({lat:null, lng:null});
     // Whether to show an InfoWindow at the end of the line
     const [showCogInfo, setShowCogInfo] = useState(false);
-
-    // Provide a default duration of 10 minutes
-    duration = duration || 600;
 
     // Retrieve the map instance
     const map = useMap();

@@ -10,11 +10,12 @@ import { AdvancedMarker } from "@vis.gl/react-google-maps";
 
 import "./App.css";
 import { COGLine } from "./COGLine";
+import { WindBarb } from "./WindBarb.jsx";
 
 
 // React function component to show a marker for the boat position and heading
 export const BoatMarker = (props) => {
-    const { latLng, heading, cog, sog } = props;
+    const { latLng, heading, cog, sog, windSpeed, windDirection } = props;
     return (
         <div>
             <AdvancedMarker
@@ -32,6 +33,12 @@ export const BoatMarker = (props) => {
                 </div>
             </AdvancedMarker>
             <COGLine boatPosition={latLng} cog={cog} sog={sog}></COGLine>
+            <AdvancedMarker
+                key={"flyer-wind"}
+                position={latLng}
+                title={"Wind at Western Flyer"}>
+                <WindBarb windSpeed={windSpeed} windDirection={windDirection} />
+            </AdvancedMarker>
         </div>
     );
 };
@@ -41,4 +48,6 @@ BoatMarker.propTypes = {
     heading: PropTypes.number,
     cog: PropTypes.number,
     sog: PropTypes.number,
+    windSpeed: PropTypes.number,
+    windDirection: PropTypes.number,
 };

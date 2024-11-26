@@ -155,7 +155,10 @@ function App() {
                         <BoatMarker latLng={latLng}
                                     heading={boatDir}
                                     cog={vesselState["navigation.courseOverGroundTrue"]?.value}
-                                    sog={vesselState["navigation.speedOverGround"]?.value}/>
+                                    sog={vesselState["navigation.speedOverGround"]?.value}
+                                    windSpeed={vesselState["environment.wind.speedTrue"]?.value}
+                                    windDirection={vesselState["environment.wind.directionTrue"]?.value}/>
+
                     </Map>
                 )) || (
                     <p className="fetching">Waiting for a valid vessel
