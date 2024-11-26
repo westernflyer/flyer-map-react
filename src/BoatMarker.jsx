@@ -24,7 +24,7 @@ import "./App.css";
  *   future. Default is 600 (10 minutes).
  * @returns {JSX.Element} - An InfoWindow located at the end of the COG line that will be shown on mouseover
  */
-export const COGMarker = (props) => {
+export const COGLine = (props) => {
     let { boatPosition, cog, sog, duration } = props;
 
     // The polyline representing the COG vector
@@ -97,7 +97,7 @@ export const COGMarker = (props) => {
 };
 
 
-COGMarker.propTypes = {
+COGLine.propTypes = {
     boatPosition: PropTypes.objectOf(PropTypes.number),
     cog: PropTypes.number,
     sog: PropTypes.number,
@@ -123,7 +123,7 @@ export const BoatMarker = (props) => {
                          alt="Boat position" />
                 </div>
             </AdvancedMarker>
-            <COGMarker boatPosition={latLng} cog={cog} sog={sog}></COGMarker>
+            <COGLine boatPosition={latLng} cog={cog} sog={sog}></COGLine>
         </div>
     );
 };
