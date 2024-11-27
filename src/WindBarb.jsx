@@ -7,7 +7,7 @@
 
 import PropTypes from "prop-types";
 
-import {genWindBarb} from "./genWindBarb";
+import { genWindBarb } from "./genWindBarb";
 
 
 /**
@@ -23,17 +23,14 @@ export const WindBarb = (props) => {
     const { windSpeed, windDirection } = props;
 
     return (
-        <div
-            style={{
-                transform: "rotate(" + windDirection + "rad)",
-            }}
-        >
+        <>
             {windSpeed && windDirection &&
-                <div
-                    dangerouslySetInnerHTML={{ __html: genWindBarb(windSpeed) }}
-                />
+                <div style={{
+                    transform: "translate(0px,0px) rotate(" + windDirection + "rad)",
+                }}
+                     dangerouslySetInnerHTML={{ __html: genWindBarb(windSpeed) }} />
             }
-        </div>
+        </>
     );
 };
 

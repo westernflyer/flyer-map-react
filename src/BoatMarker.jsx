@@ -23,11 +23,9 @@ export const BoatMarker = (props) => {
                 position={latLng}
                 title={"Western Flyer"}
             >
-                <div
-                    style={{
-                        transform: "translate(0px,25px) rotate(" + heading + "rad)",
-                    }}
-                >
+                <div style={{
+                    transform: "translate(0px,25px) rotate(" + heading + "rad)",
+                }}>
                     <img src={"/flyer-map/red_boat.svg"}
                          alt="Boat position" />
                 </div>
@@ -37,10 +35,12 @@ export const BoatMarker = (props) => {
                 key={"flyer-wind"}
                 position={latLng}
                 title={"Wind at Western Flyer"}>
-                <WindBarb windSpeed={windSpeed} windDirection={windDirection} />
+                    <WindBarb windSpeed={windSpeed}
+                              windDirection={windDirection} />
             </AdvancedMarker>
         </div>
-    );
+    )
+        ;
 };
 
 BoatMarker.propTypes = {

@@ -5,38 +5,54 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { conversionDict } from "./units";
+import { conversionDict } from "./units.js";
+
+const WIDTH = 40;
+const HEIGHT = 80;
+const SPACE = 16;
+const FULLBARB = 14;
 
 export function genWindBarb(windSpeed) {
     // Convert from m/s to knots
-    windSpeed = conversionDict["meter_per_second"]["knot"](windSpeed);
+    let remainingSpeed = conversionDict["meter_per_second"]["knot"](windSpeed);
 
-    let fullBarbs = Math.floor(windSpeed / 10);
-    let halfBarbs = Math.floor((windSpeed % 10) / 5);
-    let pennants = Math.floor(windSpeed / 50);
+    let svgString = `M ${WIDTH / 2} ${HEIGHT} v ${20 - HEIGHT}`;
 
-    let svgParts = [];
-    let yPosition = 10;
+    // Wind speeds between 5 and 10 kn traditionally have a little space between
+    // the end of the shaft and the barb.
+    if (remainingSpeed>=5 && remainingSpeed<10)
+        svgString += ` m 0 ${SPACE/2}`
 
-    // Draw the staff
-    svgParts.push(`<line x1="10" y1="10" x2="10" y2="${pennants * 10 + fullBarbs * 10 + halfBarbs * 5 + 50}" stroke="black" stroke-width="1"/>`);
+    function addPennant() {
 
-    // Draw pennants
-    for (let i = 0; i < pennants; i++) {
-        svgParts.push(`<polygon points="10,${yPosition} 20,${yPosition} 10,${yPosition + 10}" fill="black"/>`);
-        yPosition += 12;
     }
 
-    // Draw full barbs
-    for (let i = 0; i < fullBarbs; i++) {
-        svgParts.push(`<line x1="10" y1="${yPosition}" x2="25" y2="${yPosition - 5}" stroke="black" stroke-width="1"/>`);
-        yPosition += 12;
+    function addBarb(length) {
+        svgString += ` l ${length} ${-length} m ${-length} ${length} m 0 ${SPACE}`
     }
 
-    // Draw half barbs
-    if (halfBarbs > 0) {
-        svgParts.push(`<line x1="10" y1="${yPosition}" x2="17.5" y2="${yPosition - 2.5}" stroke="black" stroke-width="1"/>`);
+    while (remainingSpeed >= 50) {
+        addPennant();
+        remainingSpeed -= 50;
+    }
+    while (remainingSpeed >= 10) {
+        addBarb(FULLBARB);
+        remainingSpeed -= 10;
+    }
+    if (remainingSpeed >= 5) {
+        addBarb(FULLBARB/2);
     }
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="${pennants * 10 + fullBarbs * 10 + halfBarbs * 5 + 20 + 20}">` + svgParts.join("") + `</svg>`;
+    // Return to the beginning of the shaft
+    svgString += ` V ${HEIGHT}`
+
+    return `<svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="${WIDTH}" height="${HEIGHT}"
+    stroke="black"
+    fill="none">
+    <path d="${svgString}"/>
+</svg>`;
 }
+
+console.log(genWindBarb(10))
