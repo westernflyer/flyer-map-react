@@ -9,29 +9,33 @@ import { conversionDict } from "./units.js";
 
 const WIDTH = 40;       // The width of the SVG element
 const HEIGHT = 80;      // Its height
-const SPACE = 16;       // The space along the shaft between barbsx
+const SPACE = 16;       // The space along the shaft between barbs
 const FULLBARB = 14;    // The delta-x and delta-y of a full barb
 
 /**
- * Generate a wind barb as an SVG element
+ * Generate a wind barb as an SVG element. The barb will be vertical with the
+ * head of the shaft at the bottom and the barbs on the top.
  *
  * @param {number} windSpeed - The wind speed in meters per second
  * @returns {string}
  */
 export function genWindBarb(windSpeed) {
+
     // Convert from m/s to knots
     let remainingSpeed = conversionDict["meter_per_second"]["knot"](windSpeed);
 
     let svgParts = [];
 
-    // Draw the shaft. It will be 80 units long.
-    svgParts.push("<line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"100\"/>");
+    // Draw the shaft. It will be a vertical line, 80 units long, running from
+    // y=20 at the top, to y=100 at the bottom. It will be centered at x=20 in
+    // the box.
+    svgParts.push("<line x1='20' y1='20' x2='20' y2='100'/>");
 
     // Start at the top of the shaft
     let yPos = 20;
 
     // Wind speeds between 5 and 10 kn traditionally have a little space between
-    // the end of the shaft and the barb.
+    // the end of the shaft and the barb, so move down a bit.
     if (remainingSpeed >= 5 && remainingSpeed < 10)
         yPos += SPACE / 2;
 

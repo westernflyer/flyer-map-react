@@ -9,14 +9,13 @@ import PropTypes from "prop-types";
 
 import { genWindBarb } from "./genWindBarb";
 
-
 /**
  * Component that generates a wind barb
  *
  * @param {object} props
  * @param {number} props.windSpeed - Wind speed in m/s
  * @param {number} props.windDirection - Wind direction in radians. 0=N
- * @returns {JSX.Element}
+ * @returns {JSX.Element} - An SVG with a wind barb
  * @constructor
  */
 export const WindBarb = (props) => {
@@ -26,9 +25,14 @@ export const WindBarb = (props) => {
         <>
             {windSpeed && windDirection &&
                 <div style={{
-                    transform: "translate(0px,0px) rotate(" + windDirection + "rad)",
+                    // Make sure we rotate around the base of the shaft.
+                    transformOrigin: "center bottom",
+                    transform: "rotate(" + windDirection + "rad)",
                 }}
-                     dangerouslySetInnerHTML={{ __html: genWindBarb(windSpeed) }} />
+                    // Despite the scary name, this function is perfectly safe
+                    // because we control its input parameter.
+                     dangerouslySetInnerHTML={{ __html: genWindBarb(windSpeed) }}
+                />
             }
         </>
     );
