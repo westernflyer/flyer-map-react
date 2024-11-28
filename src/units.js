@@ -101,7 +101,7 @@ const unitSelection = {
 };
 
 // Convert between units
-const conversionDict = {
+export const conversionDict = {
   degree_K: {
     degree_C: (x) => x - 273.15,
   },

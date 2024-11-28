@@ -138,8 +138,8 @@ function App() {
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
-            <p>If no position appears after a few seconds, it&apos;s because power
-            is off on the boat.</p>
+            <p>If no position appears after a few seconds, it&apos;s because
+                power is off on the boat.</p>
             <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
                 Foundation website</a></p>
             <APIProvider
@@ -155,7 +155,10 @@ function App() {
                         <BoatMarker latLng={latLng}
                                     heading={boatDir}
                                     cog={vesselState["navigation.courseOverGroundTrue"]?.value}
-                                    sog={vesselState["navigation.speedOverGround"]?.value}/>
+                                    sog={vesselState["navigation.speedOverGround"]?.value}
+                                    windSpeed={vesselState["environment.wind.speedTrue"]?.value}
+                                    windDirection={vesselState["environment.wind.directionTrue"]?.value} />
+
                     </Map>
                 )) || (
                     <p className="fetching">Waiting for a valid vessel
