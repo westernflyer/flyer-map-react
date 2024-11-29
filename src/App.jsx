@@ -130,6 +130,12 @@ function App() {
     if (boatDir == null)
         boatDir = vesselState["navigation.courseOverGroundTrue"]?.value;
 
+    // Use environment.wind.speedTrue, but if it's not available,
+    // then environment.wind.speedOverGround
+    let windSpeed = vesselState["environment.wind.speedTrue"]?.value;
+    if (windSpeed == null)
+        windSpeed = vesselState["environment.wind.speedOverGround"]?.value;
+
     // latLng holds the current vessel position, or null if it has not been established yet.
     const latLng = getLatLng(vesselState);
 
@@ -156,7 +162,7 @@ function App() {
                                     heading={boatDir}
                                     cog={vesselState["navigation.courseOverGroundTrue"]?.value}
                                     sog={vesselState["navigation.speedOverGround"]?.value}
-                                    windSpeed={vesselState["environment.wind.speedTrue"]?.value}
+                                    windSpeed={windSpeed}
                                     windDirection={vesselState["environment.wind.directionTrue"]?.value} />
 
                     </Map>
