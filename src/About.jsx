@@ -12,14 +12,17 @@ const MapGuide = () => {
         <>
             <h2>Map guide</h2>
             <p>
-                The black line shows the wind direction. It points&nbsp;
-                <i>from</i>&nbsp;the direction of the wind. The purple line with
-                the small circle on the end is the course over ground. Its
-                length represents how far the boat will travel in 10 minutes.
-                Finally, the red boat is oriented along the boat&apos;s&nbsp;
-                <i>heading</i>. Putting it all together, in this image, the boat
-                is heading south-southwest, the wind is from the west, and the course
-                over ground is south.
+                The black line is a <a
+                href={"https://www.weather.gov/hfo/windbarbinfo"}>wind
+                barb</a> that shows the wind direction and speed. It
+                points&nbsp;<i>from</i>&nbsp;the direction of the wind. The
+                purple line with the small circle on the end is the course over
+                ground. Its length represents how far the boat will travel in 10
+                minutes. Finally, the red boat is oriented along the
+                boat&apos;s&nbsp;<i>heading</i>. Putting it all together, in
+                this image, the boat is heading south-southwest, the wind is
+                between 5 and 10 knots from the west, and the course over ground
+                is south.
             </p>
             <img src={"/flyer-map/Sample.png"}
                  width="155"

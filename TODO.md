@@ -13,4 +13,5 @@ slightly off. Something about the translation?
 
 Include pop-ups for the wind and COG vectors.
 
-Explanation of what the black and purple lines mean.
+The speed breaks for the wind barbs are slightly off. See the [NOAA
+guide](https://www.weather.gov/hfo/windbarbinfo)
