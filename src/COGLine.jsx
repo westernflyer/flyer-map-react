@@ -29,7 +29,7 @@ export const COGLine = (props) => {
 
     const [pixelDistance, setPixelDistance] = useState(null);
     const [projection, setProjection] = useState(null);
-    const [zoom, setZoom] = useState(null);
+    const [zoom, setZoom] = useState(0);
     // // Whether to show an InfoWindow
     // const [showCogInfo, setShowCogInfo] = useState(false);
     // // Where to put it
@@ -42,17 +42,17 @@ export const COGLine = (props) => {
     const map = useMap();
 
     // Add a listener for when the zoom changes. This speeds up the
-    // repositioning of the COG line when zooming in and out. Set up only once.
+    // repositioning of the COG line when zooming in and out.
     useEffect(() => {
         map.addListener("zoom_changed", () => {
             setZoom(map.getZoom());
         });
-    }, []);
+    }, [map]);
 
     useEffect(() => {
         setProjection(map.getProjection());
         setZoom(map.getZoom());
-        const scale = zoom == null ? null : Math.pow(2, zoom);
+        const scale = zoom ? Math.pow(2, zoom) : null;
         // Make sure we have all the data we need
         if (map && projection && boatPosition && cog != null && sog != null && zoom != null && scale != null) {
             // Calculate how far the boat will go in duration seconds
