@@ -41,6 +41,14 @@ export const COGLine = (props) => {
     // Retrieve the map instance
     const map = useMap();
 
+    // Add a listener for when the zoom changes. This speeds up the
+    // repositioning of the COG line when zooming in and out. Set up only once.
+    useEffect(() => {
+        map.addListener("zoom_changed", () => {
+            setZoom(map.getZoom());
+        });
+    }, []);
+
     useEffect(() => {
         setProjection(map.getProjection());
         setZoom(map.getZoom());
@@ -62,7 +70,7 @@ export const COGLine = (props) => {
                 <div style={{
                     // Make sure we rotate around the base of line.
                     transformOrigin: "center bottom",
-                    transform: "translate(0px,0px) rotate(" + cog + "rad)",
+                    transform: "rotate(" + cog + "rad)",
                 }}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

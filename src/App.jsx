@@ -72,7 +72,8 @@ function App() {
     const [formattedState, setFormattedState] = useState(new FormattedState());
 
     // Because this app relies on an external connection to the MQTT broker,
-    // internal state must be synchronized in a "useEffect" function.
+    // internal state must be synchronized in a "useEffect" function. Set up
+    // the connection and subscriptions.
     useEffect(() => {
         // Connect to the broker.
         const client = mqtt.connect(mqttOptions.brokerUrl, {
@@ -104,6 +105,7 @@ function App() {
                 setClient(null);
             }
         };
+        // Explicitly list no dependencies. This will cause this "useEffect()" to get run only once.
     }, []);
 
     // This useEffect() is used to synchronize between an arrival of a message
