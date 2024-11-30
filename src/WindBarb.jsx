@@ -19,7 +19,8 @@ const TOPMARGIN = 20;
  * oriented with the base of the shaft down, and the barbs up (as if indicating
  * a northern wind).
  *
- * @param {number} windSpeed - The wind speed in meters per second
+ * @param {object} props
+ * @param {number} props.windSpeed - The wind speed in meters per second
  * @returns {JSXElement}
  */
 const SVGWindBarb = (props) => {
