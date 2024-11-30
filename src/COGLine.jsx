@@ -30,13 +30,13 @@ export const COGLine = (props) => {
     const [pixelDistance, setPixelDistance] = useState(null);
     const [projection, setProjection] = useState(null);
     const [zoom, setZoom] = useState(null);
-    // Whether to show an InfoWindow
-    const [showCogInfo, setShowCogInfo] = useState(false);
-    // Where to put it
-    const [infoWindowPosition, setInfoWindowPosition] = useState({
-        lat: null,
-        lng: null,
-    });
+    // // Whether to show an InfoWindow
+    // const [showCogInfo, setShowCogInfo] = useState(false);
+    // // Where to put it
+    // const [infoWindowPosition, setInfoWindowPosition] = useState({
+    //     lat: null,
+    //     lng: null,
+    // });
 
     // Retrieve the map instance
     const map = useMap();
@@ -46,7 +46,7 @@ export const COGLine = (props) => {
         setZoom(map.getZoom());
         const scale = zoom == null ? null : Math.pow(2, zoom);
         // Make sure we have all the data we need
-        if (map && boatPosition && cog != null && sog != null && zoom != null && scale != null) {
+        if (map && projection && boatPosition && cog != null && sog != null && zoom != null && scale != null) {
             // Calculate how far the boat will go in duration seconds
             const distance_meters = sog * duration;
             // Calculate where the boat will end up at that time

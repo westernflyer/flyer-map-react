@@ -13,28 +13,30 @@ const WIDTH = 40;       // The width of the SVG element
 const HEIGHT = 80;      // Its height
 const SPACE = 16;       // The space along the shaft between barbs
 const FULLBARB = 14;    // The delta-x and delta-y of a full barb
-
+const TOPMARGIN = 20;
 /**
- * Component that generates a wind barb as an SVG element. The barb will be
- * vertical with the head of the shaft at the bottom and the barbs on the top.
+ * Component that generates a wind barb as an SVG element. It will be vertically
+ * oriented with the base of the shaft down, and the barbs up (as if indicating
+ * a northern wind).
  *
  * @param {number} windSpeed - The wind speed in meters per second
- * @returns {string}
+ * @returns {JSXElement}
  */
-function SVGWindBarb(props) {
+const SVGWindBarb = (props) => {
+    const { windSpeed } = props;
 
     // Convert from m/s to knots
-    let remainingSpeed = conversionDict["meter_per_second"]["knot"](props.windSpeed);
+    let remainingSpeed = conversionDict["meter_per_second"]["knot"](windSpeed);
 
     let svgParts = [];
 
     // Draw the shaft. It will be a vertical line, 80 units long, running from
     // y=20 at the top, to y=100 at the bottom. It will be centered at x=20 in
     // the box.
-    svgParts.push("<line x1='20' y1='20' x2='20' y2='100'/>");
+    svgParts.push(`<line x1=${WIDTH / 2} y1=${TOPMARGIN} x2=${WIDTH / 2} y2=${HEIGHT} />`);
 
     // Start at the top of the shaft
-    let yPos = 20;
+    let yPos = TOPMARGIN;
 
     // Wind speeds between 5 and 10 kn traditionally have a little space between
     // the end of the shaft and the barb, so move down a bit.
@@ -43,12 +45,12 @@ function SVGWindBarb(props) {
 
     function addPennant() {
         // Use a closed path to draw a pennant
-        svgParts.push(`<path d="M20 ${yPos} v ${-FULLBARB} h ${FULLBARB}z"/>`);
+        svgParts.push(`<path d="M${WIDTH / 2} ${yPos} v ${-FULLBARB} h ${FULLBARB}z"/>`);
         yPos += SPACE;
     }
 
     function addBarb(length) {
-        svgParts.push(`<line x1="20" y1="${yPos}" x2="${20 + length}" y2="${yPos - length}"/>`);
+        svgParts.push(`<line x1=${WIDTH / 2} y1="${yPos}" x2="${WIDTH / 2 + length}" y2="${yPos - length}"/>`);
         yPos += SPACE;
     }
 
@@ -64,19 +66,26 @@ function SVGWindBarb(props) {
         addBarb(FULLBARB / 2);
     }
 
+    const svgStmt = `<svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="${WIDTH}" height="${HEIGHT}"
+                stroke="black"
+                fill="black">
+                ${svgParts.join(" ")}
+            </svg>`;
+
     return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width={WIDTH} height={HEIGHT}
-            stroke="black"
-            fill="black">
-            {svgParts.join(" ")}
-        </svg>
+        <div
+            // Despite the scary name, this function is perfectly safe in this
+            // context because we control its input parameter.
+            dangerouslySetInnerHTML={{ __html: svgStmt }}
+        />
     );
-}
+};
 
 SVGWindBarb.propTypes = {
     windSpeed: PropTypes.number,
+    windDirection: PropTypes.number,
 };
 
 /**
