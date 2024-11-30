@@ -7,35 +7,62 @@
 
 import "./App.css";
 
+const MapGuide = () => {
+    return (
+        <>
+            <h2>Map guide</h2>
+            <p>
+                The black line shows the wind direction. It points&nbsp;
+                <i>from</i>&nbsp;the direction of the wind. The purple line with
+                the small circle on the end is the course over ground. Its
+                length represents how far the boat will travel in 10 minutes.
+                Finally, the red boat is oriented along the boat&apos;s&nbsp;
+                <i>heading</i>. Putting it all together, in this image, the boat
+                is heading south-southwest, the wind is from the west, and the course
+                over ground is south.
+            </p>
+            <img src={"/flyer-map/Sample.png"}
+                 width="155"
+                 height="173"
+                 alt="Boat guide" />
+        </>
+    );
+};
+
 export const About = () => {
-  return (
-    <div className="about">
-      <h2>About</h2>
-      <p>
-        Data originates on an NMEA 2000 network, flows through a{" "}
-        <a
-          href={
-            "https://actisense.com/products/pro-ndc-1e2k/"
-          }
-        >
-          Actisense PRO-NDC-1E2K gateway
-        </a>
-        , then to a <a href={"https://signalk.org/"}>SignalK server</a> running
-        on a low-powered Linux server. From there, updates are published to an{" "}
-        <a href={"https://mqtt.org/"}>MQTT broker</a>. The client browser
-        receives the updates from the broker via a websocket connection.
-      </p>
-      <p>
-        The Google Maps and &ldquo;Current Values&rdquo; table are updated using&nbsp;
-        <a href={"https://react.dev/"}>React</a>.
-      </p>
-      <p>
-        The source code can be found in the{" "}
-        <a href={"https://github.com/tkeffer/flyer-map-react"}>
-          <span className={"tty"}>flyer-map-react</span>
-        </a>{" "}
-        repository.
-      </p>
-    </div>
-  );
+    return (
+        <div className="about">
+            <MapGuide />
+            <h2>About</h2>
+            <p>
+                Data originates on an NMEA 2000 network, flows through a{" "}
+                <a
+                    href={
+                        "https://actisense.com/products/pro-ndc-1e2k/"
+                    }
+                >
+                    Actisense PRO-NDC-1E2K gateway
+                </a>
+                , then to a <a href={"https://signalk.org/"}>SignalK
+                server</a> running
+                on a low-powered Linux server. From there, updates are published
+                to an{" "}
+                <a href={"https://mqtt.org/"}>MQTT broker</a>. The client
+                browser
+                receives the updates from the broker via a websocket connection.
+            </p>
+            <p>
+                The Google Maps and &ldquo;Current Values&rdquo; table are
+                updated using&nbsp;
+                <a href={"https://react.dev/"}>React</a>.
+            </p>
+            <p>
+                The source code can be found in the{" "}
+                <a href={"https://github.com/tkeffer/flyer-map-react"}>
+                    <span className={"tty"}>flyer-map-react</span>
+                </a>{" "}
+                repository.
+            </p>
+        </div>
+    );
 };
