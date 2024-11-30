@@ -5,12 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useEffect, useRef, useState } from "react";
-import { InfoWindow, useMap } from "@vis.gl/react-google-maps";
+import { useEffect, useState } from "react";
+import { useMap } from "@vis.gl/react-google-maps";
 import PropTypes from "prop-types";
 
-import { latLngAtBearing } from "./utilities";
-import { formatValue } from "./units";
+import { getPixelDistance, latLngAtBearing } from "./utilities";
 
 /**
  * Component that displays a line for COG/SOG.
@@ -28,68 +27,68 @@ export const COGLine = (props) => {
     // Provide a default duration of 10 minutes
     const duration = props.duration || 600;
 
-    // The polyline representing the COG vector
-    const cogPathRef = useRef(null);
-    // The lat/lon position at the end of the line.
-    const [infoWindowPosition, setInfoWindowPosition] = useState({lat:null, lng:null});
-    // Whether to show an InfoWindow at the end of the line
+    const [pixelDistance, setPixelDistance] = useState(null);
+    const [projection, setProjection] = useState(null);
+    const [zoom, setZoom] = useState(null);
+    // Whether to show an InfoWindow
     const [showCogInfo, setShowCogInfo] = useState(false);
+    // Where to put it
+    const [infoWindowPosition, setInfoWindowPosition] = useState({
+        lat: null,
+        lng: null,
+    });
 
     // Retrieve the map instance
     const map = useMap();
 
     useEffect(() => {
-        if (!cogPathRef.current && map) {
-            const cogPath = new window.google.maps.Polyline({
-                geodesic: true,
-                strokeColor: "white",
-                strokeOpacity: 1.0,
-                strokeWeight: 1,
-            });
-            // Attach Polyline to the map
-            cogPath.setMap(map);
-            // Add listeners for mouseover and mouseout
-            cogPath.addListener("mouseover", (e) => {
-                setShowCogInfo(true);
-                setInfoWindowPosition(e.latLng);
-            });
-            cogPath.addListener("mouseout", () => {
-                setShowCogInfo(false);
-            });
-            cogPathRef.current = cogPath;
-        }
-    }, [map]);
-
-    useEffect(() => {
-        // Make sure we have all the data we need before setting the path
-        if (map && boatPosition && cog != null && sog != null) {
+        setProjection(map.getProjection());
+        setZoom(map.getZoom());
+        const scale = zoom == null ? null : Math.pow(2, zoom);
+        // Make sure we have all the data we need
+        if (map && boatPosition && cog != null && sog != null && zoom != null && scale != null) {
             // Calculate how far the boat will go in duration seconds
             const distance_meters = sog * duration;
-            // Calculate and save where the boat will end up in that time
+            // Calculate where the boat will end up at that time
             const endBoatPosition = latLngAtBearing(boatPosition, distance_meters, cog);
-            // Construct coordinates out of the two points
-            const lineCoordinates = [boatPosition, endBoatPosition];
-            // Attach the coordinates to the polyline
-            cogPathRef.current.setPath(lineCoordinates);
+            // Calculate its pixel distance
+            setPixelDistance(getPixelDistance(scale, projection, boatPosition, endBoatPosition));
         }
-    }, [map, boatPosition, cog, sog, duration]);
+    }, [map, projection, zoom, boatPosition, cog, sog, duration]);
 
     return (
         <>
-            {infoWindowPosition?.lat != null && showCogInfo &&
-                <InfoWindow
-                    position={infoWindowPosition}
-                    headerContent={<h3>Course over ground</h3>}
-                >
-                    <p>The white line represents the distance the boat will
-                        travel over the next {duration / 60} minutes.<br />
-                        <br />
-                        Speed and direction:&nbsp;
-                        {formatValue(sog, "group_speed", "knot")}&nbsp;
-                        at {formatValue(cog, "group_direction", "radian")}
-                    </p>
-                </InfoWindow>
+            {pixelDistance != null &&
+                <div style={{
+                    // Make sure we rotate around the base of line.
+                    transformOrigin: "center bottom",
+                    transform: "translate(0px,0px) rotate(" + cog + "rad)",
+                }}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="10" height={pixelDistance + 10}
+                        stroke="purple"
+                        fill="none">
+                        <line x1="5" y1={pixelDistance + 10} x2="5" y2={10} />
+                        <circle cx="5" cy="10" r="2" />
+                    </svg>
+                </div>
             }
+
+            {/*{infoWindowPosition?.lat != null && showCogInfo &&*/}
+            {/*    <InfoWindow*/}
+            {/*        position={infoWindowPosition}*/}
+            {/*        headerContent={<h3>Course over ground</h3>}*/}
+            {/*    >*/}
+            {/*        <p>The white line represents the distance the boat will*/}
+            {/*            travel over the next {duration / 60} minutes.<br />*/}
+            {/*            <br />*/}
+            {/*            Speed and direction:&nbsp;*/}
+            {/*            {formatValue(sog, "group_speed", "knot")}&nbsp;*/}
+            {/*            at {formatValue(cog, "group_direction", "radian")}*/}
+            {/*        </p>*/}
+            {/*    </InfoWindow>*/}
+            {/*}*/}
         </>
     );
 };

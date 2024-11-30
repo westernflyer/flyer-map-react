@@ -8,6 +8,6 @@ would allow multiple devices to provide duplicate data.
 Default should be to move the map to follow the boat. If the user moves the map,
 it stays put. A button restores default behavior.
 
-Add an explanation of what the white and black lines mean.
+Include pop-ups for the wind and COG vectors.
 
-Include a pop-up for the wind bar.
+Explanation of what the black and purple lines mean.

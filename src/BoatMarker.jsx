@@ -26,14 +26,16 @@ import { WindBarb } from "./WindBarb.jsx";
  * @param {number} props.windDirection - True wind direction in radians. 0=N
  */
 export const BoatMarker = (props) => {
-    const { latLng, heading, cog, sog,
-        windSpeed, windDirection } = props;
+    const {
+        latLng, heading, cog, sog,
+        windSpeed, windDirection,
+    } = props;
     return (
         <>
             <AdvancedMarker
                 key={"flyer-position"}
                 position={latLng}
-                title={"Western Flyer"}
+                title={"Western Flyer position"}
             >
                 <div style={{
                     transform: "translate(0px,25px) rotate(" + heading + "rad)",
@@ -42,7 +44,17 @@ export const BoatMarker = (props) => {
                          alt="Boat position" />
                 </div>
             </AdvancedMarker>
-            <COGLine boatPosition={latLng} cog={cog} sog={sog}></COGLine>
+            <AdvancedMarker
+                key={"flyer-cog"}
+                position={latLng}
+                title={"Western Flyer COG"}
+            >
+                <COGLine
+                    boatPosition={latLng}
+                    cog={cog}
+                    sog={sog}
+                />
+            </AdvancedMarker>
             <AdvancedMarker
                 key={"flyer-wind"}
                 position={latLng}

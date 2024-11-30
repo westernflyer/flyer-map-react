@@ -163,7 +163,8 @@ function App() {
                                     cog={vesselState["navigation.courseOverGroundTrue"]?.value}
                                     sog={vesselState["navigation.speedOverGround"]?.value}
                                     windSpeed={windSpeed}
-                                    windDirection={vesselState["environment.wind.directionTrue"]?.value} />
+                                    windDirection={vesselState["environment.wind.directionTrue"]?.value}
+                        />
 
                     </Map>
                 )) || (

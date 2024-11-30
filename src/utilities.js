@@ -181,3 +181,18 @@ export function latLngAtBearing(latLng, distance, bearing_radians) {
 
     return newLatLng;
 }
+
+export function getPixelDistance(scale, projection, latLng1, latLng2) {
+    // Convert the LatLng positions to pixel positions
+    const point1 = projection.fromLatLngToPoint(latLng1);
+    const point2 = projection.fromLatLngToPoint(latLng2);
+
+    // Scale them to actual pixel positions at the current zoom level
+    const pixel1 = { x: point1.x * scale, y: point1.y * scale };
+    const pixel2 = { x: point2.x * scale, y: point2.y * scale };
+
+    // Calculate the Euclidean distance in pixels
+    const pixelDistance = Math.sqrt(Math.pow(pixel2.x - pixel1.x, 2) + Math.pow(pixel2.y - pixel1.y, 2));
+
+    return pixelDistance;
+}
