@@ -12,6 +12,3 @@ The COG line and the wind barb don't quite meet. It looks like the COG line is
 slightly off. Something about the translation?
 
 Include pop-ups for the wind and COG vectors.
-
-The speed breaks for the wind barbs are slightly off. See the [NOAA
-guide](https://www.weather.gov/hfo/windbarbinfo)

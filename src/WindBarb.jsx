@@ -39,9 +39,9 @@ const SVGWindBarb = (props) => {
     // Start at the top of the shaft
     let yPos = TOPMARGIN;
 
-    // Wind speeds between 5 and 10 kn traditionally have a little space between
+    // Wind speeds between 3 and 8 kn traditionally have a little space between
     // the end of the shaft and the barb, so move down a bit.
-    if (remainingSpeed >= 5 && remainingSpeed < 10)
+    if (remainingSpeed >= 3 && remainingSpeed < 8)
         yPos += SPACE / 2;
 
     function addPennant() {
@@ -55,15 +55,15 @@ const SVGWindBarb = (props) => {
         yPos += SPACE;
     }
 
-    while (remainingSpeed >= 50) {
+    while (remainingSpeed >= 48) {
         addPennant();
         remainingSpeed -= 50;
     }
-    while (remainingSpeed >= 10) {
+    while (remainingSpeed >= 8) {
         addBarb(FULLBARB);
         remainingSpeed -= 10;
     }
-    if (remainingSpeed >= 5) {
+    if (remainingSpeed >= 3) {
         addBarb(FULLBARB / 2);
     }
 
