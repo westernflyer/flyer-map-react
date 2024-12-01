@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import PropTypes from "prop-types";
 
+import { markerOptions} from "../flyer.config.js"
 import { getPixelDistance, latLngAtBearing } from "./utilities";
 
 /**
@@ -66,7 +67,7 @@ export const COGLine = (props) => {
 
     return (
         <>
-            {pixelDistance != null &&
+            {pixelDistance != null && pixelDistance >= markerOptions.minCOGLength &&
                 <div style={{
                     // Make sure we rotate around the base of line.
                     transformOrigin: "center bottom",
