@@ -33,9 +33,9 @@ export const BoatMarker = (props) => {
     return (
         <>
             <AdvancedMarker
-                key={"flyer-position"}
+                key="flyer-position"
                 position={latLng}
-                title={"Western Flyer position"}
+                title="Western Flyer position"
             >
                 <div style={{
                     transform: "translate(0px,25px) rotate(" + heading + "rad)",
@@ -45,9 +45,9 @@ export const BoatMarker = (props) => {
                 </div>
             </AdvancedMarker>
             <AdvancedMarker
-                key={"flyer-cog"}
+                key="flyer-cog"
                 position={latLng}
-                title={"Western Flyer COG"}
+                title="Western Flyer COG"
             >
                 <COGLine
                     boatPosition={latLng}
@@ -56,9 +56,9 @@ export const BoatMarker = (props) => {
                 />
             </AdvancedMarker>
             <AdvancedMarker
-                key={"flyer-wind"}
+                key="flyer-wind"
                 position={latLng}
-                title={"True wind at Western Flyer"}
+                title="True wind at Western Flyer"
             >
                 <WindBarb
                     windSpeed={windSpeed}

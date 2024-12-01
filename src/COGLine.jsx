@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 import PropTypes from "prop-types";
 
-import { markerOptions} from "../flyer.config.js"
+import { markerOptions } from "../flyer.config.js";
 import { getPixelDistance, latLngAtBearing } from "./utilities";
 
 /**
@@ -31,13 +31,6 @@ export const COGLine = (props) => {
     const [pixelDistance, setPixelDistance] = useState(null);
     const [projection, setProjection] = useState(null);
     const [zoom, setZoom] = useState(0);
-    // // Whether to show an InfoWindow
-    // const [showCogInfo, setShowCogInfo] = useState(false);
-    // // Where to put it
-    // const [infoWindowPosition, setInfoWindowPosition] = useState({
-    //     lat: null,
-    //     lng: null,
-    // });
 
     // Retrieve the map instance
     const map = useMap();
@@ -83,25 +76,9 @@ export const COGLine = (props) => {
                     </svg>
                 </div>
             }
-
-            {/*{infoWindowPosition?.lat != null && showCogInfo &&*/}
-            {/*    <InfoWindow*/}
-            {/*        position={infoWindowPosition}*/}
-            {/*        headerContent={<h3>Course over ground</h3>}*/}
-            {/*    >*/}
-            {/*        <p>The white line represents the distance the boat will*/}
-            {/*            travel over the next {duration / 60} minutes.<br />*/}
-            {/*            <br />*/}
-            {/*            Speed and direction:&nbsp;*/}
-            {/*            {formatValue(sog, "group_speed", "knot")}&nbsp;*/}
-            {/*            at {formatValue(cog, "group_direction", "radian")}*/}
-            {/*        </p>*/}
-            {/*    </InfoWindow>*/}
-            {/*}*/}
         </>
     );
 };
-
 
 COGLine.propTypes = {
     boatPosition: PropTypes.objectOf(PropTypes.number),
