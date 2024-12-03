@@ -167,6 +167,7 @@ function App() {
                         defaultZoom={10}
                         defaultCenter={latLng}
                         streetViewControl={false}
+                        scaleControl={true}
                         mapId="DEMO_MAP_ID">
                         <BoatMarker latLng={latLng}
                                     heading={boatDir}
