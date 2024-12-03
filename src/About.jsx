@@ -21,7 +21,7 @@ const MapGuide = () => {
                 minutes. Finally, the red boat is oriented along the
                 boat&apos;s&nbsp;<i>heading</i>. Putting it all together, in
                 this image, the boat is heading south-southwest, the wind is
-                between 5 and 10 knots from the west, and the course over ground
+                between 3 and 8 knots from the west, and the course over ground
                 is south.
             </p>
             <img src={"/flyer-map/Sample.png"}

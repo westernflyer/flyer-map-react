@@ -4,10 +4,10 @@
 
 export const mqttOptions = {
     // The URL for the MQTT broker
-       brokerUrl : "ws://localhost:8080",
+    // brokerUrl : "ws://localhost:8080",
     // or for secure websockets:
     //   brokerUrl : "wss://mydomain.com:9001
-    //brokerUrl: "wss://threefools.org:9001",
+    brokerUrl: "wss://threefools.org:9001",
 
     // The client ID to be used for the MQTT connection
     clientId: "flyer-client-" + Math.floor(Math.random() * 10000),
@@ -22,7 +22,7 @@ export const mqttOptions = {
 
     // Which MQTT plugin are we using in SignalK?
     // Choose between "signalk-mqtt-gw", or "signalk-mqtt-push".
-    plugIn: "signalk-mqtt-push",
+    plugIn: "signalk-mqtt-gw",
 };
 
 export const tableOptions = {
