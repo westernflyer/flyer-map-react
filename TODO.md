@@ -14,3 +14,5 @@ Boat icon with the shape of the Flyer.
 
 Allow the boat icon, COG line and wind line to all share the same
 `AdvancedMarkerElement`. 
+
+Figure out how to show depth. Does the PRO-NDC pass it?
