@@ -10,8 +10,6 @@ it stays put. A button restores default behavior.
 
 Track for the position over the last hour.
 
-Boat icon with the shape of the Flyer.
-
 Allow the boat icon, COG line and wind line to all share the same
 `AdvancedMarkerElement`. 
 
