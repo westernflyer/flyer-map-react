@@ -119,9 +119,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="2.2150332"
-     inkscape:cx="200.22273"
-     inkscape:cy="141.53287"
+     inkscape:zoom="1.566265"
+     inkscape:cx="204.62693"
+     inkscape:cy="197.60385"
      inkscape:window-width="1440"
      inkscape:window-height="870"
      inkscape:window-x="0"
@@ -129,33 +129,34 @@
      inkscape:window-maximized="0"
      inkscape:current-layer="svg1" />
   <path
-     style="display:inline;opacity:1;fill:url(#pattern9);fill-opacity:1;stroke:#460000;stroke-opacity:0.997423"
+     style="display:inline;opacity:1;fill:url(#pattern9);fill-opacity:1;stroke:#460000;stroke-opacity:1.0"
      d="m 32.948997,235.02853 c 5.014973,3.49274 11.30429,2.9459 20.612837,3.86407 19.63902,1.70409 43.410213,1.40175 68.331816,2.3632 32.77984,1.26461 73.29737,1.96652 99.81039,2.96231 44.79641,-0.01 72.75712,0.62616 115.29596,-12.80584 17.52857,-6.18877 36.50032,-16.40536 44.18166,-34.00139 C 373.50032,177.40536 354.52857,167.18877 337,161 294.46116,147.568 266.50045,148.20406 221.70404,148.19416 c -26.51302,0.99579 -67.03055,1.6977 -99.81039,2.96231 -24.921603,0.96145 -48.692796,0.65911 -68.331816,2.3632 -9.308547,0.91817 -15.597864,0.37133 -20.612837,3.86407 -8.496812,5.91771 -11.797625,21.58278 -11.350404,38.8224 -0.447221,17.23961 2.853592,32.90468 11.350404,38.82239 z"
      id="path3"
-     sodipodi:nodetypes="scscccccscscs" />
+     sodipodi:nodetypes="scscccccscscs"
+     inkscape:label="Boat outline" />
   <rect
-     style="display:inline;opacity:1;mix-blend-mode:normal;fill:url(#linearGradient4);stroke:#4e0000;stroke-opacity:0.997423"
+     style="display:inline;opacity:1;mix-blend-mode:normal;fill:url(#linearGradient4);stroke:#4e0000;stroke-opacity:1.0"
      id="rect9"
      width="32"
      height="40"
-     x="128.65001"
-     y="175.89616"
+     x="128"
+     y="175"
      inkscape:label="Deck hatch"
      rx="4"
      ry="4" />
   <path
-     style="display:inline;fill:url(#linearGradient2);stroke:#4e0000;stroke-opacity:0.997423"
+     style="display:inline;fill:url(#linearGradient2);stroke:#4e0000;stroke-opacity:1.0"
      d="m 190.51633,223.92441 c -4.15509,-18.50292 -4.53922,-36.75279 0.90292,-56.88402 2.1245,-7.85883 78.33813,-2.21284 99.77277,0.45146 21.43464,2.6643 22.58146,2.98281 31.60224,9.02921 9.02078,6.0464 5.4799,30.11312 -0.90292,35.66538 -6.38282,5.55226 -6.62262,5.13433 -27.53909,9.48067 -20.91647,4.34634 -102.30859,9.0586 -103.83592,2.2573 z"
      id="path18"
      sodipodi:nodetypes="sszzzzs"
      inkscape:label="Deck house" />
   <ellipse
-     style="fill:url(#linearGradient6);stroke:#4e0000;stroke-opacity:0.997423"
+     style="fill:url(#linearGradient6);stroke:#4e0000;stroke-opacity:1.0"
      id="path4"
-     cx="-247.17462"
-     cy="195.7397"
-     rx="10.158"
-     ry="7.2233682"
+     cx="-250"
+     cy="195"
+     rx="10"
+     ry="7"
      inkscape:label="Stack"
      transform="scale(-1,1)" />
 </svg>
