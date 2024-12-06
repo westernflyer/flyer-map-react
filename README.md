@@ -8,15 +8,18 @@ What follows are specific instructions for each point along the way.
 
 ## NMEA 2000 and gateway
 
-The Flyer map expects data on an NMEA 2000 network. It also expects there to be
-a gateway between the network and a more traditional IP-oriented network. A good
-choice to do this is the
-[YDEN-02](https://yachtdevicesus.com/products/nmea-2000-ethernet-gateway-yden-02)
-from Yacht Devices. Plug it into the NMEA 2000 network, then run an ethernet
-cable between it and the LAN router. From there, the SignalK server can pick it
-up.
+The Flyer map uses an [Actisense PRO-NDC-1E2K
+gateway](https://actisense.com/products/pro-ndc-1e2k/) between the ship's NMEA
+2000 network, and its ethernet network. It selectively passes on data,
+converting it into NMEA 0183, then puts it on ethernet, where a SignalK server
+picks it up.
 
 ## SignalK
+
+The Flyer map uses a [SignalK server](https://github.com/SignalK/signalk-server)
+to listen to NMEA 0183 data coming from the gateway, and then at regular
+intervals pass it on to a MQTT broker. Instructions below for installing the
+server.
 
 1. Install the SignalK server:
 
@@ -39,7 +42,7 @@ up.
 1. The plugin must be installed from the configuration directory `~/.signalk`:
 
         cd ~/.signalk
-        npm install signalk-mqtt-push
+        npm install signalk-mqtt-gw
 
 2. Then restart the SignalK server
 
@@ -88,7 +91,7 @@ Add any interested paths. You can also set how often they get published.
 #### Copy a config file into place
 
 1. The alternative approach is to simply replace the file
-`~/.signalk/plugin-config-data/signalk-mqtt-push.json` with the copy found in
+`~/.signalk/plugin-config-data/signalk-mqtt-gw.json` with the copy found in
 this git repository. Then double check to see if it looks reasonable for your
 environment. In particular, you will probably want to change option
 `remoteHost`.
@@ -106,7 +109,7 @@ environment. In particular, you will probably want to change option
 An MQTT broker is used to act as a liaison between the boat and any client
 browsers. The MQTT protocol takes minimal bandwidth, so it is excellent for
 acting over a satellite or cellular connection. It should be installed on the
-same server as the webserver.
+same server as the webserver that is intended to be used.
 
 1. To install an MQTT broker:
 
