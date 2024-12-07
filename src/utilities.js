@@ -74,26 +74,14 @@ export function getUpdateDicts(signalk_obj) {
                 )
                 ;
             } else {
-                if (value.path === "environment.wind.speedOverGround"){
-                    updates.push(
-                        new Update(
-                            value.path,
-                            4 * .514445,
-                            signalKUnits[value.path],
-                            dayjs(update.timestamp),
-                        ),
-                    );
-
-                } else {
-                    updates.push(
-                        new Update(
-                            value.path,
-                            value.value,
-                            signalKUnits[value.path],
-                            dayjs(update.timestamp),
-                        ),
-                    );
-                }
+                updates.push(
+                    new Update(
+                        value.path,
+                        value.value,
+                        signalKUnits[value.path],
+                        dayjs(update.timestamp),
+                    ),
+                );
             }
         }
     }
