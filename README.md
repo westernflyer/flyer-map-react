@@ -44,7 +44,28 @@ server.
         cd ~/.signalk
         npm install signalk-mqtt-gw
 
-2. Then restart the SignalK server
+2. _Very important!_ After installation, modify the code in `~/.signalk/node_modules/signalk-mqtt-gw/index.js`
+to change this:
+
+    ```javascript
+    client = mqtt.connect(options.remoteHost, {
+    rejectUnauthorized: options.rejectUnauthorized,
+    reconnectPeriod: 60000,
+    clientId: app.selfId,
+   ```
+
+    to this:
+
+    ```javascript
+    client = mqtt.connect(options.remoteHost, {
+    rejectUnauthorized: options.rejectUnauthorized,
+    reconnectPeriod: 60000,
+    reconnectOnConnackError: true,
+    clientId: app.selfId,
+   ```
+    This will increase the robustness of the SignalK server.
+
+3. Then restart the SignalK server
 
 ### Configure the MQTT plugin
 
