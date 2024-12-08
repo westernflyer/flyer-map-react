@@ -9,11 +9,11 @@ import PropTypes from "prop-types";
 
 import { conversionDict } from "./units.js";
 
-const WIDTH = 40;       // The width of the SVG element
+const WIDTH = 40;       // The width of the SVG element box
 const HEIGHT = 80;      // Its height
-const SPACE = 16;       // The space along the shaft between barbs
+const SPACE = 10;       // The space along the shaft between barbs
 const FULLBARB = 14;    // The delta-x and delta-y of a full barb
-const TOPMARGIN = 20;
+const TOPMARGIN = 20;   // The distance from the top of the box to the top of the barb
 /**
  * Component that generates a wind barb as an SVG element. It will be vertically
  * oriented with the base of the shaft down, and the barbs up (as if indicating
