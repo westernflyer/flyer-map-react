@@ -74,6 +74,10 @@
       {
         "path" : "steering.rudderAngle",
         "interval" : 10
+      },
+      {
+        "path" : "environment.outside.temperature",
+        "interval" : 120
       }
     ]
   },
