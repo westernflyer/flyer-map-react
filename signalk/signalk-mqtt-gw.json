@@ -70,6 +70,10 @@
       {
         "path": "environment.outside.pressure",
         "interval": 120
+      },
+      {
+        "path" : "steering.rudderAngle",
+        "interval" : 10
       }
     ]
   },

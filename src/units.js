@@ -25,6 +25,7 @@ export const signalKUnits = {
     "navigation.position": "dd.dd",
     "navigation.speedOverGround": "meter_per_second",
     "navigation.speedThroughWater": "meter_per_second",
+    "steering.rudderAngle" : "radian",
     last_update: "unix_epoch",
 };
 
@@ -47,11 +48,13 @@ const unitGroup = {
     "navigation.position.longitude": "group_longitude",
     "navigation.speedOverGround": "group_speed",
     "navigation.speedThroughWater": "group_speed",
+    "steering.rudderAngle": "group_angle",
     last_update: "group_time",
 };
 
 // Which label to use for a given unit
 const unitLabels = {
+    degree_angle: "º",
     degree_C: "°C",
     degree_F: "°F",
     degree_K: "ºK",
@@ -84,11 +87,13 @@ export const pathLabels = {
     "navigation.position.longitude": "Longitude",
     "navigation.speedOverGround": "Speed over ground",
     "navigation.speedThroughWater": "Speed through water",
+    "steering.rudderAngle": "Rudder angle",
     last_update: "Last update",
 };
 
 // What unit to display for each unit group
 const unitSelection = {
+    group_angle: "degree_angle",
     group_depth: "meter",
     group_direction: "degree_true",
     group_distance: "nautical_mile",
@@ -116,6 +121,7 @@ export const conversionDict = {
         km_per_hour: (x) => 3.6 * x,
     },
     radian: {
+        degree_angle: (x) => 57.295779513 * x,
         degree_true: (x) => 57.295779513 * x,
     },
     pascal: {
@@ -174,6 +180,9 @@ export function formatValue(value, unit_group, unit) {
             break;
         case "pascal":
             fval = convertedValue.toFixed(0);
+            break;
+        case "degree_angle":
+            fval = convertedValue.toFixed(1);
             break;
         case "degree_true":
             fval = convertedValue.toFixed(0);

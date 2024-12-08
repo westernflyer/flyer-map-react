@@ -45,6 +45,7 @@ export const tableOptions = {
         "environment.wind.angleApparent",
         "environment.water.temperature",
         "environment.outside.pressure",
+        "steering.rudderAngle",
     ],
 };
 
