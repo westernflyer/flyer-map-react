@@ -78,7 +78,7 @@ export const pathLabels = {
     "environment.outside.pressure": "Pressure",
     "environment.outside.temperature": "Outside temperature",
     "environment.water.temperature": "Water temperature",
-    "environment.wind.angleApparent": "Wind direction (apparent)",
+    "environment.wind.angleApparent": "Wind angle (apparent)",
     "environment.wind.directionTrue": "Wind direction (true)",
     "environment.wind.speedApparent": "Wind speed (apparent)",
     "environment.wind.speedOverGround": "Wind speed (true)",
