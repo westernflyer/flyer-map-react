@@ -37,89 +37,35 @@ server.
    side). Fill in as appropriate. In particular, supply a value for MMSI. This
    will be used to mark the published topics to the MQTT broker.
 
-### Install the MQTT plugin
+### Install the SignalK plugins
 
-1. The plugin must be installed from the configuration directory `~/.signalk`:
+1. Two plugins are needed. They should be installed from the configuration
+   directory `~/.signalk`:
 
         cd ~/.signalk
         npm install signalk-mqtt-gw
+        npm install signalk-derived-data
 
-2. _Very important!_ After installation, modify the code in `~/.signalk/node_modules/signalk-mqtt-gw/index.js`
-to change this:
+2. Then restart the SignalK server
 
-    ```javascript
-    client = mqtt.connect(options.remoteHost, {
-    rejectUnauthorized: options.rejectUnauthorized,
-    reconnectPeriod: 60000,
-    clientId: app.selfId,
-   ```
+### Configure the plugins
 
-    to this:
+Next, you need to configure the plugins.
 
-    ```javascript
-    client = mqtt.connect(options.remoteHost, {
-    rejectUnauthorized: options.rejectUnauthorized,
-    reconnectPeriod: 60000,
-    reconnectOnConnackError: true,
-    clientId: app.selfId,
-   ```
-    This will increase the robustness of the SignalK server.
+1. Copy the relevant configuration files from the repository to the SignalK
+   plugin configuration directory. For example:
 
-3. Then restart the SignalK server
-
-### Configure the MQTT plugin
-
-Next, you need to configure the MQTT plugin. There are two choices:
-
-1. [Do it manually](#manually-configure-the-plugin)
-2. [Copy a config file into place](#copy-a-config-file-into-place)
-
-#### Manually configure the plugin
-
-1. Figure out which paths you want to watch. You can discover available data
-streams under the "Data Browser" tab. For example, `navigation.position` and
-`environment.depth.belowTransducer` would give location and depth (below
-transducer), respectively.
-
-2. Then configure the plugin in the signalk admin webpage, nominally
-http://localhost:3000/, to watch those paths and publish any changes to the
-broker. Look under "Server", then "Plugin Config", then "Signal K - MQTT Push".
-Add any interested paths. You can also set how often they get published.
-
-    Example:
-    
-    | SignalK path                        | Refresh rate |
-    |:------------------------------------|-------------:|
-    | `navigation.position`               |           20 |
-    | `navigation.speedOverGround`        |           20 | 
-    | `navigation.courseOverGroundTrue`   |           20 |      
-    | `navigation.speedThroughWater`      |           20 |
-    | `navigation.headingTrue`            |           20 |
-    | `environment.depth.belowTransducer` |           20 |     
-    | `environment.depth.belowKeel`       |           20 |           
-    | `environment.wind.speedTrue`        |           20 |
-    | `environment.wind.directionTrue`    |           20 |
-    | `environment.wind.speedApparent`    |           20 |
-    | `environment.wind.angleApparent`    |           20 |
-    | `environment.water.temperature`     |          120 |      
-    
-3. Double check that the topics are getting published:
-    
-        mosquitto_sub -h localhost -t '#'
-    
-    The `-t '#'` says that you want to listen to all topics.
-
-#### Copy a config file into place
-
-1. The alternative approach is to simply replace the file
-`~/.signalk/plugin-config-data/signalk-mqtt-gw.json` with the copy found in
-this git repository. Then double check to see if it looks reasonable for your
-environment. In particular, you will probably want to change option
-`remoteHost`.
+        cp ~/git/flyer-map-react/signalk/derived-data.json ~/.signalk/plugin-config-data
+        cp ~/git/flyer-map-react/signalk/signalk-mqtt-gw.json ~/.signalk/plugin-config-data
 
 2. Restart the SignalK server.
 
-3. Then double check that the topics are getting published:
+3. Browse to the settings for the plugin `Signal K - MQTT
+   Gateway` ([link](http://localhost:3000/admin/#/serverConfiguration/plugins/signalk-mqtt-gw))
+   and double-check the values. In particular, check that the MQTT Server Url is
+   correct.
+
+4. Then double check that the topics are getting published:
 
         mosquitto_sub -h localhost -t '#'
 
@@ -130,7 +76,7 @@ environment. In particular, you will probably want to change option
 An MQTT broker is used to act as a liaison between the boat and any client
 browsers. The MQTT protocol takes minimal bandwidth, so it is excellent for
 acting over a satellite or cellular connection. It should be installed on the
-same server as the webserver that is intended to be used.
+same server as the webserver.
 
 1. To install an MQTT broker:
 
@@ -196,3 +142,8 @@ used:
 it will look something like:
 
         export const google_key = "yourlonginscrutablegoogleapikey";
+
+### Install dependencies, build, then deploy the client
+    npm install
+    npm run build
+    npm run deploy
