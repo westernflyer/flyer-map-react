@@ -16,7 +16,7 @@
 # executable after editing it to your needs.
 
 # Set which domain this script will be run for
-MY_DOMAIN=acme.com
+MY_DOMAIN=threefools.org
 # Set the directory that the certificates will be copied to.
 CERTIFICATE_DIR=/etc/mosquitto/certs
 
@@ -25,13 +25,17 @@ for D in ${RENEWED_DOMAINS}; do
 		# Copy new certificate to Mosquitto directory
 		cp ${RENEWED_LINEAGE}/fullchain.pem ${CERTIFICATE_DIR}/fullchain.pem
 		cp ${RENEWED_LINEAGE}/cert.pem ${CERTIFICATE_DIR}/cert.pem
-		cp ${RENEWED_LINEAGE}/privkey.pem ${CERTIFICATE_DIR}/privkey.key
+		cp ${RENEWED_LINEAGE}/privkey.pem ${CERTIFICATE_DIR}/privkey.pem
 
 		# Set ownership to Mosquitto
-		chown mosquitto: ${CERTIFICATE_DIR}/server.pem ${CERTIFICATE_DIR}/server.key
+		chown mosquitto: ${CERTIFICATE_DIR}/fullchain.pem
+		chown mosquitto: ${CERTIFICATE_DIR}/cert.pem
+		chown mosquitto: ${CERTIFICATE_DIR}/privkey.pem
 
 		# Ensure permissions are restrictive
-		chmod 0600 ${CERTIFICATE_DIR}/server.pem ${CERTIFICATE_DIR}/server.key
+		chmod 0600 ${CERTIFICATE_DIR}/fullchain.pem
+		chmod 0600 ${CERTIFICATE_DIR}/cert.pem
+		chmod 0600 ${CERTIFICATE_DIR}/privkey.pem
 
 		# Tell Mosquitto to reload certificates and configuration
 		pkill -HUP -x mosquitto
