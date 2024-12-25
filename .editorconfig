@@ -11,6 +11,7 @@ max_line_length = 99
 # Javascript files.
 [*.{js,jsx}]
 max_line_length = 80
+indent_size = 4
 
 # HTML files
 [*.{htm,html}]

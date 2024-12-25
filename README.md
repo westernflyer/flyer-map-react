@@ -14,6 +14,53 @@ gateway](https://actisense.com/products/pro-ndc-1e2k/) between the ship's NMEA
 converting it into NMEA 0183, then puts it on ethernet, where a SignalK server
 picks it up.
 
+## MQTT
+
+An MQTT broker is used to act as a liaison between the boat and any client
+browsers. The MQTT protocol takes minimal bandwidth, so it is excellent for
+acting over a satellite or cellular connection. It should be installed on the
+same server as the webserver.
+
+1. To install an MQTT broker:
+
+    ```
+    sudo apt install mosquitto
+    # Not essential, but useful:
+    sudo apt install mosquitto-clients
+    ```
+
+2. Edit the file `/etc/mosquitto/mosquitto.conf` and add the following lines
+
+    ```
+    # For an unsecure MQTT connection
+    listener 1883
+    
+    # For an unsecure MQTT connection over websockets:
+    listener 8080
+    protocol websockets
+    allow_anonymous true
+    
+    # For a secure MQTT connection over websockets:
+    listener 9001
+    protocol websockets
+    allow_anonymous true
+    cafile /etc/mosquitto/certs/fullchain.pem
+    certfile /etc/mosquitto/certs/cert.pem
+    keyfile /etc/mosquitto/certs/privkey.pem
+    ```
+
+   If you are using Let's Encrypt, symbolic links for the three certificates can be
+   found in `/etc/letsencrypt/live/yourdomain.com`. Unfortunately, Let's Encrypt
+   refreshes them every 2 months, so you need to rotate new ones into place after
+   every refresh. The script `mosquitto-copy.sh` in the directory `letsencrypt` can
+   do this for you. Put it in the directory
+   `/etc/letsencrypt/renewal-hooks/deploy`. Be sure to change the variable
+   `MY_DOMAIN` to reflect your domain.
+
+3. One final step, if you are using a remote host, you may need to punch a hole
+   through its firewall for ports `1883` and `8080`, and `9001`.
+
+
 ## SignalK
 
 The Flyer map uses a [SignalK server](https://github.com/SignalK/signalk-server)
@@ -71,51 +118,6 @@ Next, you need to configure the plugins.
 
     The `-t '#'` says that you want to listen to all topics.
 
-## MQTT
-
-An MQTT broker is used to act as a liaison between the boat and any client
-browsers. The MQTT protocol takes minimal bandwidth, so it is excellent for
-acting over a satellite or cellular connection. It should be installed on the
-same server as the webserver.
-
-1. To install an MQTT broker:
-
-    ```
-    sudo apt install mosquitto
-    # Not essential, but useful:
-    sudo apt install mosquitto-clients
-    ```
-
-2. Edit the file `/etc/mosquitto/mosquitto.conf` and add the following lines
-
-    ```
-    # For an unsecure MQTT connection
-    listener 1883
-    
-    # For an unsecure MQTT connection over websockets:
-    listener 8080
-    protocol websockets
-    allow_anonymous true
-    
-    # For a secure MQTT connection over websockets:
-    listener 9001
-    protocol websockets
-    allow_anonymous true
-    cafile /etc/mosquitto/certs/fullchain.pem
-    certfile /etc/mosquitto/certs/cert.pem
-    keyfile /etc/mosquitto/certs/privkey.pem
-    ```
-
-    If you are using Let's Encrypt, symbolic links for the three certificates can be
-    found in `/etc/letsencrypt/live/yourdomain.com`. Unfortunately, Let's Encrypt
-    refreshes them every 2 months, so you need to rotate new ones into place after
-    every refresh. The script `mosquitto-copy.sh` in the directory `letsencrypt` can
-    do this for you. Put it in the directory
-    `/etc/letsencrypt/renewal-hooks/deploy`. Be sure to change the variable
-    `MY_DOMAIN` to reflect your domain.
-
-3. One final step, if you are using a remote host, you may need to punch a hole
-through its firewall for ports `1883` and `8080`, and `9001`.
 
 ## The client
 
