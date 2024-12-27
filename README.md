@@ -108,11 +108,15 @@ Next, you need to configure the plugins.
 2. Restart the SignalK server.
 
 3. Browse to the settings for the plugin `Signal K - MQTT
-   Gateway` ([link](http://localhost:3000/admin/#/serverConfiguration/plugins/signalk-mqtt-gw))
-   and double-check the values. In particular, check that the MQTT Server Url is
-   correct.
+   Gateway`
+   ([link](http://localhost:3000/admin/#/serverConfiguration/plugins/signalk-mqtt-gw))
+   Under username, enter `westernflyer` and appropriate password. While you're in
+   there double-check other values, in particular, check that the MQTT Server Url
+   is correct.
 
-4. Then double check that the topics are getting published:
+4. Restart the SignalK server.
+
+5. Then double check that the topics are getting published:
 
         mosquitto_sub -h localhost -t '#'
 
