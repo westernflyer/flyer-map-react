@@ -29,23 +29,46 @@ same server as the webserver.
     sudo apt install mosquitto-clients
     ```
 
-2. Edit the file `/etc/mosquitto/mosquitto.conf` and add the following lines
+2. Create a file `/etc/mosquitto/conf.d/default` with the following contents:
 
     ```
-    # For an unsecure MQTT connection
+    # Local settings for mosquitto
+
+    connection_messages true
+    log_timestamp true
+    log_timestamp_format %Y-%m-%dT%H:%M:%S
+    
+    # log_type debug
+    log_type error
+    log_type warning
+    log_type notice
+    log_type information
+    log_type subscribe
+    log_type unsubscribe
+    
+    # Allow anonymous access:
+    allow_anonymous true
+    
+    # Use an ACL file:
+    acl_file /etc/mosquitto/aclfile
+    
+    # For authentication:
+    password_file /etc/mosquitto/password_file
+    
+    # For an unsecured MQTT connection
     listener 1883
     
-    # For an unsecure MQTT connection over websockets:
-    listener 8080
-    protocol websockets
-    allow_anonymous true
+    # For a secured MQTT connection:
+    listener 8883
+    certfile /etc/mosquitto/certs/cert.pem
+    cafile /etc/mosquitto/certs/fullchain.pem
+    keyfile /etc/mosquitto/certs/privkey.pem
     
     # For a secure MQTT connection over websockets:
     listener 9001
     protocol websockets
-    allow_anonymous true
-    cafile /etc/mosquitto/certs/fullchain.pem
     certfile /etc/mosquitto/certs/cert.pem
+    cafile /etc/mosquitto/certs/chain.pem
     keyfile /etc/mosquitto/certs/privkey.pem
     ```
 
@@ -58,15 +81,14 @@ same server as the webserver.
    `MY_DOMAIN` to reflect your domain.
 
 3. One final step, if you are using a remote host, you may need to punch a hole
-   through its firewall for ports `1883` and `8080`, and `9001`.
+   through its firewall for ports `1883` and `8883`, and `9001`.
 
 
 ## SignalK
 
 The Flyer map uses a [SignalK server](https://github.com/SignalK/signalk-server)
 to listen to NMEA 0183 data coming from the gateway, and then at regular
-intervals pass it on to a MQTT broker. Instructions below for installing the
-server.
+intervals pass it on to a MQTT broker.
 
 1. Install the SignalK server:
 
