@@ -3,7 +3,7 @@
     "runLocalServer": false,
     "port": 1883,
     "sendToRemote": true,
-    "remoteHost": "mqtt://threefools.org",
+    "remoteHost": "mqtts://threefools.org",
     "rejectUnauthorized": false,
     "selectedOption": "3) self paths in JSON format",
     "paths": [
