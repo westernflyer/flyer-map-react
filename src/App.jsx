@@ -6,9 +6,6 @@
  */
 
 import { useState, useEffect } from "react";
-import Fader from "react-fader";
-import PropTypes from "prop-types";
-import DataTable from "react-data-table-component";
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
@@ -17,50 +14,14 @@ import {
     FormattedState,
     getUpdateDicts,
     getLatLng,
-    orderArray,
 } from "./utilities.js";
+import { VesselTable } from "./VesselTable";
 import { About } from "./About";
 import { BoatMarker } from "./BoatMarker";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
-import { mqttOptions, tableOptions } from "../flyer.config.js";
+import { mqttOptions } from "../flyer.config.js";
 import "./App.css";
-
-const tableColumns = [
-    {
-        name: "Property",
-        selector: (row) => row.label,
-    },
-    {
-        name: "Value",
-        selector: (row) => <Fader>{row.value}</Fader>,
-    },
-    {
-        name: "Last update",
-        selector: (row) => <Fader>{row.last_update}</Fader>,
-    },
-    {
-        name: "SignalK path",
-        selector: (row) => <span className={"tty"}>{row.key}</span>,
-    },
-];
-
-// React function component to show a table of current values.
-function VesselTable(props) {
-    const { formattedState } = props;
-    return (
-        <DataTable
-            data={orderArray(tableOptions.order, formattedState)}
-            columns={tableColumns}
-            title={<h2> Current values</h2>}
-            responsive
-        />
-    );
-}
-
-VesselTable.propTypes = {
-    formattedState: PropTypes.objectOf(PropTypes.object),
-};
 
 
 function App() {
