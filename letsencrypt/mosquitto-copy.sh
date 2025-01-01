@@ -23,9 +23,9 @@ CERTIFICATE_DIR=/etc/mosquitto/certs
 for D in ${RENEWED_DOMAINS}; do
 	if [ "${D}" = "${MY_DOMAIN}" ]; then
 		# Copy new certificate to Mosquitto directory
-		cp ${RENEWED_LINEAGE}/fullchain.pem ${CERTIFICATE_DIR}/fullchain.pem
-		cp ${RENEWED_LINEAGE}/cert.pem ${CERTIFICATE_DIR}/cert.pem
-		cp ${RENEWED_LINEAGE}/privkey.pem ${CERTIFICATE_DIR}/privkey.pem
+		cp "${RENEWED_LINEAGE}"/fullchain.pem ${CERTIFICATE_DIR}/fullchain.pem
+		cp "${RENEWED_LINEAGE}"/cert.pem ${CERTIFICATE_DIR}/cert.pem
+		cp "${RENEWED_LINEAGE}"/privkey.pem ${CERTIFICATE_DIR}/privkey.pem
 
 		# Set ownership to Mosquitto
 		chown mosquitto: ${CERTIFICATE_DIR}/fullchain.pem
