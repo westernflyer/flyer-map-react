@@ -18,6 +18,7 @@ import {
 import { VesselTable } from "./VesselTable";
 import { About } from "./About";
 import { BoatMarker } from "./BoatMarker";
+import { FollowBoatControl } from "./FollowBoat";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
 import { mqttOptions } from "../flyer.config.js";
@@ -137,6 +138,8 @@ function App() {
                                     windSpeed={windSpeed}
                                     windDirection={vesselState["environment.wind.directionTrue"]?.value}
                         />
+                        <FollowBoatControl
+                            latLng={latLng} />
 
                     </Map>
                 )) || (
