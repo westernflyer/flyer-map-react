@@ -13,27 +13,23 @@ import { useEffect, useState } from "react";
 /**
  * Creates a control that recenters the map to follow the boat as it moves
  *
- @param {object} props
- @param {{lat:number, lng:number}} props.latLng - The latitude/longitude of the boat
+ * @param {object} props
+ * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.boatPosition - Boat position
  */
 export function FollowBoatControl(props) {
-    const { latLng } = props;
-    const [followBoat, setFollowBoat] = useState(false);
-
-    // Toggle follow mode
-    const toggleFollow = () => {
-        setFollowBoat(!followBoat);
-    };
+    const { boatPosition } = props;
+    // Start out following the boat:
+    const [followBoat, setFollowBoat] = useState(true);
 
     // Retrieve the map instance
     const map = useMap();
 
     // If in "follow" mode, automatically recenter the map on the boat
     useEffect(() => {
-        if (followBoat && map && latLng) {
-            map.setCenter(latLng);
+        if (followBoat && map && boatPosition) {
+            map.setCenter(boatPosition);
         }
-    }, [followBoat, map, latLng]);
+    }, [followBoat, map, boatPosition]);
 
     // Add a listener for when the map is dragged. That means the user does
     // not want to follow the boat.
@@ -45,10 +41,8 @@ export function FollowBoatControl(props) {
     return (
         <MapControl position={ControlPosition.TOP_LEFT}>
             <button
-                style={{
-                    marginTop: "20px",
-                }}
-                onClick={toggleFollow}
+                style={{ marginTop: "20px" }}
+                onClick={() => setFollowBoat(!followBoat)}
             >
                 {followBoat ? "Stop following" : "Follow boat"}
             </button>
@@ -58,8 +52,8 @@ export function FollowBoatControl(props) {
 }
 
 FollowBoatControl.propTypes = {
-    latLng: PropTypes.shape({
-        lat: PropTypes.number.isRequired,
-        lng: PropTypes.number.isRequired,
-    }).isRequired,
+    boatPosition: PropTypes.shape({
+        lat: PropTypes.number,
+        lng: PropTypes.number,
+    }),
 };

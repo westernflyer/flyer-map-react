@@ -16,7 +16,7 @@ import { getPixelDistance, latLngAtBearing } from "./utilities";
  * Component that displays a line for COG/SOG.
  *
  * @param {object} props
- * @param {{lat:number, lng:number}} props.boatPosition - The latitude/longitude of the boat
+ * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.boatPosition - Boat position
  * @param {number} props.cog - The course over ground in radians. 0=N, pi/180=E, etc.
  * @param {number} props.sog - The speed over ground in meters/second
  * @param {number} [props.duration] - The line will extend this many seconds in the
@@ -81,7 +81,10 @@ export const COGLine = (props) => {
 };
 
 COGLine.propTypes = {
-    boatPosition: PropTypes.objectOf(PropTypes.number),
+    boatPosition: PropTypes.shape({
+        lat: PropTypes.number,
+        lng: PropTypes.number,
+    }),
     cog: PropTypes.number,
     sog: PropTypes.number,
     duration: PropTypes.number,

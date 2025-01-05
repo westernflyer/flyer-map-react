@@ -108,8 +108,8 @@ function App() {
     if (windSpeed == null)
         windSpeed = vesselState["environment.wind.speedOverGround"]?.value;
 
-    // latLng holds the current vessel position, or null if it has not been established yet.
-    const latLng = getLatLng(vesselState);
+    // boatPosition holds the current vessel position, or null if it has not been established yet.
+    const boatPosition = getLatLng(vesselState);
 
     return (
         <div style={{ height: "400px", width: "100%", padding: "50px" }}>
@@ -124,14 +124,14 @@ function App() {
                 apiKey={`${google_key}`}
                 onLoad={() => console.log("Maps API has loaded.")}
             >
-                {(latLng && (
+                {(boatPosition && (
                     <Map
                         defaultZoom={10}
-                        defaultCenter={latLng}
+                        defaultCenter={boatPosition}
                         streetViewControl={false}
                         scaleControl={true}
-                        mapId="DEMO_MAP_ID">
-                        <BoatMarker latLng={latLng}
+                        mapId="FLYER_MAP_ID">
+                        <BoatMarker boatPosition={boatPosition}
                                     heading={boatDir}
                                     cog={vesselState["navigation.courseOverGroundTrue"]?.value}
                                     sog={vesselState["navigation.speedOverGround"]?.value}
@@ -139,8 +139,7 @@ function App() {
                                     windDirection={vesselState["environment.wind.directionTrue"]?.value}
                         />
                         <FollowBoatControl
-                            latLng={latLng} />
-
+                            boatPosition={boatPosition} />
                     </Map>
                 )) || (
                     <p className="fetching">Waiting for a valid vessel

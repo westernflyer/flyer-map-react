@@ -18,7 +18,7 @@ import { WindBarb } from "./WindBarb.jsx";
  * heading, COG, and true wind.
  *
  * @param {object} props
- * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.latLng - Boat position
+ * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.boatPosition - Boat position
  * @param {number} props.heading - The boat heading in radians. 0=N
  * @param {number} props.cog - The boat's course-over-ground in radians.
  * @param {number} props.sog - The boat's speed-over-ground in m/s.
@@ -27,14 +27,14 @@ import { WindBarb } from "./WindBarb.jsx";
  */
 export const BoatMarker = (props) => {
     const {
-        latLng, heading, cog, sog,
+        boatPosition, heading, cog, sog,
         windSpeed, windDirection,
     } = props;
     return (
         <>
             <AdvancedMarker
                 key="flyer-position"
-                position={latLng}
+                position={boatPosition}
                 title="Western Flyer position"
             >
                 <div style={{
@@ -46,18 +46,18 @@ export const BoatMarker = (props) => {
             </AdvancedMarker>
             <AdvancedMarker
                 key="flyer-cog"
-                position={latLng}
+                position={boatPosition}
                 title="Western Flyer COG"
             >
                 <COGLine
-                    boatPosition={latLng}
+                    boatPosition={boatPosition}
                     cog={cog}
                     sog={sog}
                 />
             </AdvancedMarker>
             <AdvancedMarker
                 key="flyer-wind"
-                position={latLng}
+                position={boatPosition}
                 title="True wind at Western Flyer"
             >
                 <WindBarb
@@ -71,7 +71,10 @@ export const BoatMarker = (props) => {
 };
 
 BoatMarker.propTypes = {
-    latLng: PropTypes.objectOf(PropTypes.number),
+    boatPosition: PropTypes.shape({
+        lat: PropTypes.number,
+        lng: PropTypes.number,
+    }),
     heading: PropTypes.number,
     cog: PropTypes.number,
     sog: PropTypes.number,
