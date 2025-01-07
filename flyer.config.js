@@ -24,10 +24,6 @@ export const mqttOptions = {
     // Which SignalK ID to listen to. This is usually set to the vessel's MMSI
     // number. Use '+' to listen to all IDs.
     vesselId: "+",
-
-    // Which MQTT plugin are we using in SignalK?
-    // Choose between "signalk-mqtt-gw", or "signalk-mqtt-push".
-    plugIn: "signalk-mqtt-gw",
 };
 
 export const tableOptions = {

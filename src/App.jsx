@@ -51,20 +51,8 @@ function App() {
             mqttOptions.clientId,
         );
 
-        // How we subscribe depends on the SignalK plugin in use
-        if (mqttOptions.plugIn === "signalk-mqtt-gw") {
-            client.subscribe("signalk/delta");
-        } else if (mqttOptions.plugIn === "signalk-mqtt-push") {
-            // Subscribe to all the topics we know about
-            Object.keys(signalKUnits).forEach((key) => {
-                const topic = `signalk/${mqttOptions.vesselId}/${key}`;
-                client.subscribe(topic);
-                console.log("Subscribed to topic", topic);
-            });
-        } else {
-            console.log("Unknown MQTT plugin:", mqttOptions.plugIn);
-            throw new Error(`Unknown MQTT plugin: ${mqttOptions.plugIn}`);
-        }
+        // Subscribe to the topics we care about
+        client.subscribe("signalk/delta");
 
         // Return a function that will get called when it's time to clean up.
         return () => {
