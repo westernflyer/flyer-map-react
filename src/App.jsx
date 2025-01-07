@@ -21,7 +21,7 @@ import { BoatMarker } from "./BoatMarker";
 import { FollowBoatControl } from "./FollowBoat";
 import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
-import { mqttOptions } from "../flyer.config.js";
+import { boatOptions, mqttOptions } from "../flyer.config.js";
 import "./App.css";
 
 
@@ -116,10 +116,12 @@ function App() {
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
-            <p>If no position appears after a few seconds, it&apos;s because
-                power is off on the boat.</p>
+            <p><strong><em>Status</em></strong></p>
+            <p>{boatOptions.defaultStatus}</p>
             <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
                 Foundation website</a></p>
+               <img className="center" style={{marginBottom: "20px"}}
+                    src={"/flyer-map/underline-short.png"} alt="Underline"/>
             <APIProvider
                 apiKey={`${google_key}`}
                 onLoad={() => console.log("Maps API has loaded.")}

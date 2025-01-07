@@ -18,7 +18,7 @@ import { WindBarb } from "./WindBarb.jsx";
  * heading, COG, and true wind.
  *
  * @param {object} props
- * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.boatPosition - Boat position
+ * @param {google.maps.LatLng | google.maps.LatLngLiteral | null} props.boatPosition - Boat position
  * @param {number} props.heading - The boat heading in radians. 0=N
  * @param {number} props.cog - The boat's course-over-ground in radians.
  * @param {number} props.sog - The boat's speed-over-ground in m/s.

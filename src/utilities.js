@@ -88,16 +88,16 @@ export function getUpdateDicts(signalk_obj) {
     return updates;
 }
 
-// Extract latLng out of the vessel state
+// Extract the vessel position out of the vessel state
 export function getLatLng(vesselState) {
-    let latLng = null;
+    let boatPosition = null;
     if (vesselState["navigation.position.latitude"] != null) {
-        latLng = {
+        boatPosition = {
             lat: vesselState["navigation.position.latitude"].value,
             lng: vesselState["navigation.position.longitude"].value,
         };
     }
-    return latLng;
+    return boatPosition;
 }
 
 // This will accumulate the updates.
@@ -174,12 +174,10 @@ export function latLngAtBearing(latLng, distance, bearing_radians) {
             Math.sin(lat1_radians) * Math.sin(lat2_radians),
         );
 
-    const newLatLng = {
+    return {
         lat: (lat2_radians * 180) / Math.PI,
         lng: (lng2_radians * 180) / Math.PI,
     };
-
-    return newLatLng;
 }
 
 export function getPixelDistance(scale, projection, latLng1, latLng2) {
@@ -191,8 +189,6 @@ export function getPixelDistance(scale, projection, latLng1, latLng2) {
     const pixel1 = { x: point1.x * scale, y: point1.y * scale };
     const pixel2 = { x: point2.x * scale, y: point2.y * scale };
 
-    // Calculate the Euclidean distance in pixels
-    const pixelDistance = Math.sqrt(Math.pow(pixel2.x - pixel1.x, 2) + Math.pow(pixel2.y - pixel1.y, 2));
-
-    return pixelDistance;
+    // Calculate the Euclidean distance in pixels and return
+    return Math.sqrt(Math.pow(pixel2.x - pixel1.x, 2) + Math.pow(pixel2.y - pixel1.y, 2));
 }

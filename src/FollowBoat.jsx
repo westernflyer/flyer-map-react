@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
  * Creates a control that recenters the map to follow the boat as it moves
  *
  * @param {object} props
- * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.boatPosition - Boat position
+ * @param {google.maps.LatLng | google.maps.LatLngLiteral | null} props.boatPosition - Boat position
  */
 export function FollowBoatControl(props) {
     const { boatPosition } = props;

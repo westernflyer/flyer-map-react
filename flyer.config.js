@@ -2,6 +2,11 @@
  * Configuration settings
  */
 
+export const boatOptions = {
+    defaultStatus: "If no position appears after a few seconds, it is because " +
+        "power is off on the boat."
+}
+
 export const mqttOptions = {
     // The URL for the MQTT broker
     // brokerUrl : "ws://localhost:8080",
