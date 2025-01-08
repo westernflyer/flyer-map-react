@@ -32,6 +32,8 @@ function App() {
     const [vesselState, setVesselState] = useState(new VesselState());
     // formattedState holds the current values as formatted strings.
     const [formattedState, setFormattedState] = useState(new FormattedState());
+    // Current status
+    const [status, setStatus] = useState(boatOptions.defaultStatus);
 
     // Because this app relies on an external connection to the MQTT broker,
     // internal state must be synchronized in a "useEffect" function. Set up
@@ -53,6 +55,7 @@ function App() {
 
         // Subscribe to the topics we care about
         client.subscribe("signalk/delta");
+        client.subscribe("status");
 
         // Return a function that will get called when it's time to clean up.
         return () => {
@@ -71,11 +74,15 @@ function App() {
     useEffect(() => {
         if (client) {
             client.on("message", function(topic, message) {
-                const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
-                setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
-                setFormattedState(
-                    (f) => new FormattedState(f.mergeUpdates(updateDicts)),
-                );
+                if (topic === "status") {
+                    setStatus(message.toString());
+                } else {
+                    const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
+                    setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
+                    setFormattedState(
+                        (f) => new FormattedState(f.mergeUpdates(updateDicts)),
+                    );
+                }
             });
             client.on("error", (err) => console.error(err));
         }
@@ -105,7 +112,7 @@ function App() {
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
             <p><strong><em>Status</em></strong></p>
-            <p>{boatOptions.defaultStatus}</p>
+            <p>{status}</p>
             <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
                 Foundation website</a></p>
                <img className="center" style={{marginBottom: "20px"}}
