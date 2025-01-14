@@ -82,3 +82,8 @@ p {
     font-weight: bold;
     font-size: 10pt;
 }
+
+.status-line {
+    font-family: monospace;
+    font-size: 10pt;
+}

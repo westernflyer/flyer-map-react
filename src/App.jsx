@@ -5,21 +5,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
 import {
-    VesselState,
     FormattedState,
-    getUpdateDicts,
     getLatLng,
+    getUpdateDicts,
+    VesselState,
 } from "./utilities.js";
 import { VesselTable } from "./VesselTable";
 import { About } from "./About";
 import { BoatMarker } from "./BoatMarker";
 import { FollowBoatControl } from "./FollowBoat";
-import { signalKUnits } from "./units.js";
 import { google_key } from "./google-api-key.js";
 import { boatOptions, mqttOptions } from "../flyer.config.js";
 import "./App.css";
@@ -115,8 +114,8 @@ function App() {
             <p>{status}</p>
             <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
                 Foundation website</a></p>
-               <img className="center" style={{marginBottom: "20px"}}
-                    src={"/flyer-map/underline-short.png"} alt="Underline"/>
+            <img className="center" style={{ marginBottom: "20px" }}
+                 src={"/flyer-map/underline-short.png"} alt="Underline" />
             <APIProvider
                 apiKey={`${google_key}`}
                 onLoad={() => console.log("Maps API has loaded.")}
@@ -149,6 +148,7 @@ function App() {
                     <About />
                 </div>
             </div>
+            <a href="/flyer-map/status/status.html">Change status</a>
         </div>
     );
 }
