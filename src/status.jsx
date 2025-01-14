@@ -8,8 +8,8 @@
 import { StrictMode, useEffect, useState } from "react";
 import mqtt from "mqtt";
 import { createRoot } from "react-dom/client";
-import { mqttOptions } from "../../flyer.config.js";
-import "../App.css";
+import { mqttOptions } from "../flyer.config.js";
+import "./App.css";
 
 function Status() {
     // client is the MQTT connection.

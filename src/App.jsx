@@ -110,7 +110,8 @@ function App() {
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
-            <p><strong><em>Status</em></strong></p>
+            <p><strong><em>Status</em></strong> <span style={{float: "right"}}><a
+                href="/flyer-map/status.html">Change</a></span></p>
             <p>{status}</p>
             <p><a href={"https://westernflyer.org"}>Back to the Western Flyer
                 Foundation website</a></p>
@@ -148,7 +149,6 @@ function App() {
                     <About />
                 </div>
             </div>
-            <a href="/flyer-map/status/status.html">Change status</a>
         </div>
     );
 }
