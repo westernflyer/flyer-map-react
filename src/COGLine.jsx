@@ -21,7 +21,7 @@ import { getPixelDistance, latLngAtBearing } from "./utilities";
  * @param {number} props.sog - The speed over ground in meters/second
  * @param {number} [props.duration] - The line will extend this many seconds in the
  *   future. Default is 600 (10 minutes).
- * @returns {JSX.Element} - An InfoWindow located at the end of the COG line that will be shown on mouseover
+ * @returns {JSX.Element} - A line representing the COG.
  */
 export const COGLine = (props) => {
     const { boatPosition, cog, sog } = props;
