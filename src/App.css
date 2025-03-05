@@ -39,9 +39,8 @@ h1, h2 {
     margin: 10px auto;
     height: 10px;
     background-size: contain;
-    /* It should not be necessary to give the path relative to /public,
-    but WebStorm declares an error otherwise. */
-    background: url("/public/underline-short.png") no-repeat center;
+    /* Webstorm declares an error with the following, but it's what Vite wants: */
+    background: url("/flyer-map/underline-short.png") no-repeat center;
 }
 
 p {
