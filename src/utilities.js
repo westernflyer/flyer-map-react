@@ -6,126 +6,82 @@
  */
 
 import dayjs from "dayjs";
-import { formatUpdate, signalKUnits } from "./units";
+import { formatUpdate } from "./units";
 
 /*
-    A SignalK object looks like:
+    The MQTT object looks something like this:
     {
-        "context": "vessels.urn:mrn:imo:mmsi:367199590",
-        "updates": [{
-            "timestamp": "2024-08-07T22:49:02.000Z",
-            "$source": "Velocityyd.YD",
-            "values": [{"path": "navigation.position", "value": {"longitude": -122.65223, "latitude": 45.601395}}]
-        }]
-
-    or like
-
-    {
-        "context": "vessels.urn:mrn:imo:mmsi:367199590",
-        "updates": [{
-            "timestamp": "2024-08-11T20:52:41.018Z",
-            "$source": "velocity2000.127",
-            "values": [{"path": "navigation.speedOverGround", "value": 0}]
-        }]
-    }
+        "latitude": 31.854926666666668,
+        "longitude": -116.62007166666666,
+        "timeUTC": "01:00:13",
+        "gll_mode": "D",
+        "sentence_type": "GLL",
+        "timestamp": 1743717957
     }
  */
-
 class Update {
-    /**
-     * @constructor
-     * @param {string} key - An appropriate, unique key. This is usually
-     * the SignalK path
-     * @param {float} value - The updated value
-     * @param {float} unit - The unit the value is in
-     * @param {dayjs.Dayjs} last_update - The time the value was last updated.
-     */
-    constructor(key, value, unit, last_update) {
-        this.key = key;
-        this.value = value;
-        this.unit = unit;
-        this.last_update = last_update;
-    }
+  /**
+   * @constructor
+   * @param {string} key - An appropriate, unique key. Somethng like "longitude".
+   * @param {float} value - The updated value
+   * @param {dayjs.Dayjs} last_update - The time the value was last updated.
+   */
+  constructor(key, value, last_update) {
+    this.key = key;
+    this.value = value;
+    this.last_update = last_update;
+  }
 }
 
 // Extract data out of the parsed JSON SignalK object.
-export function getUpdateDicts(signalk_obj) {
-    let updates = [];
-    for (let update of signalk_obj.updates) {
-        for (let value of update.values) {
-            // Special treatment for position: flatten it
-            // into latitude and longitude:
-            if (value.path === "navigation.position") {
-                updates.push(
-                    new Update(
-                        "navigation.position.latitude",
-                        value.value.latitude,
-                        signalKUnits[value.path],
-                        dayjs(update.timestamp),
-                    ),
-                );
-                updates.push(
-                    new Update(
-                        "navigation.position.longitude",
-                        value.value.longitude,
-                        signalKUnits[value.path],
-                        dayjs(update.timestamp),
-                    ),
-                )
-                ;
-            } else {
-                updates.push(
-                    new Update(
-                        value.path,
-                        value.value,
-                        signalKUnits[value.path],
-                        dayjs(update.timestamp),
-                    ),
-                );
-            }
-        }
-    }
-    return updates;
+export function getUpdateDicts(topic, mqttObject) {
+  let updates = [];
+  for (const key in mqttObject) {
+    updates.push(
+      new Update(key, mqttObject[key], dayjs(mqttObject.timestamp)),
+    );
+  }
+  return updates;
 }
 
 // Extract the vessel position out of the vessel state
 export function getLatLng(vesselState) {
-    let boatPosition = null;
-    if (vesselState["navigation.position.latitude"] != null) {
-        boatPosition = {
-            lat: vesselState["navigation.position.latitude"].value,
-            lng: vesselState["navigation.position.longitude"].value,
-        };
-    }
-    return boatPosition;
+  let boatPosition = null;
+  if (vesselState["latitude"] != null) {
+    boatPosition = {
+      lat: vesselState["latitude"].value,
+      lng: vesselState["longitude"].value,
+    };
+  }
+  return boatPosition;
 }
 
 // This will accumulate the updates.
 export class VesselState {
-    constructor(oldState) {
-        Object.assign(this, oldState);
-    }
+  constructor(oldState) {
+    Object.assign(this, oldState);
+  }
 
-    mergeUpdates(updates) {
-        for (let update of updates) {
-            this[update.key] = update;
-        }
-        return this;
+  mergeUpdates(updates) {
+    for (let update of updates) {
+      this[update.key] = update;
     }
+    return this;
+  }
 }
 
 // This will format the updates, then accumulate them.
 export class FormattedState {
-    constructor(oldState) {
-        Object.assign(this, oldState);
-    }
+  constructor(oldState) {
+    Object.assign(this, oldState);
+  }
 
-    mergeUpdates(updates) {
-        for (let update of updates) {
-            this[update.key] = formatUpdate(update);
-        }
-        return this;
+  mergeUpdates(updates) {
+    for (let update of updates) {
+      this[update.key] = formatUpdate(update);
     }
+    return this;
+  }
 }
 
 /**
@@ -135,13 +91,13 @@ export class FormattedState {
  * @returns {Array[obj]}
  */
 export function orderArray(ordering, obj) {
-    return ordering.reduce((partial, x) => {
-        // Only include non-null objects
-        if (obj[x] != null) {
-            partial.push(obj[x]);
-        }
-        return partial;
-    }, []);
+  return ordering.reduce((partial, x) => {
+    // Only include non-null objects
+    if (obj[x] != null) {
+      partial.push(obj[x]);
+    }
+    return partial;
+  }, []);
 }
 
 /**
@@ -152,43 +108,44 @@ export function orderArray(ordering, obj) {
  * @returns {{lng: number, lat: number}}
  */
 export function latLngAtBearing(latLng, distance, bearing_radians) {
+  const R = 6371e3; // Earth's radius in meters
+  const lat1_radians = (latLng.lat * Math.PI) / 180; // Convert to radians
+  const lng1_radians = (latLng.lng * Math.PI) / 180;
+  const angular_distance = distance / R;
 
-    const R = 6371e3; // Earth's radius in meters
-    const lat1_radians = (latLng.lat * Math.PI) / 180; // Convert to radians
-    const lng1_radians = (latLng.lng * Math.PI) / 180;
-    const angular_distance = distance / R;
-
-    const lat2_radians = Math.asin(
-        Math.sin(lat1_radians) * Math.cos(angular_distance) +
-        Math.cos(lat1_radians) *
+  const lat2_radians = Math.asin(
+    Math.sin(lat1_radians) * Math.cos(angular_distance) +
+      Math.cos(lat1_radians) *
         Math.sin(angular_distance) *
         Math.cos(bearing_radians),
+  );
+  const lng2_radians =
+    lng1_radians +
+    Math.atan2(
+      Math.sin(bearing_radians) *
+        Math.sin(angular_distance) *
+        Math.cos(lat1_radians),
+      Math.cos(angular_distance) -
+        Math.sin(lat1_radians) * Math.sin(lat2_radians),
     );
-    const lng2_radians =
-        lng1_radians +
-        Math.atan2(
-            Math.sin(bearing_radians) *
-            Math.sin(angular_distance) *
-            Math.cos(lat1_radians),
-            Math.cos(angular_distance) -
-            Math.sin(lat1_radians) * Math.sin(lat2_radians),
-        );
 
-    return {
-        lat: (lat2_radians * 180) / Math.PI,
-        lng: (lng2_radians * 180) / Math.PI,
-    };
+  return {
+    lat: (lat2_radians * 180) / Math.PI,
+    lng: (lng2_radians * 180) / Math.PI,
+  };
 }
 
 export function getPixelDistance(scale, projection, latLng1, latLng2) {
-    // Convert the LatLng positions to pixel positions
-    const point1 = projection.fromLatLngToPoint(latLng1);
-    const point2 = projection.fromLatLngToPoint(latLng2);
+  // Convert the LatLng positions to pixel positions
+  const point1 = projection.fromLatLngToPoint(latLng1);
+  const point2 = projection.fromLatLngToPoint(latLng2);
 
-    // Scale them to actual pixel positions at the current zoom level
-    const pixel1 = { x: point1.x * scale, y: point1.y * scale };
-    const pixel2 = { x: point2.x * scale, y: point2.y * scale };
+  // Scale them to actual pixel positions at the current zoom level
+  const pixel1 = { x: point1.x * scale, y: point1.y * scale };
+  const pixel2 = { x: point2.x * scale, y: point2.y * scale };
 
-    // Calculate the Euclidean distance in pixels and return
-    return Math.sqrt(Math.pow(pixel2.x - pixel1.x, 2) + Math.pow(pixel2.y - pixel1.y, 2));
+  // Calculate the Euclidean distance in pixels and return
+  return Math.sqrt(
+    Math.pow(pixel2.x - pixel1.x, 2) + Math.pow(pixel2.y - pixel1.y, 2),
+  );
 }

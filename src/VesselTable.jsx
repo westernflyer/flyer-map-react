@@ -25,7 +25,7 @@ const tableColumns = [
         selector: (row) => <Fader>{row.last_update}</Fader>,
     },
     {
-        name: "SignalK path",
+        name: "Key",
         selector: (row) => <span className={"tty"}>{row.key}</span>,
     },
 ];

@@ -52,8 +52,13 @@ function App() {
             mqttOptions.clientId,
         );
 
+        const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
-        client.subscribe("signalk/delta");
+        for (const nmeaType of ['GLL','VTG','HDT','MDA','MWV'])
+        {
+            client.subscribe(prefix + nmeaType);
+            console.log(`Subscribed to ${prefix + nmeaType}`);
+        }
         client.subscribe("status");
 
         // Return a function that will get called when it's time to clean up.
@@ -76,7 +81,8 @@ function App() {
                 if (topic === "status") {
                     setStatus(message.toString());
                 } else {
-                    const updateDicts = getUpdateDicts(JSON.parse(message.toString()));
+                    const updateDicts = getUpdateDicts(topic, JSON.parse(message.toString()));
+                    console.log("updateDicts", updateDicts);
                     setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
                     setFormattedState(
                         (f) => new FormattedState(f.mergeUpdates(updateDicts)),
@@ -90,17 +96,6 @@ function App() {
         // the client connection. Otherwise, new handlers would get established on
         // every refresh.
     }, [client]);
-
-    // Use boat heading, but if it's not available, substitute COG
-    let boatDir = vesselState["navigation.headingTrue"]?.value;
-    if (boatDir == null)
-        boatDir = vesselState["navigation.courseOverGroundTrue"]?.value;
-
-    // Use environment.wind.speedTrue, but if it's not available,
-    // then environment.wind.speedOverGround
-    let windSpeed = vesselState["environment.wind.speedTrue"]?.value;
-    if (windSpeed == null)
-        windSpeed = vesselState["environment.wind.speedOverGround"]?.value;
 
     // boatPosition holds the current vessel position, or null if it has not been established yet.
     const boatPosition = getLatLng(vesselState);
@@ -128,11 +123,11 @@ function App() {
                         scaleControl={true}
                         mapId="FLYER_MAP_ID">
                         <BoatMarker boatPosition={boatPosition}
-                                    heading={boatDir}
-                                    cog={vesselState["navigation.courseOverGroundTrue"]?.value}
-                                    sog={vesselState["navigation.speedOverGround"]?.value}
-                                    windSpeed={windSpeed}
-                                    windDirection={vesselState["environment.wind.directionTrue"]?.value}
+                                    heading={vesselState["hdg_true"]?.value}
+                                    cog={vesselState["cog_true"]?.value}
+                                    sog={vesselState["sog_true"]?.value}
+                                    windSpeed={vesselState["tws_knots"]?.value}
+                                    windDirection={vesselState["twd_true"]?.value}
                         />
                         <FollowBoatControl
                             boatPosition={boatPosition} />
