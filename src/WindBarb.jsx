@@ -7,8 +7,6 @@
 
 import PropTypes from "prop-types";
 
-import { conversionDict } from "./units.js";
-
 const WIDTH = 40;       // The width of the SVG element box
 const HEIGHT = 80;      // Its height
 const SPACE = 10;       // The space along the shaft between barbs
@@ -20,14 +18,13 @@ const TOPMARGIN = 20;   // The distance from the top of the box to the top of th
  * a northern wind).
  *
  * @param {object} props
- * @param {number} props.windSpeed - The wind speed in meters per second
+ * @param {number} props.windSpeed - The wind speed in knots
  * @returns {JSXElement}
  */
 const SVGWindBarb = (props) => {
     const { windSpeed } = props;
 
-    // Convert from m/s to knots
-    let remainingSpeed = conversionDict["meter_per_second"]["knot"](windSpeed);
+    let remainingSpeed = windSpeed;
 
     let svgParts = [];
 
@@ -86,15 +83,14 @@ const SVGWindBarb = (props) => {
 
 SVGWindBarb.propTypes = {
     windSpeed: PropTypes.number,
-    windDirection: PropTypes.number,
 };
 
 /**
  * Component that generates a properly rotated wind barb
  *
  * @param {object} props
- * @param {number} props.windSpeed - Wind speed in m/s
- * @param {number} props.windDirection - Wind direction in radians. 0=N
+ * @param {number} props.windSpeed - Wind speed in knots
+ * @param {number} props.windDirection - Wind direction in degrees. 0=N, 90=E, etc.
  * @returns {JSX.Element} - An SVG with a wind barb
  * @constructor
  */
@@ -107,7 +103,7 @@ export const WindBarb = (props) => {
                 <div style={{
                     // Make sure we rotate around the base of the shaft.
                     transformOrigin: "center bottom",
-                    transform: "rotate(" + windDirection + "rad)",
+                    transform: "rotate(" + windDirection + "deg)",
                 }}>
                     <SVGWindBarb windSpeed={windSpeed} />
                 </div>

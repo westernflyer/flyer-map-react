@@ -69,6 +69,7 @@ export const descriptiveLabel = {
 };
 
 // Convert between units (not presently used)
+/*
 export const conversionDict = {
   degree_K: {
     degree_C: (x) => x - 273.15,
@@ -111,6 +112,8 @@ export const conversionDict = {
     iso8601: (x) => dayjs(x).toISOString(),
   },
 };
+*/
+
 
 // Take an update from the broker, and format it for presentation.
 export function formatUpdate(update) {

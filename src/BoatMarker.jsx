@@ -19,11 +19,11 @@ import { WindBarb } from "./WindBarb.jsx";
  *
  * @param {object} props
  * @param {google.maps.LatLng | google.maps.LatLngLiteral | null} props.boatPosition - Boat position
- * @param {number} props.heading - The boat heading in radians. 0=N
- * @param {number} props.cog - The boat's course-over-ground in radians.
- * @param {number} props.sog - The boat's speed-over-ground in m/s.
- * @param {number} props.windSpeed - True wind speed in m/s
- * @param {number} props.windDirection - True wind direction in radians. 0=N
+ * @param {number} props.heading - The boat heading in degrees. 0=N, 90=E, etc
+ * @param {number} props.cog - The boat's course-over-ground in degrees.
+ * @param {number} props.sog - The boat's speed-over-ground in knots.
+ * @param {number} props.windSpeed - True wind speed in knots
+ * @param {number} props.windDirection - True wind direction in degrees. 0=N
  */
 export const BoatMarker = (props) => {
     const {
@@ -38,7 +38,7 @@ export const BoatMarker = (props) => {
                 title="Western Flyer position"
             >
                 <div style={{
-                    transform: "translate(0px,25px) rotate(" + heading + "rad)",
+                    transform: "translate(0px,25px) rotate(" + heading + "deg)",
                 }}>
                     <img src={"/flyer-map/western flyer.svg"}
                          alt="Boat position" />
