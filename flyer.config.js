@@ -24,7 +24,7 @@ export const mqttOptions = {
     prefix : "nmea",
 
     // Which MMSI to listen to. Use '+' to listen to all IDs.
-    MMSI: "+",
+    MMSI: "368323170",
 };
 
 export const tableOptions = {
