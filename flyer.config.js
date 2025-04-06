@@ -42,6 +42,7 @@ export const tableOptions = {
         "awa",
         "temperature_water_celsius",
         "temperature_air_celsius",
+        "pressure_millibars",
         "rudder_angle",
     ],
 };
