@@ -54,7 +54,7 @@ function App() {
 
         const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
-        for (const nmeaType of ['GLL','VTG','HDT','MDA','MWV'])
+        for (const nmeaType of ['GLL','HDT','MDA','MWV', 'RSA', 'VTG'])
         {
             client.subscribe(prefix + nmeaType);
             console.log(`Subscribed to ${prefix + nmeaType}`);
@@ -82,7 +82,6 @@ function App() {
                     setStatus(message.toString());
                 } else {
                     const updateDicts = getUpdateDicts(topic, JSON.parse(message.toString()));
-                    console.log("updateDicts", updateDicts);
                     setVesselState((v) => new VesselState(v.mergeUpdates(updateDicts)));
                     setFormattedState(
                         (f) => new FormattedState(f.mergeUpdates(updateDicts)),
