@@ -24,10 +24,10 @@ const tableColumns = [
         name: "Last update",
         selector: (row) => <Fader>{row.last_update}</Fader>,
     },
-    {
-        name: "Key",
-        selector: (row) => <span className={"tty"}>{row.key}</span>,
-    },
+    // {
+    //     name: "Key",
+    //     selector: (row) => <span className={"tty"}>{row.key}</span>,
+    // },
 ];
 
 /**

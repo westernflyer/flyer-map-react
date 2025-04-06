@@ -16,7 +16,7 @@
 # executable after editing it to your needs.
 
 # Set which domain this script will be run for
-MY_DOMAIN=threefools.org
+MY_DOMAIN=your-domain.org
 # Set the directory that the certificates will be copied to.
 CERTIFICATE_DIR=/etc/mosquitto/certs
 
