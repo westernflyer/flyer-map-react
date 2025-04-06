@@ -44,6 +44,7 @@ export const tableOptions = {
         "temperature_air_celsius",
         "pressure_millibars",
         "rudder_angle",
+        "rate_of_turn",
     ],
 };
 

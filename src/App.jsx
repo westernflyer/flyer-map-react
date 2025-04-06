@@ -54,7 +54,7 @@ function App() {
 
         const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
-        for (const nmeaType of ['GLL','HDT','MDA','MWV', 'RSA', 'VTG'])
+        for (const nmeaType of ['GLL','HDT','MDA','MWV', 'ROT', 'RSA', 'VTG'])
         {
             client.subscribe(prefix + nmeaType);
             console.log(`Subscribed to ${prefix + nmeaType}`);

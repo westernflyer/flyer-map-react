@@ -23,6 +23,7 @@ const unitLabel = {
   pressure_bars: " bar",
   pressure_millibars: " mbar",
   pressure_inches: " inHg",
+  rate_of_turn: "º/min",
   rudder_angle: "º",
   sog_knots: " kn",
   sog_kph: " km/h",
@@ -56,6 +57,7 @@ export const descriptiveLabel = {
   pressure_bars: "Pressure",
   pressure_inches: "Pressure",
   pressure_millibars: "Pressure",
+  rate_of_turn: "Rate of turn",
   rudder_angle: "Rudder angle",
   sog_knots: "Speed over ground",
   sog_kph: "Speed over ground",
@@ -167,6 +169,7 @@ export function formatValue(key, value) {
     case "aws_mps":
     case "magnetic_variation":
     case "pressure_millibars":
+    case "rate_of_turn":
     case "rudder_angle":
     case "sog_knots":
     case "sog_kph":
