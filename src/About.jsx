@@ -33,39 +33,35 @@ const MapGuide = () => {
 };
 
 export const About = () => {
-    return (
-        <div className="about">
-            <MapGuide />
-            <h2 style={{clear:"right"}}>About</h2>
-            <p>
-                Data originates on an NMEA 2000 network, flows through a{" "}
-                <a
-                    href={
-                        "https://actisense.com/products/pro-ndc-1e2k/"
-                    }
-                >
-                    Actisense PRO-NDC-1E2K gateway
-                </a>
-                , then to a <a href={"https://signalk.org/"}>SignalK
-                server</a> running
-                on a low-powered Linux server. From there, updates are published
-                to an{" "}
-                <a href={"https://mqtt.org/"}>MQTT broker</a>. The client
-                browser
-                receives the updates from the broker via a websocket connection.
-            </p>
-            <p>
-                The Google Maps and &ldquo;Current Values&rdquo; table are
-                updated using&nbsp;
-                <a href={"https://react.dev/"}>React</a>.
-            </p>
-            <p>
-                The source code can be found in the{" "}
-                <a href={"https://github.com/tkeffer/flyer-map-react"}>
-                    <span className={"tty"}>flyer-map-react</span>
-                </a>{" "}
-                repository.
-            </p>
-        </div>
-    );
+  return (
+    <div className="about">
+
+      <MapGuide />
+
+      <h2 style={{ clear: "right" }}>About</h2>
+
+      <p>
+        Data originates on an NMEA 2000 network, flows through a <a
+        href={"https://actisense.com/products/pro-ndc-1e2k/"}> Actisense
+        PRO-NDC-1E2K gateway </a>, which converts it to the NMEA 0183 standard.
+        From there, it is passed to a <a
+        href={"https://github.com/westernflyer/nmea-mqtt-py"}> gateway server
+        written in Python </a>, which publishes updates to an <a
+        href={"https://mqtt.org/"}>MQTT broker</a>. The client browser receives
+        the updates from the broker via a websocket connection. </p>
+
+      <p>
+        The Google Maps and &ldquo;Current Values&rdquo; table are updated
+        using&nbsp;
+        <a href={"https://react.dev/"}>React</a>.
+      </p>
+      <p>
+        The source code can be found in the{" "}
+        <a href={"https://github.com/westernflyer/flyer-map-react"}>
+          <span className={"tty"}>flyer-map-react</span>
+        </a>{" "}
+        repository.
+      </p>
+    </div>
+  );
 };
