@@ -8,7 +8,7 @@ const __dirname = path.dirname(__filename);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    base: "/flyer-map",
+    base: "/flyer-map2",
     plugins: [react()],
     build: {
         rollupOptions: {

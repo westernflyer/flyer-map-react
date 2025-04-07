@@ -11,7 +11,7 @@ const MapGuide = () => {
     return (
         <>
             <h2>Map guide</h2>
-            <img src={"/flyer-map/boat sample.png"}
+            <img src={"/flyer-map2/boat sample.png"}
                  style={{float: "right"}}
                  width="155"
                  height="173"

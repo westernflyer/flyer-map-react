@@ -101,15 +101,15 @@ function App() {
 
     return (
         <div style={{ height: "400px", width: "100%", padding: "50px" }}>
-            <p><a href="https://westernflyer.org"><img  style={{width: "300px"}} src="/flyer-map/assets_logo_trans.png" alt="Logo"/></a></p>
+            <p><a href="https://westernflyer.org"><img  style={{width: "300px"}} src="/flyer-map2/assets_logo_trans.png" alt="Logo"/></a></p>
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
             <p><strong><em>Status</em></strong> <span style={{float: "right"}}><a
-                href="/flyer-map/status.html">Change</a></span></p>
+                href="/flyer-map2/status.html">Change</a></span></p>
             <p>{status}</p>
             <img className="center" style={{ marginBottom: "20px" }}
-                 src={"/flyer-map/underline-short.png"} alt="Underline" />
+                 src={"/flyer-map2/underline-short.png"} alt="Underline" />
             <APIProvider
                 apiKey={`${google_key}`}
                 onLoad={() => console.log("Maps API has loaded.")}
