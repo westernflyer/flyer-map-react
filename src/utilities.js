@@ -37,9 +37,7 @@ class Update {
 export function getUpdateDicts(topic, mqttObject) {
   let updates = [];
   for (const key in mqttObject) {
-    updates.push(
-      new Update(key, mqttObject[key], dayjs(mqttObject.timestamp)),
-    );
+    updates.push(new Update(key, mqttObject[key], dayjs(mqttObject.timestamp)));
   }
   return updates;
 }
@@ -103,15 +101,16 @@ export function orderArray(ordering, obj) {
 /**
  *
  * @param latLng {{lng: number, lat: number}}
- * @param distance {number} Distance in meters
- * @param bearing_radians {number} Bearing in radians (0=north)
+ * @param distance_nm {number} Distance in nm
+ * @param bearing_degrees {number} Bearing in degrees (0=N; 90=E)
  * @returns {{lng: number, lat: number}}
  */
-export function latLngAtBearing(latLng, distance, bearing_radians) {
-  const R = 6371e3; // Earth's radius in meters
+export function latLngAtBearing(latLng, distance_nm, bearing_degrees) {
+  const R = 3443.8; // Earth's radius in nm
+  const angular_distance = distance_nm / R;
   const lat1_radians = (latLng.lat * Math.PI) / 180; // Convert to radians
   const lng1_radians = (latLng.lng * Math.PI) / 180;
-  const angular_distance = distance / R;
+  const bearing_radians = (bearing_degrees * Math.PI) / 180;
 
   const lat2_radians = Math.asin(
     Math.sin(lat1_radians) * Math.cos(angular_distance) +

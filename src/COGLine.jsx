@@ -17,7 +17,7 @@ import { getPixelDistance, latLngAtBearing } from "./utilities";
  *
  * @param {object} props
  * @param {google.maps.LatLng | google.maps.LatLngLiteral} props.boatPosition - Boat position
- * @param {number} props.cog - The course over ground in radians. 0=N, pi/180=E, etc.
+ * @param {number} props.cog - The course over ground in degrees. 0=N, 90=E, etc.
  * @param {number} props.sog - The speed over ground in meters/second
  * @param {number} [props.duration] - The line will extend this many seconds in the
  *   future. Default is 600 (10 minutes).
@@ -25,7 +25,7 @@ import { getPixelDistance, latLngAtBearing } from "./utilities";
  */
 export const COGLine = (props) => {
     const { boatPosition, cog, sog } = props;
-    // Provide a default duration of 10 minutes
+    // Provide a default duration of 600 seconds (10 minutes)
     const duration = props.duration || 600;
 
     const [pixelDistance, setPixelDistance] = useState(null);
@@ -49,10 +49,10 @@ export const COGLine = (props) => {
         const scale = zoom ? Math.pow(2, zoom) : null;
         // Make sure we have all the data we need
         if (map && projection && boatPosition && cog != null && sog != null && zoom != null && scale != null) {
-            // Calculate how far the boat will go in duration seconds
-            const distance_meters = sog * duration;
-            // Calculate where the boat will end up at that time
-            const endBoatPosition = latLngAtBearing(boatPosition, distance_meters, cog);
+            // Calculate how far the boat will go in nm in duration seconds
+            const distance_nm = sog * duration / 3600;
+            // Calculate where the boat will end up
+            const endBoatPosition = latLngAtBearing(boatPosition, distance_nm, cog);
             // Calculate its pixel distance
             setPixelDistance(getPixelDistance(scale, projection, boatPosition, endBoatPosition));
         }
@@ -64,7 +64,7 @@ export const COGLine = (props) => {
                 <div style={{
                     // Make sure we rotate around the base of line.
                     transformOrigin: "center bottom",
-                    transform: "rotate(" + cog + "rad)",
+                    transform: "rotate(" + cog + "deg)",
                 }}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

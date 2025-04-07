@@ -124,7 +124,7 @@ function App() {
                         <BoatMarker boatPosition={boatPosition}
                                     heading={vesselState["hdg_true"]?.value}
                                     cog={vesselState["cog_true"]?.value}
-                                    sog={vesselState["sog_true"]?.value}
+                                    sog={vesselState["sog_knots"]?.value}
                                     windSpeed={vesselState["tws_knots"]?.value}
                                     windDirection={vesselState["twd_true"]?.value}
                         />
