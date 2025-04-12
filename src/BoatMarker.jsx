@@ -40,7 +40,7 @@ export const BoatMarker = (props) => {
                 <div style={{
                     transform: "translate(0px,25px) rotate(" + heading + "deg)",
                 }}>
-                    <img src={"/flyer-map2/western flyer.svg"}
+                    <img src={"/flyer-map/western flyer.svg"}
                          alt="Boat position" />
                 </div>
             </AdvancedMarker>

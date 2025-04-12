@@ -40,7 +40,7 @@ h1, h2 {
     height: 10px;
     background-size: contain;
     /* Webstorm declares an error with the following, but it's what Vite wants: */
-    background: url("/flyer-map2/underline-short.png") no-repeat center;
+    background: url("/flyer-map/underline-short.png") no-repeat center;
 }
 
 p {
