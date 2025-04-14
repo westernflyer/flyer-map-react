@@ -35,7 +35,7 @@ export const tableOptions = {
         "sog_knots",
         "cog_true",
         "hdg_true",
-        "depth_meters",
+        "water_depth_meters",
         "tws_knots",
         "twd_true",
         "aws_knots",
