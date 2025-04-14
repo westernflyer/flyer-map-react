@@ -34,6 +34,7 @@ const unitLabel = {
   twd_true: "º",
   tws_knots: " kn",
   tws_mps: " m/s",
+  water_depth_meters: " m",
 };
 
 // Which descriptive label to use for a given key
@@ -68,6 +69,7 @@ export const descriptiveLabel = {
   twd_true: "True wind direction (true)",
   tws_knots: "True wind speed",
   tws_mps: "True wind speed",
+  water_depth_meters: "Water depth",
 };
 
 // Convert between units (not presently used)
@@ -177,6 +179,7 @@ export function formatValue(key, value) {
     case "temperature_water_celsius":
     case "tws_knots":
     case "tws_mps":
+    case "water_depth_meters":
       fval = value.toFixed(1);
       break;
     case "pressure_inches":
