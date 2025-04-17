@@ -76,8 +76,8 @@ function Status() {
         const newStatus = formData.get("new_status");
         const c = mqtt.connect(mqttOptions.brokerUrl, {
             clientId: mqttOptions.clientId + "-status",
-            username: formData.get("uname"),
-            password: formData.get("pword"),
+            username: formData.get("uname").trim(),
+            password: formData.get("pword").trim(),
         });
         c.publish("status", newStatus, { retain: true }, () => c.end());
     }
