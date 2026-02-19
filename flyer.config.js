@@ -25,6 +25,13 @@ export const mqttOptions = {
 
     // Which MMSI to listen to. Use '+' to listen to all IDs.
     MMSI: "368323170",
+    // For testing:
+    // MMSI: "1234567"
+};
+
+export const historyOptions = {
+    // Where to get the initial history data from.
+    history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
 };
 
 export const tableOptions = {

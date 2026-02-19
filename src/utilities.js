@@ -36,8 +36,23 @@ class Update {
 // Extract data out of the parsed JSON SignalK object.
 export function getUpdateDicts(topic, mqttObject) {
   let updates = [];
+  const timestamp = dayjs(mqttObject.timestamp);
   for (const key in mqttObject) {
-    updates.push(new Update(key, mqttObject[key], dayjs(mqttObject.timestamp)));
+    if (key !== "timestamp") {
+      updates.push(new Update(key, mqttObject[key], timestamp));
+    }
+  }
+  return updates;
+}
+
+// Extract data out of the parsed JSON API object.
+export function getUpdateDictsFromApi(apiObject) {
+  let updates = [];
+  const timestamp = dayjs(apiObject.timestamp);
+  for (const key in apiObject) {
+    if (key !== "timestamp" && key !== "mmsi") {
+      updates.push(new Update(key, apiObject[key], timestamp));
+    }
   }
   return updates;
 }
@@ -63,6 +78,7 @@ export class VesselState {
   mergeUpdates(updates) {
     for (let update of updates) {
       this[update.key] = update;
+      this.timestamp = update.last_update;
     }
     return this;
   }
