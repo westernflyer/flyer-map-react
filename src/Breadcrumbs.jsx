@@ -50,7 +50,7 @@ const Polyline = (props) => {
         if (map && typeof google !== 'undefined' && !polyline) {
             setPolyline(new google.maps.Polyline(props));
         }
-    }, [map]);
+    }, [map, polyline, props]);
 
     useEffect(() => {
         if (!polyline) return;
