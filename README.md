@@ -26,7 +26,7 @@ gateway server picks it up.
 
 ## NMEA-MQTT server
 
-This is a custom server runs as a daemon on an onboard computer. Its job is to
+This is a custom server that runs as a daemon on an on-board computer. Its job is to
 listen for NMEA 0183 sentences on the socket coming from the Actisense gateway.
 As they come in, it parses the sentence, converts it to a JSON structure, which
 it then publishes to the MQTT broker. It can be found at
@@ -90,13 +90,10 @@ same server as the webserver.
     keyfile /etc/mosquitto/certs/privkey.pem
     ```
 
-   If you are using Let's Encrypt, symbolic links for the three certificates can
-   be
+   If you are using Let's Encrypt, symbolic links for the three certificates can be
    found in `/etc/letsencrypt/live/yourdomain.com`. Unfortunately, Let's Encrypt
-   refreshes them every 2 months, so you need to rotate new ones into place
-   after
-   every refresh. The script `mosquitto-copy.sh` in the directory `letsencrypt`
-   can
+   refreshes them every 2 months, so you need to rotate new ones into place after
+   every refresh. The script `mosquitto-copy.sh` in the directory `letsencrypt` can
    do this for you. Put it in the directory
    `/etc/letsencrypt/renewal-hooks/deploy`. Be sure to change the variable
    `MY_DOMAIN` to reflect your domain.
@@ -104,7 +101,7 @@ same server as the webserver.
 3. If you are using a remote host, you may need to punch a hole
    through its firewall for ports `1883` and `8883`, and `9001`.
 
-4. If the NMEA-MQTT gateway server is running, double check that the topics are
+4. If the NMEA-MQTT gateway server is running, double-check that the topics are
    getting published:
 
         mosquitto_sub -h localhost -t '#' -v

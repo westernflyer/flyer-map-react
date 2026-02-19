@@ -24,9 +24,7 @@ export const mqttOptions = {
     prefix : "nmea",
 
     // Which MMSI to listen to. Use '+' to listen to all IDs.
-    MMSI: "368323170",
-    // For testing:
-    // MMSI: "1234567"
+    MMSI: 368323170,
 };
 
 export const historyOptions = {
