@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { AdvancedMarker, InfoWindow, useAdvancedMarkerRef, useMap } from "@vis.gl/react-google-maps";
 import { FormattedState, orderArray } from "./utilities";
@@ -75,6 +75,15 @@ const Polyline = (props) => {
 const BreadcrumbMarker = ({ state }) => {
     const [markerRef, marker] = useAdvancedMarkerRef();
     const [infowindowOpen, setInfowindowOpen] = useState(false);
+    const timeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
 
     const position = {
         lat: state["latitude"]?.value,
@@ -85,13 +94,27 @@ const BreadcrumbMarker = ({ state }) => {
 
     const formattedState = new FormattedState().mergeUpdates(Object.values(state).filter(v => v.key));
 
+    const handleMouseEnter = () => {
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+        }
+        setInfowindowOpen(true);
+    };
+
+    const handleMouseLeave = () => {
+        timeoutRef.current = setTimeout(() => {
+            setInfowindowOpen(false);
+        }, 200);
+    };
+
     return (
         <>
             <AdvancedMarker
                 ref={markerRef}
                 position={position}
-                onMouseEnter={() => setInfowindowOpen(true)}
-                onMouseLeave={() => setInfowindowOpen(false)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
                 <div style={{
                     width: '8px',
@@ -107,10 +130,15 @@ const BreadcrumbMarker = ({ state }) => {
                     onCloseClick={() => setInfowindowOpen(false)}
                     disableAutoPan={true}
                 >
-                    <HistoricalConditions
-                        formattedState={formattedState}
-                        timestamp={state.timestamp}
-                    />
+                    <div
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                    >
+                        <HistoricalConditions
+                            formattedState={formattedState}
+                            timestamp={state.timestamp}
+                        />
+                    </div>
                 </InfoWindow>
             )}
         </>
@@ -136,10 +164,34 @@ const HistoricalConditions = ({ formattedState, timestamp }) => {
     );
 };
 
+HistoricalConditions.propTypes = {
+    formattedState: PropTypes.object.isRequired,
+    timestamp: PropTypes.object.isRequired,
+};
+
 Breadcrumbs.propTypes = {
     history: PropTypes.array.isRequired,
 };
 
 BreadcrumbMarker.propTypes = {
     state: PropTypes.object.isRequired,
+};
+
+Polyline.propTypes = {
+    path: PropTypes.arrayOf(
+        PropTypes.shape({
+            lat: PropTypes.number.isRequired,
+            lng: PropTypes.number.isRequired,
+        })
+    ).isRequired,
+
+    strokeColor: PropTypes.string,
+    strokeOpacity: PropTypes.number,
+    strokeWeight: PropTypes.number,
+};
+
+Polyline.defaultProps = {
+    strokeColor: "#4d7685",
+    strokeOpacity: 0.5,
+    strokeWeight: 2,
 };
