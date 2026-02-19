@@ -47,8 +47,10 @@ const Polyline = (props) => {
     const [polyline, setPolyline] = useState(null);
 
     useEffect(() => {
-        if (map && typeof google !== 'undefined' && !polyline) {
-            setPolyline(new google.maps.Polyline(props));
+        const g = typeof window !== "undefined" ? window.google : undefined;
+
+        if (map && g?.maps?.Polyline && !polyline) {
+            setPolyline(new g.maps.Polyline(props));
         }
     }, [map, polyline, props]);
 
