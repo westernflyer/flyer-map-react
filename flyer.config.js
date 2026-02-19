@@ -31,6 +31,7 @@ export const mqttOptions = {
 
 export const historyOptions = {
     // Where to get the initial history data from.
+    // history_url: `http://localhost:3001/api/v1/data/${mqttOptions.MMSI}/`
     history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
 };
 
