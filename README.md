@@ -143,3 +143,9 @@ Finally, we come to the client!
     npm install
     npm run build
     npm run deploy
+
+## Copyright
+
+Copyright (c) 2025 Tom Keffer <tkeffer@gmail.com>
+
+See the file LICENSE.txt for your rights.
