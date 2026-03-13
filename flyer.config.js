@@ -28,9 +28,13 @@ export const mqttOptions = {
 };
 
 export const historyOptions = {
-    // Where to get the initial history data from.
-    // history_url: `http://localhost:3001/api/v1/data/${mqttOptions.MMSI}/`
-    history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
+  // Where to get the initial history data from.
+  // When testing, to avoid a CORS error when running the client locally, set up a proxy:
+  //     npx local-cors-proxy --proxyUrl https://projects.westernflyer.org
+  // then use the following history_url:
+  // history_url: `http://localhost:8010/proxy/api/v1/data/${mqttOptions.MMSI}/`,
+
+  history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
 };
 
 export const tableOptions = {
