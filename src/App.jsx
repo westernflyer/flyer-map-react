@@ -25,7 +25,6 @@ import { google_key } from "./google-api-key.js";
 import { boatOptions, mqttOptions, historyOptions } from "../flyer.config.js";
 import "./App.css";
 
-
 function App() {
     // client is the MQTT connection.
     const [client, setClient] = useState(null);
@@ -43,23 +42,29 @@ function App() {
     // the connection and subscriptions.
     useEffect(() => {
         // Fetch initial history
-        console.log(`Fetching initial history from ${historyOptions.history_url}`)
+        console.log(
+            `Fetching initial history from ${historyOptions.history_url}`,
+        );
         fetch(historyOptions.history_url)
-            .then(response => response.json())
-            .then(data => {
-                const historyStates = data.map(item =>
-                    new VesselState().mergeUpdates(getUpdateDictsFromApi(item))
+            .then((response) => response.json())
+            .then((data) => {
+                const historyStates = data.map((item) =>
+                    new VesselState().mergeUpdates(getUpdateDictsFromApi(item)),
                 );
                 setHistory(historyStates);
                 // Also set initial vessel state to the most recent historical point
                 if (historyStates.length > 0) {
                     const lastState = historyStates[historyStates.length - 1];
                     setVesselState(lastState);
-                    const updateDicts = getUpdateDictsFromApi(data[data.length - 1]);
-                    setFormattedState(new FormattedState().mergeUpdates(updateDicts));
+                    const updateDicts = getUpdateDictsFromApi(
+                        data[data.length - 1],
+                    );
+                    setFormattedState(
+                        new FormattedState().mergeUpdates(updateDicts),
+                    );
                 }
             })
-            .catch(err => console.error("Error fetching history:", err));
+            .catch((err) => console.error("Error fetching history:", err));
 
         // Connect to the broker.
         const client = mqtt.connect(mqttOptions.brokerUrl, {
@@ -77,8 +82,16 @@ function App() {
 
         const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
-        for (const nmeaType of ['DPT', 'GLL','HDT','MDA','MWV', 'ROT', 'RSA', 'VTG'])
-        {
+        for (const nmeaType of [
+            "DPT",
+            "GLL",
+            "HDT",
+            "MDA",
+            "MWV",
+            "ROT",
+            "RSA",
+            "VTG",
+        ]) {
             client.subscribe(prefix + nmeaType);
             console.log(`Subscribed to ${prefix + nmeaType}`);
         }
@@ -88,7 +101,9 @@ function App() {
         return () => {
             if (client) {
                 client.end(
-                    (err) => err && console.log("Error closing MQTT connection:", err),
+                    (err) =>
+                        err &&
+                        console.log("Error closing MQTT connection:", err),
                 );
                 setClient(null);
             }
@@ -100,22 +115,33 @@ function App() {
     // and the internal state.
     useEffect(() => {
         if (client) {
-            client.on("message", function(topic, message) {
+            client.on("message", function (topic, message) {
                 if (topic === "status") {
                     setStatus(message.toString());
                 } else {
-                    const updateDicts = getUpdateDicts(topic, JSON.parse(message.toString()));
+                    const updateDicts = getUpdateDicts(
+                        topic,
+                        JSON.parse(message.toString()),
+                    );
                     setVesselState((v) => {
-                        const newState = new VesselState(v).mergeUpdates(updateDicts);
-                        setHistory(prevHistory => {
+                        const newState = new VesselState(v).mergeUpdates(
+                            updateDicts,
+                        );
+                        setHistory((prevHistory) => {
                             const now = newState.timestamp;
                             if (!now) return prevHistory;
-                            const lastPoint = prevHistory[prevHistory.length - 1];
-                            if (!lastPoint || now.diff(lastPoint.timestamp, 'second') > 60) {
+                            const lastPoint =
+                                prevHistory[prevHistory.length - 1];
+                            if (
+                                !lastPoint ||
+                                now.diff(lastPoint.timestamp, "second") > 60
+                            ) {
                                 // Add new point
                                 const newHistory = [...prevHistory, newState];
                                 // Prune points older than 1 hour
-                                return newHistory.filter(p => now.diff(p.timestamp, 'hour') < 1);
+                                return newHistory.filter(
+                                    (p) => now.diff(p.timestamp, "hour") < 1,
+                                );
                             } else {
                                 // Update last point
                                 const newHistory = [...prevHistory];
@@ -125,8 +151,8 @@ function App() {
                         });
                         return newState;
                     });
-                    setFormattedState(
-                        (f) => new FormattedState(f).mergeUpdates(updateDicts),
+                    setFormattedState((f) =>
+                        new FormattedState(f).mergeUpdates(updateDicts),
                     );
                 }
             });
@@ -143,15 +169,33 @@ function App() {
 
     return (
         <div style={{ height: "400px", width: "100%", padding: "50px" }}>
-            <p><a href="https://westernflyer.org"><img  style={{width: "300px"}} src="/flyer-map/assets_logo_trans.png" alt="Logo"/></a></p>
+            <p>
+                <a href="https://westernflyer.org">
+                    <img
+                        style={{ width: "300px" }}
+                        src="/flyer-map/assets_logo_trans.png"
+                        alt="Logo"
+                    />
+                </a>
+            </p>
             <header className="entry-header">
                 <h1 className="entry-title">Where&apos;s the Flyer?</h1>
             </header>
-            <p><strong><em>Status</em></strong> <span style={{float: "right"}}><a
-                href="/flyer-map/status.html">Change</a></span></p>
+            <p>
+                <strong>
+                    <em>Status</em>
+                </strong>{" "}
+                <span style={{ float: "right" }}>
+                    <a href="/flyer-map/status.html">Change</a>
+                </span>
+            </p>
             <p>{status}</p>
-            <img className="center" style={{ marginBottom: "20px" }}
-                 src={"/flyer-map/underline-short.png"} alt="Underline" />
+            <img
+                className="center"
+                style={{ marginBottom: "20px" }}
+                src={"/flyer-map/underline-short.png"}
+                alt="Underline"
+            />
             <APIProvider
                 apiKey={`${google_key}`}
                 onLoad={() => console.log("Maps API has loaded.")}
@@ -162,21 +206,23 @@ function App() {
                         defaultCenter={boatPosition}
                         streetViewControl={false}
                         scaleControl={true}
-                        mapId="FLYER_MAP_ID">
+                        mapId="FLYER_MAP_ID"
+                    >
                         <Breadcrumbs history={history} />
-                        <BoatMarker boatPosition={boatPosition}
-                                    heading={vesselState["hdg_true"]?.value}
-                                    cog={vesselState["cog_true"]?.value}
-                                    sog={vesselState["sog_knots"]?.value}
-                                    windSpeed={vesselState["tws_knots"]?.value}
-                                    windDirection={vesselState["twd_true"]?.value}
+                        <BoatMarker
+                            boatPosition={boatPosition}
+                            heading={vesselState["hdg_true"]?.value}
+                            cog={vesselState["cog_true"]?.value}
+                            sog={vesselState["sog_knots"]?.value}
+                            windSpeed={vesselState["tws_knots"]?.value}
+                            windDirection={vesselState["twd_true"]?.value}
                         />
-                        <FollowBoatControl
-                            boatPosition={boatPosition} />
+                        <FollowBoatControl boatPosition={boatPosition} />
                     </Map>
                 )) || (
-                    <p className="fetching">Waiting for a valid vessel
-                        position...</p>
+                    <p className="fetching">
+                        Waiting for a valid vessel position...
+                    </p>
                 )}
             </APIProvider>
             <div style={{ padding: "20px" }}>
