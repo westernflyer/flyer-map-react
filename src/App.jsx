@@ -5,7 +5,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { useEffect, useState, flushSync } from "react";
+import { useEffect, useState } from "react";
 import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
@@ -105,40 +105,29 @@ function App() {
                     setStatus(message.toString());
                 } else {
                     const updateDicts = getUpdateDicts(topic, JSON.parse(message.toString()));
-
-                    const updateState = () => {
-                        flushSync(() => {
-                            setVesselState((v) => {
-                                const newState = new VesselState(v).mergeUpdates(updateDicts);
-                                setHistory(prevHistory => {
-                                    const now = newState.timestamp;
-                                    if (!now) return prevHistory;
-                                    const lastPoint = prevHistory[prevHistory.length - 1];
-                                    if (!lastPoint || now.diff(lastPoint.timestamp, 'second') > 60) {
-                                        // Add new point
-                                        const newHistory = [...prevHistory, newState];
-                                        // Prune points older than 1 hour
-                                        return newHistory.filter(p => now.diff(p.timestamp, 'hour') < 1);
-                                    } else {
-                                        // Update last point
-                                        const newHistory = [...prevHistory];
-                                        newHistory[newHistory.length - 1] = newState;
-                                        return newHistory;
-                                    }
-                                });
-                                return newState;
-                            });
-                            setFormattedState(
-                                (f) => new FormattedState(f).mergeUpdates(updateDicts),
-                            );
+                    setVesselState((v) => {
+                        const newState = new VesselState(v).mergeUpdates(updateDicts);
+                        setHistory(prevHistory => {
+                            const now = newState.timestamp;
+                            if (!now) return prevHistory;
+                            const lastPoint = prevHistory[prevHistory.length - 1];
+                            if (!lastPoint || now.diff(lastPoint.timestamp, 'second') > 60) {
+                                // Add new point
+                                const newHistory = [...prevHistory, newState];
+                                // Prune points older than 1 hour
+                                return newHistory.filter(p => now.diff(p.timestamp, 'hour') < 1);
+                            } else {
+                                // Update last point
+                                const newHistory = [...prevHistory];
+                                newHistory[newHistory.length - 1] = newState;
+                                return newHistory;
+                            }
                         });
-                    };
-
-                    if (document.startViewTransition) {
-                        document.startViewTransition(() => updateState());
-                    } else {
-                        updateState();
-                    }
+                        return newState;
+                    });
+                    setFormattedState(
+                        (f) => new FormattedState(f).mergeUpdates(updateDicts),
+                    );
                 }
             });
             client.on("error", (err) => console.error(err));

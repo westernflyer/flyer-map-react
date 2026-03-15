@@ -5,6 +5,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
+import Fader from "react-fader";
 import DataTable from "react-data-table-component";
 import { orderArray } from "./utilities.js";
 import { tableOptions } from "../flyer.config.js";
@@ -17,11 +18,11 @@ const tableColumns = [
     },
     {
         name: "Value",
-        selector: (row) => row.value,
+        selector: (row) => <Fader>{row.value}</Fader>,
     },
     {
         name: "Last update",
-        selector: (row) => row.last_update,
+        selector: (row) => <Fader>{row.last_update}</Fader>,
     },
     // {
     //     name: "Key",

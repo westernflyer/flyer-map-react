@@ -86,9 +86,3 @@ p {
     font-family: monospace;
     font-size: 10pt;
 }
-
-/* Native View Transitions */
-::view-transition-old(root),
-::view-transition-new(root) {
-    animation-duration: 0.5s;
-}
