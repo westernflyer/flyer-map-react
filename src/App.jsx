@@ -13,7 +13,7 @@ import {
     FormattedState,
     getLatLng,
     getUpdateDicts,
-    getUpdateDictsFromApi,
+    extractUpdateDictsfromJson,
     VesselState,
 } from "./utilities.js";
 import { VesselTable } from "./VesselTable";
@@ -34,11 +34,11 @@ function App() {
     const [formattedState, setFormattedState] = useState(new FormattedState());
     // Current status
     const [status, setStatus] = useState(boatOptions.defaultStatus);
-    // history holds the vessel states for the previous hour.
+    // history holds the vessel states going back in time
     const [history, setHistory] = useState([]);
 
     // Because this app relies on an external connection to the MQTT broker,
-    // internal state must be synchronized in a "useEffect" function. Set up
+    // the internal state must be synchronized in a "useEffect" function. Set up
     // the connection and subscriptions.
     useEffect(() => {
         // Fetch initial history
@@ -48,15 +48,17 @@ function App() {
         fetch(historyOptions.history_url)
             .then((response) => response.json())
             .then((data) => {
+                // Merge the historical data into an empty VesselState object
                 const historyStates = data.map((item) =>
-                    new VesselState().mergeUpdates(getUpdateDictsFromApi(item)),
+                    new VesselState().mergeUpdates(extractUpdateDictsfromJson(item)),
                 );
                 setHistory(historyStates);
-                // Also set initial vessel state to the most recent historical point
+                // Also set the initial vessel state and formatted state to the
+                // most recent historical point
                 if (historyStates.length > 0) {
                     const lastState = historyStates[historyStates.length - 1];
                     setVesselState(lastState);
-                    const updateDicts = getUpdateDictsFromApi(
+                    const updateDicts = extractUpdateDictsfromJson(
                         data[data.length - 1],
                     );
                     setFormattedState(
@@ -124,9 +126,7 @@ function App() {
                         JSON.parse(message.toString()),
                     );
                     setVesselState((v) => {
-                        const newState = new VesselState(v).mergeUpdates(
-                            updateDicts,
-                        );
+                        const newState = new VesselState(v).mergeUpdates(updateDicts);
                         setHistory((prevHistory) => {
                             const now = newState.timestamp;
                             if (!now) return prevHistory;
@@ -158,13 +158,13 @@ function App() {
             });
             client.on("error", (err) => console.error(err));
         }
-        // Setting 'client' as the sole dependency ensures that the function only
-        // gets called when client changes. That is, on initial establishment of
-        // the client connection. Otherwise, new handlers would get established on
-        // every refresh.
+        // Setting 'client' as the sole dependency ensures that the function only gets called when
+        // client changes. Because the only time that client changes is on the initial establishment
+        // of the connection, the handlers only get set up once, which is what we want.
     }, [client]);
 
-    // boatPosition holds the current vessel position, or null if it has not been established yet.
+    // boatPosition holds the current vessel position, or null if it has not
+    // been established yet.
     const boatPosition = getLatLng(vesselState);
 
     return (
