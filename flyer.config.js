@@ -25,6 +25,9 @@ export const mqttOptions = {
 
     // Which MMSI to listen to. Use '+' to listen to all IDs.
     MMSI: 368323170,
+
+    // Which channel to listen to.
+    channel: "ch1",
 };
 
 export const historyOptions = {

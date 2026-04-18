@@ -82,7 +82,6 @@ function App() {
             mqttOptions.clientId,
         );
 
-        const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
         for (const nmeaType of [
             "DPT",
@@ -94,8 +93,9 @@ function App() {
             "RSA",
             "VTG",
         ]) {
-            client.subscribe(prefix + nmeaType);
-            console.log(`Subscribed to ${prefix + nmeaType}`);
+            const topic = `${mqttOptions.prefix}/${mqttOptions.MMSI}/${mqttOptions.channel}/${nmeaType}`;
+            client.subscribe(topic);
+            console.log(`Subscribed to ${topic}`);
         }
         client.subscribe("status");
 
