@@ -7,6 +7,7 @@
 
 import dayjs from "dayjs";
 import { formatUpdate } from "./units";
+import { fieldOptions } from "../flyer.config";
 
 /*
     The MQTT object looks something like this:
@@ -22,24 +23,25 @@ import { formatUpdate } from "./units";
 class Update {
     /**
      * @constructor
-     * @param {string} key - An appropriate, unique key. Somethng like "longitude".
-     * @param {float} value - The updated value
-     * @param {dayjs.Dayjs} last_update - The time the value was last updated.
+     * @param {string} dataFieldKey - The key for a field. Something like "GPGLL_longitude".
+     * @param {float} dataFieldValue - The updated value
+     * @param {dayjs.Dayjs} last_update - The time the dataFieldValue was last updated.
      */
-    constructor(key, value, last_update) {
-        this.key = key;
-        this.value = value;
+    constructor(dataFieldKey, dataFieldValue, last_update) {
+        this.dataFieldKey = dataFieldKey;
+        this.value = dataFieldValue;
         this.last_update = last_update;
     }
 }
 
-// Extract data out of the parsed JSON SignalK object.
+// Extract data out of the parsed JSON object.
 export function getUpdateDicts(topic, mqttObject) {
-    let updates = [];
+    const updates = [];
     const timestamp = dayjs(mqttObject.timestamp);
-    for (const key in mqttObject) {
-        if (key !== "timestamp") {
-            updates.push(new Update(key, mqttObject[key], timestamp));
+    for (const dataField in mqttObject) {
+        if (dataField !== "timestamp") {
+            const dataFieldKey= topic.split("/")[2] + "_" + dataField;
+            updates.push(new Update(dataFieldKey, mqttObject[dataField], timestamp));
         }
     }
     return updates;
@@ -57,9 +59,9 @@ export function getUpdateDicts(topic, mqttObject) {
 export function extractUpdateDictsfromJson(apiObject) {
     let updates = [];
     const timestamp = dayjs(apiObject.timestamp);
-    for (const key in apiObject) {
-        if (key !== "timestamp" && key !== "mmsi") {
-            updates.push(new Update(key, apiObject[key], timestamp));
+    for (const dataFieldKey in apiObject) {
+        if (dataFieldKey !== "timestamp" && dataFieldKey !== "mmsi") {
+            updates.push(new Update(dataFieldKey, apiObject[dataFieldKey], timestamp));
         }
     }
     return updates;
@@ -78,10 +80,12 @@ export function extractUpdateDictsfromJson(apiObject) {
  */
 export function getLatLng(vesselState) {
     let boatPosition = null;
-    if (vesselState["latitude"] != null) {
+    const lat = vesselState.getField("latitude")?.value;
+    const lon = vesselState.getField("longitude")?.value;
+    if (lat != null && lon != null) {
         boatPosition = {
-            lat: vesselState["latitude"].value,
-            lng: vesselState["longitude"].value,
+            lat: lat,
+            lng: lon,
         };
     }
     return boatPosition;
@@ -94,11 +98,15 @@ export class VesselState {
     }
 
     mergeUpdates(updates) {
-        for (let update of updates) {
-            this[update.key] = update;
+        for (const update of updates) {
+            this[update.dataFieldKey] = update;
             this.timestamp = update.last_update;
         }
         return this;
+    }
+    getField(field){
+        const dataFieldKey = fieldOptions[field];
+        return this[dataFieldKey];
     }
 }
 
@@ -109,8 +117,8 @@ export class FormattedState {
     }
 
     mergeUpdates(updates) {
-        for (let update of updates) {
-            this[update.key] = formatUpdate(update);
+        for (const update of updates) {
+            this[update.dataFieldKey] = formatUpdate(update);
         }
         return this;
     }

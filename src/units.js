@@ -7,7 +7,7 @@
 
 import dayjs from "dayjs";
 
-// Which unit label to use for a given key
+// Which unit label to use for a given data field
 const unitLabel = {
   altitude_meter: " m",
   awa: "º",
@@ -37,39 +37,30 @@ const unitLabel = {
   water_depth_meters: " m",
 };
 
-// Which descriptive label to use for a given key
+// Which descriptive label to use for a given data field key
 export const descriptiveLabel = {
-  altitude_meter: "Altitude",
-  awa: "Apparent wind angle",
-  aws_knots: "Apparent wind speed",
-  aws_kph: "Apparent wind speed",
-  aws_mps: "Apparent wind speed",
-  cog_magnetic: "Course over ground (magnetic)",
-  cog_true: "Course over ground (true)",
-  dew_point_celsius: "Dew point",
-  fix_quality: "Fix quality",
-  hdg_true: "Heading (true)",
-  hdop: "Horizontal dilution of precision",
-  humidity_relative: "Relative humidity",
-  latitude: "Latitude",
-  longitude: "Longitude",
-  magnetic_variation: "Magnetic variation",
-  num_satellites: "Number of satellites",
-  pressure_bars: "Pressure",
-  pressure_inches: "Pressure",
-  pressure_millibars: "Pressure",
-  rate_of_turn: "Rate of turn",
-  rudder_angle: "Rudder angle",
-  sog_knots: "Speed over ground",
-  sog_kph: "Speed over ground",
-  temperature_air_celsius: "Air temperature",
-  temperature_water_celsius: "Water temperature",
-  timeUTC: "Time (UTC)",
-  twd_magnetic: "True wind direction (magnetic)",
-  twd_true: "True wind direction (true)",
-  tws_knots: "True wind speed",
-  tws_mps: "True wind speed",
-  water_depth_meters: "Water depth",
+  FTMWV_awa: "Apparent wind angle (FT602)",
+  FTMWV_aws_knots: "Apparent wind speed (FT602)",
+  GPGGA_altitude_meter: "Altitude",
+  GPGLL_latitude: "Latitude",
+  GPGLL_longitude: "Longitude",
+  GPGLL_timeUTC: "Time (UTC)",
+  GPVTG_cog_true: "Course over ground (true)",
+  GPVTG_sog_knots: "Speed over ground",
+  HEHDT_hdg_true: "Heading (true)",
+  IIMDA_dew_point_celsius: "Dew point",
+  IIMDA_humidity_relative: "Relative humidity",
+  IIMDA_pressure_millibars: "Pressure",
+  IIMDA_temperature_air_celsius: "Air temperature",
+  IIMDA_temperature_water_celsius: "Water temperature",
+  IIMDA_twd_true: "True wind direction (200WX)",
+  IIMDA_tws_knots: "True wind speed (200WX)",
+  IIRSA_rudder_angle: "Rudder angle",
+  SDDPT_depth_below_transducer_meters: "Depth below transducer",
+  SDDPT_water_depth_meters: "Water depth",
+  TIROT_rate_of_turn: "Rate of turn",
+  WIMWV_awa: "Apparent wind angle (200WX)",
+  WIMWV_aws_knots: "Apparent wind speed (200WX)",
 };
 
 // Convert between units (not presently used)
@@ -119,21 +110,25 @@ export const conversionDict = {
 */
 
 
-// Take an update from the broker, and format it for presentation.
+// Take an update from the broker and format it for presentation.
 export function formatUpdate(update) {
   let labeledVal;
+  // This will be something like `IIMDA_temperature_air_celsius`:
+  const dfk = update.dataFieldKey;
+  // This will be something like `temperature_air_celsius`:
+  const dataField = dfk.substring(dfk.indexOf("_") + 1);
 
   // Special case for formatting latitude and longitude:
-  if (update.key === "latitude" || update.key === "longitude") {
-    labeledVal = formatLatLon(update.key, update.value);
+  if (dataField === "latitude" || dataField === "longitude") {
+    labeledVal = formatLatLon(dataField, update.value);
   } else {
-    labeledVal = formatValue(update.key, update.value);
+    labeledVal = formatValue(dataField, update.value);
   }
 
   // Now put it all together:
   return {
-    key: update.key,
-    label: descriptiveLabel[update.key],
+    dataFieldKey: dfk,
+    label: descriptiveLabel[dfk],
     value: labeledVal,
     last_update: formatValue("last_update", update.last_update),
   };
@@ -141,17 +136,17 @@ export function formatUpdate(update) {
 
 /**
  * Format a value. Add a unit label.
- * @param {string} key - The key (e.g., "tws_knots")
+ * @param {string} dataField - The key (e.g., "tws_knots")
  * @param {number} value - The value to be formatted
  */
-export function formatValue(key, value) {
+export function formatValue(dataField, value) {
   let fval;
 
   if (value === null) {
     return null;
   }
 
-  switch (key) {
+  switch (dataField) {
     case "altitude_meter":
     case "awa":
     case "cog_magnetic":
@@ -180,6 +175,7 @@ export function formatValue(key, value) {
     case "tws_knots":
     case "tws_mps":
     case "water_depth_meters":
+    case "depth_below_transducer_meters":
       fval = value.toFixed(1);
       break;
     case "pressure_inches":
@@ -196,18 +192,18 @@ export function formatValue(key, value) {
       fval = String(value);
   }
   // Get an appropriate label for the unit. Something like "°C".
-  const unit_label = unitLabel[key] || "";
+  const unit_label = unitLabel[dataField] || "";
   // Attach the unit label and return
   return fval + unit_label;
 }
 
 // Format a latitude or longitude
-function formatLatLon(key, value) {
+function formatLatLon(dataField, value) {
   let hemisphere;
   const degrees = Math.floor(Math.abs(value));
   const minutes = (Math.abs(value) - degrees) * 60.0;
   const fval = degrees.toFixed(0) + "° " + minutes.toFixed(1) + "'";
-  if (key === "latitude") hemisphere = value >= 0 ? "N" : "S";
+  if (dataField === "latitude") hemisphere = value >= 0 ? "N" : "S";
   else hemisphere = value >= 0 ? "E" : "W";
   return fval + hemisphere;
 }

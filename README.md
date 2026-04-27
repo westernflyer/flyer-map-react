@@ -144,6 +144,34 @@ Finally, we come to the client!
     npm run build
     npm run deploy
 
+## Glossary
+
+For an incoming JSON message from the MQTT broker with topic `nmea/mmsi/GPGLL`
+that looks like this:
+
+```json
+{
+  "latitude":42.047,
+  "longitude":-124.267,
+  "timeUTC":"17:36:25",
+  "gll_mode":"D",
+  "sentence_type":"GLL",
+  "timestamp":1777311385402
+}
+```
+
+here's a glossary of the various parts:
+
+| Field            | Description               |
+|:-----------------|:--------------------------|
+| `mmsi`           | MMSI number of the vessel | 
+| `GPGLL`          | Address field             |
+| `GP`             | Talker ID                 |
+| `GLL`            | Sentence formatter        |
+| `latitude`       | Data field                |
+| `GPGLL_latitude` | Data field key            |
+
+
 ## Copyright
 
 Copyright (c) 2025 Tom Keffer <tkeffer@gmail.com>

@@ -21,8 +21,8 @@ export const Breadcrumbs = ({ history }) => {
     const path = useMemo(() => {
         return history
             .map(state => ({
-                lat: state["latitude"]?.value,
-                lng: state["longitude"]?.value
+                lat: state.getField("latitude")?.value,
+                lng: state.getField("longitude")?.value
             }))
             .filter(pos => pos.lat && pos.lng);
     }, [history]);
@@ -88,13 +88,13 @@ const BreadcrumbMarker = ({ state }) => {
     }, []);
 
     const position = {
-        lat: state["latitude"]?.value,
-        lng: state["longitude"]?.value
+        lat: state.getField("latitude")?.value,
+        lng: state.getField("longitude")?.value
     };
 
     if (!position.lat || !position.lng) return null;
 
-    const formattedState = new FormattedState().mergeUpdates(Object.values(state).filter(v => v.key));
+    const formattedState = new FormattedState().mergeUpdates(Object.values(state).filter(v => v.dataFieldKey));
 
     const handleMouseEnter = () => {
         if (timeoutRef.current) {
@@ -155,7 +155,7 @@ const HistoricalConditions = ({ formattedState, timestamp }) => {
             <table style={{ borderCollapse: 'collapse' }}>
                 <tbody>
                     {data.map(row => (
-                        <tr key={row.key} style={{ borderBottom: '1px solid #eee' }}>
+                        <tr key={row.dataFieldKey} style={{ borderBottom: '1px solid #eee' }}>
                             <td style={{ padding: '2px 0' }}>{row.label}</td>
                             <td style={{ padding: '2px 0 2px 10px', textAlign: 'right' }}>{row.value}</td>
                         </tr>

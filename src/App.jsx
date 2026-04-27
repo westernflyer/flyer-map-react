@@ -82,20 +82,20 @@ function App() {
             mqttOptions.clientId,
         );
 
+        const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
-        for (const nmeaType of [
-            "DPT",
-            "GLL",
-            "HDT",
-            "MDA",
-            "MWV",
-            "ROT",
-            "RSA",
-            "VTG",
+        for (const addressField of [
+            "TIROT",
+            "HEHDT",
+            "GPVTG",
+            "GPGLL",
+            "FTMWV",
+            "WIMWV",
+            "IIMDA",
+            "IIRSA",
         ]) {
-            const topic = `${mqttOptions.prefix}/${mqttOptions.MMSI}/${mqttOptions.channel}/${nmeaType}`;
-            client.subscribe(topic);
-            console.log(`Subscribed to ${topic}`);
+            client.subscribe(prefix + addressField);
+            console.log(`Subscribed to ${prefix + addressField}`);
         }
         client.subscribe("status");
 
@@ -211,11 +211,11 @@ function App() {
                         <Breadcrumbs history={history} />
                         <BoatMarker
                             boatPosition={boatPosition}
-                            heading={vesselState["hdg_true"]?.value}
-                            cog={vesselState["cog_true"]?.value}
-                            sog={vesselState["sog_knots"]?.value}
-                            windSpeed={vesselState["tws_knots"]?.value}
-                            windDirection={vesselState["twd_true"]?.value}
+                            heading={vesselState.getField("hdg_true")?.value}
+                            cog={vesselState.getField("cog_true")?.value}
+                            sog={vesselState.getField("sog_knots")?.value}
+                            windSpeed={vesselState.getField("tws_knots")?.value}
+                            windDirection={vesselState.getField("twd_true")?.value}
                         />
                         <FollowBoatControl boatPosition={boatPosition} />
                     </Map>
