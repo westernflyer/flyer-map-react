@@ -84,18 +84,18 @@ function App() {
 
         const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
-        for (const nmeaType of [
-            "DPT",
-            "GLL",
-            "HDT",
-            "MDA",
-            "MWV",
-            "ROT",
-            "RSA",
-            "VTG",
+        for (const addressField of [
+            "TIROT",
+            "HEHDT",
+            "GPVTG",
+            "GPGLL",
+            "FTMWV",
+            "WIMWV",
+            "IIMDA",
+            "IIRSA",
         ]) {
-            client.subscribe(prefix + nmeaType);
-            console.log(`Subscribed to ${prefix + nmeaType}`);
+            client.subscribe(prefix + addressField);
+            console.log(`Subscribed to ${prefix + addressField}`);
         }
         client.subscribe("status");
 

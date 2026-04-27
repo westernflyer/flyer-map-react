@@ -21,7 +21,7 @@ export const mqttOptions = {
     username: undefined,
     password: undefined,
 
-    prefix : "nmea",
+    prefix : "nmea-debug",
 
     // Which MMSI to listen to. Use '+' to listen to all IDs.
     MMSI: 368323170,
@@ -32,29 +32,33 @@ export const historyOptions = {
   // When testing, to avoid a CORS error when running the client locally, set up a proxy:
   //     npx local-cors-proxy --proxyUrl https://projects.westernflyer.org
   // then use the following history_url:
-  // history_url: `http://localhost:8010/proxy/api/v1/data/${mqttOptions.MMSI}/`,
+  history_url: `http://localhost:8010/proxy/api/v1/data/${mqttOptions.MMSI}/`,
 
-  history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
+  // history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
 };
 
 export const tableOptions = {
     // What to present in the table, and in what order:
     order: [
-        "latitude",
-        "longitude",
-        "sog_knots",
-        "cog_true",
-        "hdg_true",
-        "water_depth_meters",
-        "tws_knots",
-        "twd_true",
-        "aws_knots",
-        "awa",
-        "temperature_water_celsius",
-        "temperature_air_celsius",
-        "pressure_millibars",
-        "rudder_angle",
-        "rate_of_turn",
+        "GPGLL_latitude",
+        "GPGLL_longitude",
+        "GPRMC_cog_true",
+        "GPVTG_sog_knots",
+        "HEHDT_hdg_true",
+        "IIMDA_tws_knots",
+        "IIMDA_twd_true",
+        "IIMWV_aws_knots",
+        "IIMWV_awa",
+        "WIMWV_aws_knots",
+        "FTMWV_aws_knots",
+        "WIMWV_awa",
+        "FTMWV_awa",
+        "IIMDA_pressure_millibars",
+        "IIMDA_temperature_air_celsius",
+        "IIMDA_temperature_water_celsius",
+        "IIRSA_rudder_angle",
+        "SDDPT_depth_below_transducer_meters",
+        "TIROT_rate_of_turn",
     ],
 };
 
