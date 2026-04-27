@@ -7,6 +7,7 @@
 
 import dayjs from "dayjs";
 import { formatUpdate } from "./units";
+import { fieldOptions } from "../flyer.config";
 
 /*
     The MQTT object looks something like this:
@@ -58,9 +59,9 @@ export function getUpdateDicts(topic, mqttObject) {
 export function extractUpdateDictsfromJson(apiObject) {
     let updates = [];
     const timestamp = dayjs(apiObject.timestamp);
-    for (const key in apiObject) {
-        if (key !== "timestamp" && key !== "mmsi") {
-            updates.push(new Update(key, apiObject[key], timestamp));
+    for (const dataFieldKey in apiObject) {
+        if (dataFieldKey !== "timestamp" && dataFieldKey !== "mmsi") {
+            updates.push(new Update(dataFieldKey, apiObject[dataFieldKey], timestamp));
         }
     }
     return updates;
@@ -79,10 +80,12 @@ export function extractUpdateDictsfromJson(apiObject) {
  */
 export function getLatLng(vesselState) {
     let boatPosition = null;
-    if (vesselState["latitude"] != null) {
+    const lat = vesselState.getField("latitude")?.value;
+    const lon = vesselState.getField("longitude")?.value;
+    if (lat != null && lon != null) {
         boatPosition = {
-            lat: vesselState["latitude"].value,
-            lng: vesselState["longitude"].value,
+            lat: lat,
+            lng: lon,
         };
     }
     return boatPosition;
@@ -100,6 +103,10 @@ export class VesselState {
             this.timestamp = update.last_update;
         }
         return this;
+    }
+    getField(field){
+        const dataFieldKey = fieldOptions[field];
+        return this[dataFieldKey];
     }
 }
 

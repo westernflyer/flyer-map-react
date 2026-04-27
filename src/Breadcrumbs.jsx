@@ -21,8 +21,8 @@ export const Breadcrumbs = ({ history }) => {
     const path = useMemo(() => {
         return history
             .map(state => ({
-                lat: state["latitude"]?.value,
-                lng: state["longitude"]?.value
+                lat: state.getField("latitude")?.value,
+                lng: state.getField("longitude")?.value
             }))
             .filter(pos => pos.lat && pos.lng);
     }, [history]);
@@ -88,8 +88,8 @@ const BreadcrumbMarker = ({ state }) => {
     }, []);
 
     const position = {
-        lat: state["latitude"]?.value,
-        lng: state["longitude"]?.value
+        lat: state.getField("latitude")?.value,
+        lng: state.getField("longitude")?.value
     };
 
     if (!position.lat || !position.lng) return null;

@@ -21,20 +21,20 @@ export const mqttOptions = {
     username: undefined,
     password: undefined,
 
-    prefix : "nmea-debug",
+    prefix: "nmea-debug",
 
     // Which MMSI to listen to. Use '+' to listen to all IDs.
     MMSI: 368323170,
 };
 
 export const historyOptions = {
-  // Where to get the initial history data from.
-  // When testing, to avoid a CORS error when running the client locally, set up a proxy:
-  //     npx local-cors-proxy --proxyUrl https://projects.westernflyer.org
-  // then use the following history_url:
-  history_url: `http://localhost:8010/proxy/api/v1/data/${mqttOptions.MMSI}/`,
+    // Where to get the initial history data from.
+    // When testing, to avoid a CORS error when running the client locally, set up a proxy:
+    //     npx local-cors-proxy --proxyUrl https://projects.westernflyer.org
+    // then use the following history_url:
+    history_url: `http://localhost:8010/proxy/api/v1/data/${mqttOptions.MMSI}/`,
 
-  // history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
+    // history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
 };
 
 export const tableOptions = {
@@ -42,7 +42,7 @@ export const tableOptions = {
     order: [
         "GPGLL_latitude",
         "GPGLL_longitude",
-        "GPRMC_cog_true",
+        "GPVTG_cog_true",
         "GPVTG_sog_knots",
         "HEHDT_hdg_true",
         "IIMDA_tws_knots",
@@ -62,6 +62,16 @@ export const tableOptions = {
     ],
 };
 
+export const fieldOptions = {
+    // Some fields can be found in multiple sentence types. This object picks which one to use.
+    latitude: "GPGLL_latitude",
+    longitude: "GPGLL_longitude",
+    cog_true: "GPVTG_cog_true",
+    sog_knots: "GPVTG_sog_knots",
+    hdg_true: "HEHDT_hdg_true",
+    tws_knots: "IIMDA_tws_knots",
+    twd_true: "IIMDA_twd_true",
+};
 export const markerOptions = {
     minCOGLength: 5,
 };

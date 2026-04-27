@@ -211,11 +211,11 @@ function App() {
                         <Breadcrumbs history={history} />
                         <BoatMarker
                             boatPosition={boatPosition}
-                            heading={vesselState["hdg_true"]?.value}
-                            cog={vesselState["cog_true"]?.value}
-                            sog={vesselState["sog_knots"]?.value}
-                            windSpeed={vesselState["tws_knots"]?.value}
-                            windDirection={vesselState["twd_true"]?.value}
+                            heading={vesselState.getField("hdg_true")?.value}
+                            cog={vesselState.getField("cog_true")?.value}
+                            sog={vesselState.getField("sog_knots")?.value}
+                            windSpeed={vesselState.getField("tws_knots")?.value}
+                            windDirection={vesselState.getField("twd_true")?.value}
                         />
                         <FollowBoatControl boatPosition={boatPosition} />
                     </Map>
