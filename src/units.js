@@ -16,6 +16,7 @@ const unitLabel = {
   aws_mps: " m/s",
   cog_magnetic: "º",
   cog_true: "º",
+  depth_below_transducer_meters: " m",
   dew_point_celsius: "ºC",
   hdg_true: "º",
   humidity_relative: "%",
