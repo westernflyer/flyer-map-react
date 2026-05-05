@@ -85,14 +85,15 @@ function App() {
         const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
         for (const addressField of [
-            "TIROT",
-            "HEHDT",
-            "GPVTG",
-            "GPGLL",
             "FTMWV",
-            "WIMWV",
+            "GPGLL",
+            "GPVTG",
+            "HEHDT",
             "IIMDA",
             "IIRSA",
+            "SDDPT",
+            "TIROT",
+            "WIMWV",
         ]) {
             client.subscribe(prefix + addressField);
             console.log(`Subscribed to ${prefix + addressField}`);

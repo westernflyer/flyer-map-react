@@ -57,7 +57,7 @@ export const tableOptions = {
         "IIMDA_temperature_air_celsius",
         "IIMDA_temperature_water_celsius",
         "IIRSA_rudder_angle",
-        "SDDPT_depth_below_transducer_meters",
+        "SDDPT_water_depth_meters",
         "TIROT_rate_of_turn",
     ],
 };
