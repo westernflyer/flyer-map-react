@@ -42,9 +42,10 @@ export const tableOptions = {
     order: [
         "GPGLL_latitude",
         "GPGLL_longitude",
-        "GPVTG_cog_true",
         "GPVTG_sog_knots",
+        "GPVTG_cog_true",
         "HEHDT_hdg_true",
+        "SDDPT_water_depth_meters",
         "IIMDA_tws_knots",
         "IIMDA_twd_true",
         "IIMWV_aws_knots",
@@ -57,7 +58,6 @@ export const tableOptions = {
         "IIMDA_temperature_air_celsius",
         "IIMDA_temperature_water_celsius",
         "IIRSA_rudder_angle",
-        "SDDPT_water_depth_meters",
         "TIROT_rate_of_turn",
     ],
 };
