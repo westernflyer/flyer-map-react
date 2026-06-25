@@ -1,3 +1,9 @@
+1.4.0 2026-06-25
+
+* Allow the amount of history breadcrumbs to be configured.
+* Fix bugs that caused them to get truncated prematurely.
+
+ 
 1.3.0 2026-04-27
 
 * Use new MQTT message format and new JSON format.
