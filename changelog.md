@@ -1,3 +1,8 @@
+1.5.0 2026-06-25
+
+* Use react-transition-group instead of react-fader.
+
+
 1.4.0 2026-06-25
 
 * Allow the amount of history breadcrumbs to be configured.

@@ -5,7 +5,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import Fader from "react-fader";
+import Fader from "./Fader";
 import DataTable from "react-data-table-component";
 import { orderArray } from "./utilities.js";
 import { tableOptions } from "../flyer.config.js";
