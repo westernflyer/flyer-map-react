@@ -111,7 +111,7 @@ export const conversionDict = {
 */
 
 
-// Take an update from the broker and format it for presentation.
+// Take an Update object and format it for presentation.
 export function formatUpdate(update) {
   let labeledVal;
   // This will be something like `IIMDA_temperature_air_celsius`:

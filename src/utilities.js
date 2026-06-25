@@ -34,7 +34,53 @@ class Update {
     }
 }
 
-// Extract data out of the parsed JSON object.
+/**
+ * Given a topic and a parsed MQTT object, flatten its components into an array of Update objects.
+ *
+ * @param {string} topic - The MQTT topic string used to derive keys for the updates.
+ * @param {Object} mqttObject - The parsed MQTT message object containing data fields and a timestamp.
+ * @return {Array<Update>} An array of Update objects containing keys, values, and a timestamp.
+
+ * For example, given an MQTT object that looks like this:
+ *
+ * {
+ *     "latitude": 36.805795,
+ *     "longitude": -121.785685,
+ *     "timeUTC": "20:52:38",
+ *     "gll_mode": "D",
+ *     "sentence_type": "GLL",
+ *     "timestamp": 1782420758158
+ * }
+ * The results would look like this:
+ * [
+ *     {
+ *         "dataFieldKey": "GPGLL_latitude",
+ *         "value": 36.805795,
+ *         "last_update": "2026-06-25T20:52:38.158Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "GPGLL_longitude",
+ *         "value": -121.785685,
+ *         "last_update": "2026-06-25T20:52:38.158Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "GPGLL_timeUTC",
+ *         "value": "20:52:38",
+ *         "last_update": "2026-06-25T20:52:38.158Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "GPGLL_gll_mode",
+ *         "value": "D",
+ *         "last_update": "2026-06-25T20:52:38.158Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "GPGLL_sentence_type",
+ *         "value": "GLL",
+ *         "last_update": "2026-06-25T20:52:38.158Z"
+ *     }
+ * ]
+ */
+
 export function getUpdateDicts(topic, mqttObject) {
     const updates = [];
     const timestamp = dayjs(mqttObject.timestamp);
@@ -48,13 +94,48 @@ export function getUpdateDicts(topic, mqttObject) {
 }
 
 /**
- * Extracts and transforms key-value pairs from the given JSON object (excluding specific keys)
- * into an array of Update objects.
+ * Very similar to the above, except that it works with objects returned from the WF data server.
  *
- * @param {Object} apiObject - The JSON object containing data to be processed.
- *                             Expected to include a `timestamp` key and other fields for updates.
+ * @param {Object} apiObject - The JSON object as returned by the WF data server.
+ *                             Expected to include a `timestamp` key and other fields.
  * @return {Array<Update>} An array of Update objects, each containing a key, value, and a
  * timestamp as a dayjs object.
+ *
+ * For example, for an object that looks like this:
+ * {
+ *     "mmsi": 368323170,
+ *     "timestamp": 1782378240000,
+ *     "FTMWV_awa": 34,
+ *     "FTMWV_aws_knots": 2.4,
+ *     "GPGLL_latitude": 36.80578333333333,
+ *     "GPGLL_longitude": -121.78568333333334,
+ *     ...
+ *
+ * The results would look like this:
+ *
+ * [
+ *     {
+ *         "dataFieldKey": "FTMWV_awa",
+ *         "value": 34,
+ *         "last_update": "2026-06-25T09:04:00.000Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "FTMWV_aws_knots",
+ *         "value": 2.4,
+ *         "last_update": "2026-06-25T09:04:00.000Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "GPGLL_latitude",
+ *         "value": 36.80578333333333,
+ *         "last_update": "2026-06-25T09:04:00.000Z"
+ *     },
+ *     {
+ *         "dataFieldKey": "GPGLL_longitude",
+ *         "value": -121.78568333333334,
+ *         "last_update": "2026-06-25T09:04:00.000Z"
+ *     },
+ *     ...
+ * ]
  */
 export function extractUpdateDictsfromJson(apiObject) {
     let updates = [];
@@ -75,7 +156,7 @@ export function extractUpdateDictsfromJson(apiObject) {
  * @param {Object} vesselState.longitude - The longitude property of the vessel state.
  * @param {number} vesselState.latitude.value - The numeric value of latitude.
  * @param {number} vesselState.longitude.value - The numeric value of longitude.
- * @return {Object|null} An object containing `lat` and `lng` properties if latitude is present,
+ * @return {Object|null} An object containing `lat` and `lng` properties if both are present,
  * otherwise null.
  */
 export function getLatLng(vesselState) {
