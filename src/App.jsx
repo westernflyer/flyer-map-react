@@ -45,7 +45,10 @@ function App() {
         console.log(
             `Fetching initial history from ${historyOptions.history_url}`,
         );
-        fetch(historyOptions.history_url)
+        const now = Date.now();
+        const startTime = now - historyOptions.historyHours * 3600.0 * 1000.0;
+        const url = `${historyOptions.history_url}?start=${startTime}`;
+        fetch(url)
             .then((response) => response.json())
             .then((data) => {
                 // Merge the historical data into an empty VesselState object

@@ -34,7 +34,10 @@ export const historyOptions = {
     // then use the following history_url:
     // history_url: `http://localhost:8010/proxy/api/v1/data/${mqttOptions.MMSI}/`,
 
-    history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`
+    history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`,
+
+    // How much history to get in hours:
+    historyHours: 12,
 };
 
 export const tableOptions = {

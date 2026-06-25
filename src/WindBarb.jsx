@@ -29,7 +29,7 @@ const SVGWindBarb = (props) => {
     let svgParts = [];
 
     // Draw the shaft. It will be a vertical line, 80 units long, running from
-    // y=20 at the top, to y=100 at the bottom. It will be centered at x=20 in
+    // y=20 at the top to y=100 at the bottom. It will be centered at x=20 in
     // the box.
     svgParts.push(`<line x1=${WIDTH / 2} y1=${TOPMARGIN} x2=${WIDTH / 2} y2=${HEIGHT} />`);
 
