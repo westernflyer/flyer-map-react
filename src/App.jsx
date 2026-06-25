@@ -142,7 +142,7 @@ function App() {
                             ) {
                                 // Add new point
                                 const newHistory = [...prevHistory, newState];
-                                // Prune points older than 1 hour
+                                // Prune points older than historyHours ago
                                 return newHistory.filter(
                                     (p) =>
                                         now.diff(p.timestamp, "hour") < historyOptions.historyHours,
