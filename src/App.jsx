@@ -37,9 +37,9 @@ function App() {
     // history holds the vessel states going back in time
     const [history, setHistory] = useState([]);
 
-    // Because this app relies on an external connection to the MQTT broker,
-    // the internal state must be synchronized in a "useEffect" function. Set up
-    // the connection and subscriptions.
+    // Because this app relies on fetching history records from the WF data server, and on an
+    // external connection to the MQTT broker, the internal state must be synchronized in a
+    // "useEffect" function. Set up the connection and subscriptions.
     useEffect(() => {
         // Fetch initial history
         console.log(
@@ -51,7 +51,7 @@ function App() {
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
-                // Merge the historical data into an empty VesselState object
+                // Merge the historical data into an array of VesselState object
                 const historyStates = data.map((item) =>
                     new VesselState().mergeUpdates(extractUpdateDictsfromJson(item)),
                 );
@@ -71,7 +71,7 @@ function App() {
             })
             .catch((err) => console.error("Error fetching history:", err));
 
-        // Connect to the broker.
+        // Now connect to the MQTT broker.
         const client = mqtt.connect(mqttOptions.brokerUrl, {
             clientId: mqttOptions.clientId,
             username: mqttOptions.username,
@@ -85,8 +85,8 @@ function App() {
             mqttOptions.clientId,
         );
 
-        const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         // Subscribe to the topics we care about
+        const prefix = `${mqttOptions.prefix}/${mqttOptions.MMSI}/`;
         for (const addressField of [
             "FTMWV",
             "GPGLL",
@@ -101,6 +101,7 @@ function App() {
             client.subscribe(prefix + addressField);
             console.log(`Subscribed to ${prefix + addressField}`);
         }
+        // Finally, subscribe to the status topic
         client.subscribe("status");
 
         // Return a function that will get called when it's time to clean up.
@@ -117,10 +118,12 @@ function App() {
         // Explicitly list no dependencies. This will cause this "useEffect()" to get run only once.
     }, []);
 
-    // This useEffect() is used to synchronize between an arrival of a message
-    // and the internal state.
+    // This useEffect() is used to set up the message handler. It is solely dependent on
+    // the `client` variable, which means it gets run only once --- when `client` is initially
+    // established.
     useEffect(() => {
         if (client) {
+            // Set up the message handler
             client.on("message", function (topic, message) {
                 if (topic === "status") {
                     setStatus(message.toString());
@@ -130,31 +133,7 @@ function App() {
                         JSON.parse(message.toString()),
                     );
                     setVesselState((v) => {
-                        const newState = new VesselState(v).mergeUpdates(updateDicts);
-                        setHistory((prevHistory) => {
-                            const now = newState.timestamp;
-                            if (!now) return prevHistory;
-                            const lastPoint =
-                                prevHistory[prevHistory.length - 1];
-                            if (
-                                !lastPoint ||
-                                now.diff(lastPoint.timestamp, "second") > 60
-                            ) {
-                                // Add new point
-                                const newHistory = [...prevHistory, newState];
-                                // Prune points older than historyHours ago
-                                return newHistory.filter(
-                                    (p) =>
-                                        now.diff(p.timestamp, "hour") < historyOptions.historyHours,
-                                );
-                            } else {
-                                // Update last point
-                                const newHistory = [...prevHistory];
-                                newHistory[newHistory.length - 1] = newState;
-                                return newHistory;
-                            }
-                        });
-                        return newState;
+                        return new VesselState(v).mergeUpdates(updateDicts);
                     });
                     setFormattedState((f) =>
                         new FormattedState(f).mergeUpdates(updateDicts),
@@ -163,9 +142,6 @@ function App() {
             });
             client.on("error", (err) => console.error(err));
         }
-        // Setting 'client' as the sole dependency ensures that the function only gets called when
-        // client changes. Because the only time that client changes is on the initial establishment
-        // of the connection, the handlers only get set up once, which is what we want.
     }, [client]);
 
     // boatPosition holds the current vessel position, or null if it has not

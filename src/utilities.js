@@ -151,11 +151,8 @@ export function extractUpdateDictsfromJson(apiObject) {
 /**
  * Retrieves the latitude and longitude coordinates from the vessel state object.
  *
- * @param {Object} vesselState - The state object of the vessel containing position data.
- * @param {Object} vesselState.latitude - The latitude property of the vessel state.
- * @param {Object} vesselState.longitude - The longitude property of the vessel state.
- * @param {number} vesselState.latitude.value - The numeric value of latitude.
- * @param {number} vesselState.longitude.value - The numeric value of longitude.
+ * @param {VesselState} vesselState - The state object of the vessel, which should contain
+ * position data.
  * @return {Object|null} An object containing `lat` and `lng` properties if both are present,
  * otherwise null.
  */
