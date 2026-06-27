@@ -9,22 +9,32 @@ import dayjs from "dayjs";
 import { formatUpdate } from "./units";
 import { fieldOptions } from "../flyer.config";
 
-/*
-    The MQTT object looks something like this:
-    {
-        "latitude": 31.854926666666668,
-        "longitude": -116.62007166666666,
-        "timeUTC": "01:00:13",
-        "gll_mode": "D",
-        "sentence_type": "GLL",
-        "timestamp": 1743717957
-    }
+/**
+ * A parsed MQTT message payload.
+ *
+ * Each message has a timestamp plus a variable set of data fields depending
+ * on the MQTT sentence type.
+ *
+ * @typedef {Object.<string, string|number|boolean|null>} MqttObject
+ * @property {number} timestamp - Message timestamp, usually milliseconds since Unix epoch.
+ * @property {string} sentence_type - The type of sentence, e.g. "GLL".
+ *
+ * For sentence type GLL, this would look like:
+ * {
+ *     "latitude": 36.805795,
+ *     "longitude": -121.785685,
+ *     "timeUTC": "20:52:38",
+ *     "gll_mode": "D",
+ *     "sentence_type": "GLL",
+ *     "timestamp": 1782420758158
+ * }
  */
+
 class Update {
     /**
      * @constructor
      * @param {string} dataFieldKey - The key for a field. Something like "GPGLL_longitude".
-     * @param {float} dataFieldValue - The updated value
+     * @param {float} dataFieldValue - The value for the field.
      * @param {dayjs.Dayjs} last_update - The time the dataFieldValue was last updated.
      */
     constructor(dataFieldKey, dataFieldValue, last_update) {
@@ -169,7 +179,36 @@ export function getLatLng(vesselState) {
     return boatPosition;
 }
 
-// This will accumulate the updates.
+/**
+ * The state of the vessel, represented as an object full of Update objects.
+ *
+ * Typically, it looks something like this:
+ *
+ * {
+ *     "timestamp": "2026-06-26T19:13:00.000Z",
+ *     "FTMWV_awa": {
+ *         "dataFieldKey": "FTMWV_awa",
+ *         "value": 82,
+ *         "last_update": "2026-06-26T19:13:00.000Z"
+ *     },
+ *     "FTMWV_aws_knots": {
+ *         "dataFieldKey": "FTMWV_aws_knots",
+ *         "value": 10.6,
+ *         "last_update": "2026-06-26T19:13:00.000Z"
+ *     },
+ *     "GPGLL_latitude": {
+ *         "dataFieldKey": "GPGLL_latitude",
+ *         "value": 36.80578833333333,
+ *         "last_update": "2026-06-26T19:13:00.000Z"
+ *     },
+ *     "GPGLL_longitude": {
+ *         "dataFieldKey": "GPGLL_longitude",
+ *         "value": -121.785685,
+ *         "last_update": "2026-06-26T19:13:00.000Z"
+ *     },
+ *     ...
+ * }
+ */
 export class VesselState {
     constructor(oldState) {
         Object.assign(this, oldState);
@@ -182,25 +221,33 @@ export class VesselState {
         }
         return this;
     }
+    // Some fields can appear in multiple sentence types. This function picks the right one to use.
     getField(field){
         const dataFieldKey = fieldOptions[field];
         return this[dataFieldKey];
     }
 }
 
-// This will format the updates, then accumulate them.
-export class FormattedState {
-    constructor(oldState) {
-        Object.assign(this, oldState);
-    }
-
-    mergeUpdates(updates) {
-        for (const update of updates) {
-            this[update.dataFieldKey] = formatUpdate(update);
+/**
+ * Format the vessel state for display.
+ * @typedef {Object} FormattedUpdate
+ * @property {string} dataFieldKey
+ * @property {string} label
+ * @property {string} value
+ * @property {string} last_update
+ * @param {VesselState} vesselState
+ * @returns {Object.<string, FormattedUpdate>}
+ */
+export function formatVesselState(vesselState) {
+    const formattedState = {};
+    for (const key in vesselState) {
+        if (key !== "timestamp") {
+            formattedState[key] = formatUpdate(vesselState[key]);
         }
-        return this;
     }
+    return formattedState;
 }
+
 
 /**
  * Extract attributes from an object in a given ordering
@@ -221,9 +268,9 @@ export function orderArray(ordering, obj) {
 /**
  * Given a latitude and longitude, calculate the position at a specified distance and bearing.
  *
- * @param latLng {{lng: number, lat: number}}
- * @param distance_nm {number} Distance in nm
- * @param bearing_degrees {number} Bearing in degrees (0=N; 90=E)
+ * @param {{lng: number, lat: number}} latLng
+ * @param {number} distance_nm - Distance in nm
+ * @param {number} bearing_degrees - Bearing in degrees (0=N; 90=E)
  * @returns {{lng: number, lat: number}}
  */
 export function latLngAtBearing(latLng, distance_nm, bearing_degrees) {

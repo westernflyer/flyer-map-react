@@ -10,7 +10,6 @@ import { APIProvider, Map } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
 import {
-    FormattedState,
     getLatLng,
     getUpdateDicts,
     extractUpdateDictsfromJson,
@@ -30,21 +29,17 @@ function App() {
     const [client, setClient] = useState(null);
     // vesselState holds the current values. They are unformatted.
     const [vesselState, setVesselState] = useState(new VesselState());
-    // formattedState holds the current values as formatted strings.
-    const [formattedState, setFormattedState] = useState(new FormattedState());
-    // Current status
-    const [status, setStatus] = useState(boatOptions.defaultStatus);
     // history holds the vessel states going back in time
     const [history, setHistory] = useState([]);
+    // Current status
+    const [status, setStatus] = useState(boatOptions.defaultStatus);
 
     // Because this app relies on fetching history records from the WF data server, and on an
     // external connection to the MQTT broker, the internal state must be synchronized in a
     // "useEffect" function. Set up the connection and subscriptions.
     useEffect(() => {
         // Fetch initial history
-        console.log(
-            `Fetching initial history from ${historyOptions.history_url}`,
-        );
+        console.log(`Fetching initial history from ${historyOptions.history_url}`);
         const now = Date.now();
         const startTime = now - historyOptions.historyHours * 3600.0 * 1000.0;
         const url = `${historyOptions.history_url}?start=${startTime}`;
@@ -56,17 +51,10 @@ function App() {
                     new VesselState().mergeUpdates(extractUpdateDictsfromJson(item)),
                 );
                 setHistory(historyStates);
-                // Also set the initial vessel state and formatted state to the
-                // most recent historical point
+                // Set the initial vessel state to the last state in the history.
                 if (historyStates.length > 0) {
                     const lastState = historyStates[historyStates.length - 1];
                     setVesselState(lastState);
-                    const updateDicts = extractUpdateDictsfromJson(
-                        data[data.length - 1],
-                    );
-                    setFormattedState(
-                        new FormattedState().mergeUpdates(updateDicts),
-                    );
                 }
             })
             .catch((err) => console.error("Error fetching history:", err));
@@ -107,11 +95,7 @@ function App() {
         // Return a function that will get called when it's time to clean up.
         return () => {
             if (client) {
-                client.end(
-                    (err) =>
-                        err &&
-                        console.log("Error closing MQTT connection:", err),
-                );
+                client.end((err) => err && console.log("Error closing MQTT connection:", err));
                 setClient(null);
             }
         };
@@ -128,16 +112,10 @@ function App() {
                 if (topic === "status") {
                     setStatus(message.toString());
                 } else {
-                    const updateDicts = getUpdateDicts(
-                        topic,
-                        JSON.parse(message.toString()),
-                    );
+                    const updateDicts = getUpdateDicts(topic, JSON.parse(message.toString()));
                     setVesselState((v) => {
                         return new VesselState(v).mergeUpdates(updateDicts);
                     });
-                    setFormattedState((f) =>
-                        new FormattedState(f).mergeUpdates(updateDicts),
-                    );
                 }
             });
             client.on("error", (err) => console.error(err));
@@ -200,14 +178,10 @@ function App() {
                         />
                         <FollowBoatControl boatPosition={boatPosition} />
                     </Map>
-                )) || (
-                    <p className="fetching">
-                        Waiting for a valid vessel position...
-                    </p>
-                )}
+                )) || <p className="fetching">Waiting for a valid vessel position...</p>}
             </APIProvider>
             <div style={{ padding: "20px" }}>
-                <VesselTable formattedState={formattedState} />
+                <VesselTable vesselState={vesselState} />
                 <div style={{ paddingLeft: "16px" }}>
                     <About />
                 </div>

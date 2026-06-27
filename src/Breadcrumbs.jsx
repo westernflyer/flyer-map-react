@@ -13,8 +13,9 @@ import {
     useAdvancedMarkerRef,
     useMap,
 } from "@vis.gl/react-google-maps";
-import { FormattedState, orderArray } from "./utilities";
+import { formatVesselState, orderArray } from "./utilities";
 import { tableOptions } from "../flyer.config.js";
+import { formatUpdate } from "./units.js";
 
 /**
  * React component to show the breadcrumb trail of the boat.
@@ -112,9 +113,8 @@ const BreadcrumbMarker = ({ state }) => {
 
     if (!position.lat || !position.lng) return null;
 
-    const formattedState = new FormattedState().mergeUpdates(
-        Object.values(state).filter((v) => v.dataFieldKey),
-    );
+    // Format the contents so they can be used in the popup windows
+    const formattedState = formatVesselState(state);
 
     const handleMouseEnter = () => {
         if (timeoutRef.current) {
