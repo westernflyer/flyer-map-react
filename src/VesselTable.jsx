@@ -10,7 +10,6 @@ import DataTable from "react-data-table-component";
 import { formatVesselState, orderArray } from "./utilities.js";
 import { tableOptions } from "../flyer.config.js";
 import PropTypes from "prop-types";
-import { formatUpdate } from "./units.js";
 
 const tableColumns = [
     {

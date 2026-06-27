@@ -11,8 +11,8 @@ import mqtt from "mqtt";
 
 import {
     getLatLng,
-    getUpdateDicts,
-    extractUpdateDictsfromJson,
+    flattenUpdate,
+    flattenHistory,
     VesselState,
 } from "./utilities.js";
 import { VesselTable } from "./VesselTable";
@@ -28,7 +28,7 @@ function App() {
     // client is the MQTT connection.
     const [client, setClient] = useState(null);
     // vesselState holds the current values. They are unformatted.
-    const [vesselState, setVesselState] = useState(new VesselState());
+    const [vesselState, setVesselState] = useState(null);
     // history holds the vessel states going back in time
     const [history, setHistory] = useState([]);
     // Current status
@@ -44,18 +44,15 @@ function App() {
         const startTime = now - historyOptions.historyHours * 3600.0 * 1000.0;
         const url = `${historyOptions.history_url}?start=${startTime}`;
         fetch(url)
-            .then((response) => response.json())
-            .then((data) => {
+            .then(response => response.json())
+            .then(data => {
                 // Merge the historical data into an array of VesselState object
-                const historyStates = data.map((item) =>
-                    new VesselState().mergeUpdates(extractUpdateDictsfromJson(item)),
+                const historyStates = data.map(history =>
+                    new VesselState().mergeUpdates(flattenHistory(history)),
                 );
                 setHistory(historyStates);
                 // Set the initial vessel state to the last state in the history.
-                if (historyStates.length > 0) {
-                    const lastState = historyStates[historyStates.length - 1];
-                    setVesselState(lastState);
-                }
+                setVesselState(historyStates.at(-1))
             })
             .catch((err) => console.error("Error fetching history:", err));
 
@@ -112,8 +109,8 @@ function App() {
                 if (topic === "status") {
                     setStatus(message.toString());
                 } else {
-                    const updateDicts = getUpdateDicts(topic, JSON.parse(message.toString()));
-                    setVesselState((v) => {
+                    const updateDicts = flattenUpdate(topic, JSON.parse(message.toString()));
+                    setVesselState(v => {
                         return new VesselState(v).mergeUpdates(updateDicts);
                     });
                 }

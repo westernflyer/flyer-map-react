@@ -10,14 +10,14 @@ import { formatUpdate } from "./units";
 import { fieldOptions } from "../flyer.config";
 
 /**
- * A parsed MQTT message payload.
+ * A parsed MQTT message payload from the broker.
  *
- * Each message has a timestamp plus a variable set of data fields depending
+ * Each message has a sentence type, timestamp, plus a variable set of data fields depending
  * on the MQTT sentence type.
  *
  * @typedef {Object.<string, string|number|boolean|null>} MqttObject
- * @property {number} timestamp - Message timestamp, usually milliseconds since Unix epoch.
  * @property {string} sentence_type - The type of sentence, e.g. "GLL".
+ * @property {number} timestamp - Message timestamp, usually milliseconds since Unix epoch.
  *
  * For sentence type GLL, this would look like:
  * {
@@ -30,12 +30,43 @@ import { fieldOptions } from "../flyer.config";
  * }
  */
 
-class Update {
+/**
+ * A parsed, timestamped history object from the WF data server.
+ *
+ * @typedef {Object.<string, string|number|boolean|null>} WFHistoryObject
+ * @property {number} mmsi - The MMSI of the vessel.
+ * @property {number} timestamp - Message timestamp, usually milliseconds since Unix epoch.
+ *
+ * A typical object might look like this:
+ * {
+ *     "mmsi": 368323170,
+ *     "timestamp": 1782378240000,
+ *     "FTMWV_awa": 34,
+ *     "FTMWV_aws_knots": 2.4,
+ *     "GPGLL_latitude": 36.80578333333333,
+ *     "GPGLL_longitude": -121.78568333333334,
+ *     ...
+ * }
+ */
+
+/**
+ * Represents the vessel state, formatted for display.
+ *
+ * @typedef {Object} FormattedUpdate
+ * @property {string} dataFieldKey
+ * @property {string} label
+ * @property {string} value
+ * @property {string} last_update
+ */
+
+class Datum {
     /**
+     * Represents a single data field.
+     *
      * @constructor
      * @param {string} dataFieldKey - The key for a field. Something like "GPGLL_longitude".
      * @param {float} dataFieldValue - The value for the field.
-     * @param {dayjs.Dayjs} last_update - The time the dataFieldValue was last updated.
+     * @param {dayjs.Dayjs} last_update - The time the `dataFieldValue` was last updated.
      */
     constructor(dataFieldKey, dataFieldValue, last_update) {
         this.dataFieldKey = dataFieldKey;
@@ -45,13 +76,15 @@ class Update {
 }
 
 /**
- * Given a topic and a parsed MQTT object, flatten its components into an array of Update objects.
+ * Given a topic and a parsed MQTT object, flatten its components into an array of Datum objects.
  *
  * @param {string} topic - The MQTT topic string used to derive keys for the updates.
- * @param {Object} mqttObject - The parsed MQTT message object containing data fields and a timestamp.
- * @return {Array<Update>} An array of Update objects containing keys, values, and a timestamp.
+ * @param {MqttObject} mqttMsg - The parsed MQTT message object containing data fields and a
+ * timestamp.
+ * @return {Array<Datum>} An array of DatumUpdate objects containing keys, values,
+ * and last_update timestamps.
 
- * For example, given an MQTT object that looks like this:
+ * For example, given a parsed MQTT object of topic `GPGLL`,
  *
  * {
  *     "latitude": 36.805795,
@@ -61,7 +94,9 @@ class Update {
  *     "sentence_type": "GLL",
  *     "timestamp": 1782420758158
  * }
- * The results would look like this:
+ *
+ * the results would look like this:
+ *
  * [
  *     {
  *         "dataFieldKey": "GPGLL_latitude",
@@ -91,13 +126,13 @@ class Update {
  * ]
  */
 
-export function getUpdateDicts(topic, mqttObject) {
+export function flattenUpdate(topic, mqttMsg) {
     const updates = [];
-    const timestamp = dayjs(mqttObject.timestamp);
-    for (const dataField in mqttObject) {
+    const timestamp = dayjs(mqttMsg.timestamp);
+    for (const dataField in mqttMsg) {
         if (dataField !== "timestamp") {
-            const dataFieldKey= topic.split("/")[2] + "_" + dataField;
-            updates.push(new Update(dataFieldKey, mqttObject[dataField], timestamp));
+            const dataFieldKey = topic.split("/")[2] + "_" + dataField;
+            updates.push(new Datum(dataFieldKey, mqttMsg[dataField], timestamp));
         }
     }
     return updates;
@@ -106,12 +141,12 @@ export function getUpdateDicts(topic, mqttObject) {
 /**
  * Very similar to the above, except that it works with objects returned from the WF data server.
  *
- * @param {Object} apiObject - The JSON object as returned by the WF data server.
- *                             Expected to include a `timestamp` key and other fields.
- * @return {Array<Update>} An array of Update objects, each containing a key, value, and a
- * timestamp as a dayjs object.
+ * @param {WFHistoryObject} apiObject - The JSON object as returned by the WF data server.
+ * Expected to include a `timestamp` key and other fields.
+ * @return {Array<Datum>} An array of DatumUpdate objects, each containing a key, value,
+ * and a `last_update` value as a dayjs object.
  *
- * For example, for an object that looks like this:
+ * For example, for a WFHistoryObject that looks like this:
  * {
  *     "mmsi": 368323170,
  *     "timestamp": 1782378240000,
@@ -120,6 +155,7 @@ export function getUpdateDicts(topic, mqttObject) {
  *     "GPGLL_latitude": 36.80578333333333,
  *     "GPGLL_longitude": -121.78568333333334,
  *     ...
+ * }
  *
  * The results would look like this:
  *
@@ -147,15 +183,15 @@ export function getUpdateDicts(topic, mqttObject) {
  *     ...
  * ]
  */
-export function extractUpdateDictsfromJson(apiObject) {
-    let updates = [];
+export function flattenHistory(apiObject) {
+    let histories = [];
     const timestamp = dayjs(apiObject.timestamp);
     for (const dataFieldKey in apiObject) {
         if (dataFieldKey !== "timestamp" && dataFieldKey !== "mmsi") {
-            updates.push(new Update(dataFieldKey, apiObject[dataFieldKey], timestamp));
+            histories.push(new Datum(dataFieldKey, apiObject[dataFieldKey], timestamp));
         }
     }
-    return updates;
+    return histories;
 }
 
 /**
@@ -168,6 +204,9 @@ export function extractUpdateDictsfromJson(apiObject) {
  */
 export function getLatLng(vesselState) {
     let boatPosition = null;
+    if (vesselState == null) {
+        return boatPosition;
+    }
     const lat = vesselState.getField("latitude")?.value;
     const lon = vesselState.getField("longitude")?.value;
     if (lat != null && lon != null) {
@@ -180,7 +219,7 @@ export function getLatLng(vesselState) {
 }
 
 /**
- * The state of the vessel, represented as an object full of Update objects.
+ * The state of the vessel, represented as an object full of Datum objects.
  *
  * Typically, it looks something like this:
  *
@@ -222,7 +261,7 @@ export class VesselState {
         return this;
     }
     // Some fields can appear in multiple sentence types. This function picks the right one to use.
-    getField(field){
+    getField(field) {
         const dataFieldKey = fieldOptions[field];
         return this[dataFieldKey];
     }
@@ -230,11 +269,6 @@ export class VesselState {
 
 /**
  * Format the vessel state for display.
- * @typedef {Object} FormattedUpdate
- * @property {string} dataFieldKey
- * @property {string} label
- * @property {string} value
- * @property {string} last_update
  * @param {VesselState} vesselState
  * @returns {Object.<string, FormattedUpdate>}
  */
@@ -247,7 +281,6 @@ export function formatVesselState(vesselState) {
     }
     return formattedState;
 }
-
 
 /**
  * Extract attributes from an object in a given ordering

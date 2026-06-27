@@ -15,7 +15,6 @@ import {
 } from "@vis.gl/react-google-maps";
 import { formatVesselState, orderArray } from "./utilities";
 import { tableOptions } from "../flyer.config.js";
-import { formatUpdate } from "./units.js";
 
 /**
  * React component to show the breadcrumb trail of the boat.
