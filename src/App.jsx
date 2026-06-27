@@ -27,6 +27,8 @@ function App() {
     const [history, setHistory] = useState([]);
     // Current status
     const [status, setStatus] = useState(boatOptions.defaultStatus);
+    // Whether to follow the boat as it moves
+    const [followBoat, setFollowBoat] = useState(true);
 
     // Because this app relies on fetching history records from the WF data server, and on an
     // external connection to the MQTT broker, the internal state must be synchronized in a
@@ -154,7 +156,7 @@ function App() {
                     scaleControl={true}
                     mapId="FLYER_MAP_ID"
                 >
-                    <Breadcrumbs history={history} />
+                    <Breadcrumbs history={history} setFollowBoat={setFollowBoat} />
                     <BoatMarker
                         boatPosition={boatPosition}
                         heading={vesselState.getField("hdg_true")?.value}
@@ -163,7 +165,11 @@ function App() {
                         windSpeed={vesselState.getField("tws_knots")?.value}
                         windDirection={vesselState.getField("twd_true")?.value}
                     />
-                    <FollowBoatControl boatPosition={boatPosition} />
+                    <FollowBoatControl
+                        boatPosition={boatPosition}
+                        followBoat={followBoat}
+                        setFollowBoat={setFollowBoat}
+                    />
                 </Map>
             )) || <p className="fetching">Waiting for a valid vessel position...</p>}
             <div style={{ padding: "20px" }}>

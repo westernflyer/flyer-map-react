@@ -8,18 +8,18 @@
 import PropTypes from "prop-types";
 
 import { MapControl, ControlPosition, useMap } from "@vis.gl/react-google-maps";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 /**
  * Creates a control that recenters the map to follow the boat as it moves
  *
  * @param {object} props
  * @param {google.maps.LatLng | google.maps.LatLngLiteral | null} props.boatPosition - Boat position
+ * @param {boolean} props.followBoat - Whether to follow the boat
+ * @param {function} props.setFollowBoat - Function to set follow boat mode
  */
 export function FollowBoatControl(props) {
-    const { boatPosition } = props;
-    // Start out following the boat:
-    const [followBoat, setFollowBoat] = useState(true);
+    const { boatPosition, followBoat, setFollowBoat } = props;
 
     // Retrieve the map instance
     const map = useMap();
@@ -34,9 +34,14 @@ export function FollowBoatControl(props) {
     // Add a listener for when the map is dragged. That means the user does
     // not want to follow the boat.
     useEffect(() => {
-        map.addListener("dragend",
-            () => setFollowBoat(false));
-    }, [map]);
+        if (!map) return;
+        const listener = map.addListener("dragend", () => setFollowBoat(false));
+        return () => {
+            if (listener) {
+                listener.remove();
+            }
+        };
+    }, [map, setFollowBoat]);
 
     return (
         <MapControl position={ControlPosition.TOP_LEFT}>
@@ -56,4 +61,6 @@ FollowBoatControl.propTypes = {
         lat: PropTypes.number,
         lng: PropTypes.number,
     }),
+    followBoat: PropTypes.bool.isRequired,
+    setFollowBoat: PropTypes.func.isRequired,
 };

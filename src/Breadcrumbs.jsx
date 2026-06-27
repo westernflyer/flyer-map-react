@@ -5,7 +5,7 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import {
     AdvancedMarker,
@@ -21,8 +21,10 @@ import { tableOptions } from "../flyer.config.js";
  *
  * @param {object} props
  * @param {Array<VesselState>} props.history - Array of historical vessel states
+ * @param {function} props.setFollowBoat - Function to set follow boat mode
  */
-export const Breadcrumbs = ({ history }) => {
+export const Breadcrumbs = ({ history, setFollowBoat }) => {
+    const [selectedState, setSelectedState] = useState(null);
     const path = useMemo(() => {
         return history
             .map((state) => ({
@@ -36,7 +38,16 @@ export const Breadcrumbs = ({ history }) => {
         <>
             <Polyline path={path} strokeColor="#4d7685" strokeOpacity={0.5} strokeWeight={2} />
             {history.map((state, index) => (
-                <BreadcrumbMarker key={index} state={state} />
+                <BreadcrumbMarker
+                    key={index}
+                    state={state}
+                    isSelected={selectedState === state}
+                    onSelect={() => {
+                        setSelectedState(state);
+                        setFollowBoat(false);
+                    }}
+                    onClose={() => setSelectedState(null)}
+                />
             ))}
         </>
     );
@@ -92,18 +103,8 @@ const Polyline = ({
     return null;
 };
 
-const BreadcrumbMarker = ({ state }) => {
+const BreadcrumbMarker = ({ state, isSelected, onSelect, onClose }) => {
     const [markerRef, marker] = useAdvancedMarkerRef();
-    const [infowindowOpen, setInfowindowOpen] = useState(false);
-    const timeoutRef = useRef(null);
-
-    useEffect(() => {
-        return () => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-        };
-    }, []);
 
     const position = {
         lat: state.getField("latitude")?.value,
@@ -115,27 +116,12 @@ const BreadcrumbMarker = ({ state }) => {
     // Format the contents so they can be used in the popup windows
     const formattedState = formatVesselState(state);
 
-    const handleMouseEnter = () => {
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-            timeoutRef.current = null;
-        }
-        setInfowindowOpen(true);
-    };
-
-    const handleMouseLeave = () => {
-        timeoutRef.current = setTimeout(() => {
-            setInfowindowOpen(false);
-        }, 200);
-    };
-
     return (
         <>
             <AdvancedMarker
                 ref={markerRef}
                 position={position}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
+                onClick={onSelect}
             >
                 <div
                     style={{
@@ -147,13 +133,13 @@ const BreadcrumbMarker = ({ state }) => {
                     }}
                 />
             </AdvancedMarker>
-            {infowindowOpen && (
+            {isSelected && (
                 <InfoWindow
                     anchor={marker}
-                    onCloseClick={() => setInfowindowOpen(false)}
-                    disableAutoPan={true}
+                    onCloseClick={onClose}
+                    disableAutoPan={false}
                 >
-                    <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                    <div>
                         <HistoricalConditions
                             formattedState={formattedState}
                             timestamp={state.timestamp}
@@ -195,10 +181,14 @@ HistoricalConditions.propTypes = {
 
 Breadcrumbs.propTypes = {
     history: PropTypes.array.isRequired,
+    setFollowBoat: PropTypes.func.isRequired,
 };
 
 BreadcrumbMarker.propTypes = {
     state: PropTypes.object.isRequired,
+    isSelected: PropTypes.bool.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
 };
 
 Polyline.propTypes = {

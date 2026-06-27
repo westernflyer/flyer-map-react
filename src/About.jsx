@@ -28,6 +28,11 @@ const MapGuide = () => {
                 between 8 and 12 knots from the west, and the course over ground
                 is south.
             </p>
+            <p>
+                If the boat is moving, it will leave a trail of "breadcrumbs" behind, up to
+                12 hours long. Clicking on a crumb will bring up the conditions at that time
+                and place.
+            </p>
         </>
     );
 };

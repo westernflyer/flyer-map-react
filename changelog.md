@@ -1,8 +1,9 @@
 1.6.0 2026-06-27
 
+* Better positioning of the InfoWindow in the breadcrumbs.
+* Move `<APIProvider>` to root level. This gets rid of multiple loads.
 * Simpler internal state. Got rid of class `FormattedState` and instead 
-formatted on the fly.
-* Move `<APIProvider>` to root level.
+  formatted on the fly.
 
 
 1.5.0 2026-06-25
