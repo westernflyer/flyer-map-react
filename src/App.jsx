@@ -6,21 +6,15 @@
  */
 
 import { useEffect, useState } from "react";
-import { APIProvider, Map } from "@vis.gl/react-google-maps";
+import { Map } from "@vis.gl/react-google-maps";
 import mqtt from "mqtt";
 
-import {
-    getLatLng,
-    flattenUpdate,
-    flattenHistory,
-    VesselState,
-} from "./utilities.js";
+import { getLatLng, flattenUpdate, flattenHistory, VesselState } from "./utilities.js";
 import { VesselTable } from "./VesselTable";
 import { About } from "./About";
 import { BoatMarker } from "./BoatMarker";
 import { Breadcrumbs } from "./Breadcrumbs.jsx";
 import { FollowBoatControl } from "./FollowBoat";
-import { google_key } from "./google-api-key.js";
 import { boatOptions, mqttOptions, historyOptions } from "../flyer.config.js";
 import "./App.css";
 
@@ -44,15 +38,15 @@ function App() {
         const startTime = now - historyOptions.historyHours * 3600.0 * 1000.0;
         const url = `${historyOptions.history_url}?start=${startTime}`;
         fetch(url)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 // Merge the historical data into an array of VesselState object
-                const historyStates = data.map(history =>
+                const historyStates = data.map((history) =>
                     new VesselState().mergeUpdates(flattenHistory(history)),
                 );
                 setHistory(historyStates);
                 // Set the initial vessel state to the last state in the history.
-                setVesselState(historyStates.at(-1))
+                setVesselState(historyStates.at(-1));
             })
             .catch((err) => console.error("Error fetching history:", err));
 
@@ -110,7 +104,7 @@ function App() {
                     setStatus(message.toString());
                 } else {
                     const updateDicts = flattenUpdate(topic, JSON.parse(message.toString()));
-                    setVesselState(v => {
+                    setVesselState((v) => {
                         return new VesselState(v).mergeUpdates(updateDicts);
                     });
                 }
@@ -152,31 +146,26 @@ function App() {
                 src={"/flyer-map/underline-short.png"}
                 alt="Underline"
             />
-            <APIProvider
-                apiKey={`${google_key}`}
-                onLoad={() => console.log("Maps API has loaded.")}
-            >
-                {(boatPosition && (
-                    <Map
-                        defaultZoom={10}
-                        defaultCenter={boatPosition}
-                        streetViewControl={false}
-                        scaleControl={true}
-                        mapId="FLYER_MAP_ID"
-                    >
-                        <Breadcrumbs history={history} />
-                        <BoatMarker
-                            boatPosition={boatPosition}
-                            heading={vesselState.getField("hdg_true")?.value}
-                            cog={vesselState.getField("cog_true")?.value}
-                            sog={vesselState.getField("sog_knots")?.value}
-                            windSpeed={vesselState.getField("tws_knots")?.value}
-                            windDirection={vesselState.getField("twd_true")?.value}
-                        />
-                        <FollowBoatControl boatPosition={boatPosition} />
-                    </Map>
-                )) || <p className="fetching">Waiting for a valid vessel position...</p>}
-            </APIProvider>
+            {(boatPosition && (
+                <Map
+                    defaultZoom={10}
+                    defaultCenter={boatPosition}
+                    streetViewControl={false}
+                    scaleControl={true}
+                    mapId="FLYER_MAP_ID"
+                >
+                    <Breadcrumbs history={history} />
+                    <BoatMarker
+                        boatPosition={boatPosition}
+                        heading={vesselState.getField("hdg_true")?.value}
+                        cog={vesselState.getField("cog_true")?.value}
+                        sog={vesselState.getField("sog_knots")?.value}
+                        windSpeed={vesselState.getField("tws_knots")?.value}
+                        windDirection={vesselState.getField("twd_true")?.value}
+                    />
+                    <FollowBoatControl boatPosition={boatPosition} />
+                </Map>
+            )) || <p className="fetching">Waiting for a valid vessel position...</p>}
             <div style={{ padding: "20px" }}>
                 <VesselTable vesselState={vesselState} />
                 <div style={{ paddingLeft: "16px" }}>

@@ -1,7 +1,8 @@
 1.6.0 2026-06-27
 
-* Simpler internal state. Got rid of class `FormattedState`, and instead 
+* Simpler internal state. Got rid of class `FormattedState` and instead 
 formatted on the fly.
+* Move `<APIProvider>` to root level.
 
 
 1.5.0 2026-06-25
