@@ -20,7 +20,7 @@ What follows are specific instructions for each point along the way.
 
 The Flyer map uses an [Actisense PRO-NDC-1E2K
 gateway](https://actisense.com/products/pro-ndc-1e2k/) between the ship's NMEA
-2000 network, and its ethernet network. It selectively passes on data,
+2000 network and its ethernet network. It selectively passes on data,
 converting it into NMEA 0183, then puts it on ethernet, where the NMEA-MQTT
 gateway server picks it up.
 
@@ -118,7 +118,7 @@ Finally, we come to the client!
    value for `brokerUrl` and for `vesselId`. The vessel's MMSI number is usually
    used for the latter.
 
-### Google maps
+### Google Maps
 
 1. The system uses Google Maps, which requires an API key. After obtaining one
    from

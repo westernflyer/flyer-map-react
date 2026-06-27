@@ -36,7 +36,7 @@ export const historyOptions = {
 
     // history_url: `https://projects.westernflyer.org/api/v1/data/${mqttOptions.MMSI}/`,
 
-    // How much history to get in hours:
+    // The number of hours of history to get:
     historyHours: 12,
 };
 

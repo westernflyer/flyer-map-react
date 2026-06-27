@@ -129,7 +129,7 @@ function App() {
                 <a href="https://westernflyer.org">
                     <img
                         style={{ width: "300px" }}
-                        src="/flyer-map/assets_logo_trans.png"
+                        src={`${import.meta.env.BASE_URL}/assets_logo_trans.png`}
                         alt="Logo"
                     />
                 </a>
