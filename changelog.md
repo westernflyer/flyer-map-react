@@ -1,3 +1,9 @@
+1.6.0 2026-06-27
+
+* Simpler internal state. Got rid of class `FormattedState`, and instead 
+formatted on the fly.
+
+
 1.5.0 2026-06-25
 
 * Use react-transition-group instead of react-fader.
